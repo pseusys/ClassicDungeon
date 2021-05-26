@@ -1,5 +1,7 @@
 package com.ekdorn.classicdungeon.shared.ui
 
+
+
 abstract class TouchView {
     companion object {
         private const val CLICK = 1.0

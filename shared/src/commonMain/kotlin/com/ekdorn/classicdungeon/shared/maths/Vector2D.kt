@@ -1,5 +1,7 @@
 package com.ekdorn.classicdungeon.shared.maths
 
+
+
 import kotlin.math.sqrt
 
 class Vector2D (var x: Double = 0.0, var y: Double = 0.0) {
