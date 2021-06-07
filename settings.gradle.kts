@@ -10,7 +10,7 @@ pluginManagement {
 rootProject.name = "ClassicDungeon"
 
 
-include(":androidApp")
+include(":android")
 include(":shared")
-include(":desktopApp")
+include(":desktop")
 

@@ -3,3 +3,4 @@
 /gradle/
 /.idea/
 /shared/build/
+/local.properties

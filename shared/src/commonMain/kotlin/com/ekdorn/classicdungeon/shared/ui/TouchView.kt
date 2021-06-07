@@ -2,7 +2,7 @@ package com.ekdorn.classicdungeon.shared.ui
 
 
 
-abstract class TouchView {
+internal abstract class TouchView {
     companion object {
         private const val CLICK = 1.0
         private const val LONG_CLICK = 3.0
