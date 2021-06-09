@@ -14,23 +14,23 @@ internal open class Widget (var parent: Layout? = null) {
     var visible: Boolean = true
         get() = field && (parent?.visible == true)
 
-    val coords = Vector2D(0.0, 0.0)
+    val coords = Vector2D()
     var width = 0.0
         get() = field * scale.x
     var height = 0.0
         get() = field * scale.y
 
-    private val speed = Vector2D(0.0, 0.0)
-    private val acceleration = Vector2D(0.0, 0.0)
+    private val speed = Vector2D()
+    private val acceleration = Vector2D()
     private var angle = 0.0
     private val angleSpeed = 0.0
 
     private val scale = Vector2D(1.0, 1.0)
-    private val origin = Vector2D(0.0, 0.0)
+    private val origin = Vector2D()
     private val model = Matrix4x4()
 
     private val ambient = Vector4D(1.0, 1.0, 1.0, 1.0)
-    private val material = Vector4D(0.0, 0.0, 0.0, 0.0)
+    private val material = Vector4D()
 
     constructor (x: Double, y: Double, w: Double, h: Double): this() {
         coords.x = x
