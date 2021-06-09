@@ -18,6 +18,9 @@ internal sealed class Vector<Other> (protected val ind: DoubleArray) {
         ind.iterator().withIndex().forEach {
             coords += "${it.index}: ${it.value}; "
         }
+
+        coords.let {  }
+
         return "Vector(${coords.substringBeforeLast("; ")})"
     }
 }
