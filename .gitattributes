@@ -1,0 +1,3 @@
+.run/ binary
+gradlew binary
+gradlew.bat binary

@@ -34,12 +34,6 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val androidMain by getting
-        val androidTest by getting {
-            dependencies {
-                implementation("junit:junit:4.13.1")
-            }
-        }
     }
 }
 
@@ -51,3 +45,9 @@ android {
         targetSdkVersion(30)
     }
 }
+
+tasks.withType<Wrapper> {
+    gradleVersion = "6.7.1"
+    distributionType = Wrapper.DistributionType.ALL
+}
+
