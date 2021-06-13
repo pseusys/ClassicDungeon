@@ -1,7 +1,6 @@
 package com.ekdorn.classicdungeon.shared.utils
 
 
-
 internal typealias Listener <Target> = suspend (Target)->Boolean
 
 internal class Event <Target> (private val mode: TriggerMode = TriggerMode.QUEUE) {
@@ -16,6 +15,7 @@ internal class Event <Target> (private val mode: TriggerMode = TriggerMode.QUEUE
             else listeners.add(0, listener)
         }
     }
+
 
     fun remove (listener: Listener<Target>) = listeners.remove(listener)
 

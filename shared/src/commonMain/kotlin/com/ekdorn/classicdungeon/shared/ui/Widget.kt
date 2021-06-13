@@ -1,9 +1,8 @@
 package com.ekdorn.classicdungeon.shared.ui
 
-import com.ekdorn.classicdungeon.shared.Game
-import com.ekdorn.classicdungeon.shared.maths.Matrix4x4
-import com.ekdorn.classicdungeon.shared.maths.Vector2D
-import com.ekdorn.classicdungeon.shared.maths.Vector4D
+import com.ekdorn.classicdungeon.shared.maths.Matrix
+import com.ekdorn.classicdungeon.shared.maths.Vector
+import com.ekdorn.classicdungeon.shared.maths.Color
 
 
 internal open class Widget (var parent: Layout? = null) {
@@ -14,23 +13,23 @@ internal open class Widget (var parent: Layout? = null) {
     var visible: Boolean = true
         get() = field && (parent?.visible == true)
 
-    val coords = Vector2D()
+    val coords = Vector()
     var width = 0.0
         get() = field * scale.x
     var height = 0.0
         get() = field * scale.y
 
-    private val speed = Vector2D()
-    private val acceleration = Vector2D()
+    private val speed = Vector()
+    private val acceleration = Vector()
     private var angle = 0.0
     private val angleSpeed = 0.0
 
-    private val scale = Vector2D(1.0, 1.0)
-    private val origin = Vector2D()
-    private val model = Matrix4x4()
+    private val scale = Vector(1.0, 1.0)
+    private val origin = Vector()
+    private val model = Matrix()
 
-    private val ambient = Vector4D(1.0, 1.0, 1.0, 1.0)
-    private val material = Vector4D()
+    private val ambient = Color(1.0, 1.0, 1.0, 1.0)
+    private val material = Color()
 
     constructor (x: Double, y: Double, w: Double, h: Double): this() {
         coords.x = x
@@ -41,8 +40,8 @@ internal open class Widget (var parent: Layout? = null) {
 
 
 
-    inline var center: Vector2D
-        get () = Vector2D(coords.x + width / 2, coords.y + height / 2)
+    inline var center: Vector
+        get () = Vector(coords.x + width / 2, coords.y + height / 2)
         set (v) {
             coords.x = v.x - width / 2
             coords.y = v.y - height / 2
@@ -56,34 +55,31 @@ internal open class Widget (var parent: Layout? = null) {
         }
 
 
+    private fun speed (speed: Double, acceleration: Double, time: Double): Double = speed + acceleration * time
 
-    open fun update () {
-        /*var delta = (GameMath.speed( speed.x, acceleration.x ) - speed.x) / 2
-        speed.x += delta
-        coords.x += speed.x * Game.elapsed
-        speed.x += delta
+    open fun update (elapsed: Double) {
+        val halfDeltaX = (speed(speed.x, acceleration.x, elapsed) - speed.x) / 2
+        speed.x += halfDeltaX
+        coords.x += speed.x * elapsed
+        speed.x += halfDeltaX
 
-        delta = (GameMath.speed( speed.y, acceleration.y ) - speed.y) / 2;
-        speed.y += delta
-        coords.y += speed.y * Game.elapsed
-        speed.y += delta
+        val halfDeltaY = (speed(speed.y, acceleration.y, elapsed) - speed.y) / 2
+        speed.y += halfDeltaY
+        coords.y += speed.y * elapsed
+        speed.y += halfDeltaY
 
-        angle += angleSpeed * Game.elapsed;*/
+        angle += angleSpeed * elapsed
     }
 
-    open fun draw () {}
+    open fun draw (): Unit = updateModel()
 
-    fun updateMatrix() {
-        /*Matrix.setIdentity( matrix );
-        Matrix.translate( matrix, x, y );
-        Matrix.translate( matrix, origin.x, origin.y );
-        if (angle != 0) {
-            Matrix.rotate( matrix, angle );
-        }
-        if (scale.x != 1 || scale.y != 1) {
-            Matrix.scale( matrix, scale.x, scale.y );
-        }
-        Matrix.translate( matrix, -origin.x, -origin.y );*/
+    private fun updateModel() {
+        model.toIdentity()
+        model.translate(coords.x, coords.y)
+        model.translate(origin.x, origin.y)
+        model.rotate(angle)
+        model.scale(scale.x, scale.y)
+        model.translate(-origin.x, -origin.y)
     }
 
 
