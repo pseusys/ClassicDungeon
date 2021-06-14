@@ -22,10 +22,7 @@ internal class Color private constructor (private val lights: DoubleArray) {
 
 
     inline var int: Int
-        get () = ((r * 255).toInt() and 0xFF shl 24) or
-                ((g * 255).toInt() and 0xFF shl 16) or
-                ((b * 255).toInt() and 0xFF shl 8) or
-                ((a * 255).toInt() and 0xFF)
+        get () = ((r * 255).toInt() and 0xFF shl 24) or ((g * 255).toInt() and 0xFF shl 16) or ((b * 255).toInt() and 0xFF shl 8) or ((a * 255).toInt() and 0xFF)
         set (v) {
             r = (v shr 24 and 0xFF).toDouble() / 255
             g = (v shr 16 and 0xFF).toDouble() / 255

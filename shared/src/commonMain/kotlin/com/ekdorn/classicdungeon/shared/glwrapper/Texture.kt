@@ -30,10 +30,10 @@ internal abstract class Texture {
         release()
     }
 
-    fun fill (width: Int, height: Int, pixels: Array<Color>) {
+
+    protected fun fill (width: Int, height: Int, pixels: ByteArray) {
         bind()
-        val arrays = pixels.map { it.bytes }
-        GLFunctions.image(width, height, ByteArray(pixels.size * 4) { index -> arrays[index / 4][index % 4] })
+        GLFunctions.image(width, height, pixels)
         release()
     }
 }
