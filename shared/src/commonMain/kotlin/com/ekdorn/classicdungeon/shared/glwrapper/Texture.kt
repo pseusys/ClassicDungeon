@@ -23,6 +23,7 @@ internal abstract class Texture {
         GLFunctions.filter(min, mag)
         release()
     }
+
     fun wrap (s: GLFunctions.WRAPPING_MODE, t: GLFunctions.WRAPPING_MODE) {
         bind()
         GLFunctions.wrap(s, t)
@@ -31,7 +32,8 @@ internal abstract class Texture {
 
     fun fill (width: Int, height: Int, pixels: Array<Color>) {
         bind()
-        GLFunctions.image(width, height, pixels.map { it.int }.toIntArray())
+        val arrays = pixels.map { it.bytes }
+        GLFunctions.image(width, height, ByteArray(pixels.size * 4) { index -> arrays[index / 4][index % 4] })
         release()
     }
 }

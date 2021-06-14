@@ -1,4 +1,4 @@
-QT += core gui opengl openglwidgets
+QT += core gui opengl openglwidgets widgets
 
 CONFIG += c++11
 
@@ -9,19 +9,16 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 # win64: LIBS += -lglu32 -lopengl32
 
 SOURCES += \
+    glwidget.cpp \
     main.cpp \
     classicdungeon.cpp
 
 HEADERS += \
-    classicdungeon.h
+    classicdungeon.h \
+    glwidget.h
 
 FORMS += \
     classicdungeon.ui
-
-TRANSLATIONS += \
-    ClassicDungeon_en_GB.ts
-CONFIG += lrelease
-CONFIG += embed_translations
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

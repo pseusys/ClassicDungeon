@@ -47,7 +47,7 @@ android {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "6.7.1"
+    gradleVersion = "7.0.2"
     distributionType = Wrapper.DistributionType.ALL
 }
 

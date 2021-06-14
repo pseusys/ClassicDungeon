@@ -19,5 +19,5 @@ expect object GLFunctions {
     fun filter (minification: FILTERING_MODE, magnification: FILTERING_MODE)
     fun wrap (s: WRAPPING_MODE, t: WRAPPING_MODE)
 
-    fun image (w: Int, h: Int, data: IntArray)
+    fun image (w: Int, h: Int, data: ByteArray)
 }

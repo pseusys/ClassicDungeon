@@ -21,10 +21,20 @@ internal class Color private constructor (private val lights: DoubleArray) {
         set (v) { lights[3] = v }
 
 
-    private fun offset (index: Int) = (3 - index) * 8
-
     inline var int: Int
-        get () = lights.foldIndexed(0) { index, current, value -> current or ((value * 255).toInt() and 0xFF shl offset(index)) }
-        set (v): Unit = lights.forEachIndexed { index, _ -> lights[index] = (v shr offset(index) and 0xFF).toDouble() / 255 }
+        get () = ((r * 255).toInt() and 0xFF shl 24) or
+                ((g * 255).toInt() and 0xFF shl 16) or
+                ((b * 255).toInt() and 0xFF shl 8) or
+                ((a * 255).toInt() and 0xFF)
+        set (v) {
+            r = (v shr 24 and 0xFF).toDouble() / 255
+            g = (v shr 16 and 0xFF).toDouble() / 255
+            b = (v shr 8 and 0xFF).toDouble() / 255
+            a = (v and 0xFF).toDouble() / 255
+        }
 
+
+    inline var bytes: ByteArray
+        get () = lights.map { value -> (value * 255).toInt().toByte() }.toByteArray()
+        set (v): Unit = lights.forEachIndexed { index, _ -> lights[index] = v[index].toDouble() / 255 }
 }
