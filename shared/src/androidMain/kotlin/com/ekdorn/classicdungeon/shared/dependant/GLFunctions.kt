@@ -37,6 +37,6 @@ actual object GLFunctions {
     ) {
     }
 
-    actual fun image(w: Int, h: Int, data: IntArray) {
+    actual fun image(w: Int, h: Int, data: ByteArray) {
     }
 }
