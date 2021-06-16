@@ -1,9 +1,27 @@
-# Project exclude paths
+# Gradle packages
 /.gradle/
 /gradle/
+
+# IntelliJ IDEA settings
 /.idea/
-/shared/build/
+
+# Local settings (plugins, executables, etc.)
 /local.properties
 
+
+
+# Native kotlin lib build folder
+/shared/build/
+
+
+
+# QT project build folder
 /desktop/build-*/
+
+# QT settings
 /desktop/ClassicDungeon/ClassicDungeon.pro.*
+
+
+
+# JS build folder
+/build/

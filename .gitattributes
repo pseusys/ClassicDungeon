@@ -1,3 +1,6 @@
+# A folder containing run configurations for IntelliJ IDEA
 .run/ binary
+
+# Gradle scripts (auto-generated)
 gradlew binary
 gradlew.bat binary

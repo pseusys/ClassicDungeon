@@ -21,6 +21,16 @@ kotlin {
             }
         }
     }
+    js(IR) {
+        binaries.executable()
+        browser {
+            commonWebpackConfig {
+                cssSupport.enabled = true
+                cssSupport.mode = "import"
+            }
+        }
+    }
+
 
     sourceSets {
         val commonMain by getting {

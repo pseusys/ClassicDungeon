@@ -16,10 +16,10 @@ internal object Game: Assigned {
 
 
     override fun gameStarted() {
-        TODO("Not yet implemented")
+        println("Game started!")
     }
 
     override fun gameEnded() {
-        TODO("Not yet implemented")
+        println("Game ended!")
     }
 }
