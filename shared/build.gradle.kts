@@ -23,6 +23,7 @@ kotlin {
     }
     js(IR) {
         binaries.executable()
+        moduleName = "ClassicDungeon"
         browser {
             commonWebpackConfig {
                 cssSupport.enabled = true
