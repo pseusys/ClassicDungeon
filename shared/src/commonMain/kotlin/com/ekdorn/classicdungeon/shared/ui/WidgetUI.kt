@@ -3,9 +3,10 @@ package com.ekdorn.classicdungeon.shared.ui
 import com.ekdorn.classicdungeon.shared.maths.Matrix
 import com.ekdorn.classicdungeon.shared.maths.Vector
 import com.ekdorn.classicdungeon.shared.maths.Color
+import com.ekdorn.classicdungeon.shared.maths.Rectangle
 
 
-internal open class Widget (var parent: Layout? = null) {
+internal open class WidgetUI (var parent: LayoutUI? = null) {
     private var exists: Boolean = true
     private var alive: Boolean = true
     var active: Boolean = true
@@ -19,6 +20,7 @@ internal open class Widget (var parent: Layout? = null) {
     var height = 0.0
         get() = field * scale.y
 
+    // To parent percents, actual values to matrix
     private val speed = Vector()
     private val acceleration = Vector()
     private var angle = 0.0
@@ -26,10 +28,10 @@ internal open class Widget (var parent: Layout? = null) {
 
     private val scale = Vector(1.0, 1.0)
     private val origin = Vector()
-    private val model = Matrix()
+    protected val model = Matrix()
 
-    private val ambient = Color(1.0, 1.0, 1.0, 1.0)
-    private val material = Color()
+    protected val ambient = Color(1.0, 1.0, 1.0, 1.0)
+    protected val material = Color()
 
     constructor (x: Double, y: Double, w: Double, h: Double): this() {
         coords.x = x
@@ -87,7 +89,7 @@ internal open class Widget (var parent: Layout? = null) {
     fun detach () {
         parent = null
     }
-    fun attach (root: Layout) {
+    fun attach (root: LayoutUI) {
         parent = root
     }
 
@@ -99,4 +101,8 @@ internal open class Widget (var parent: Layout? = null) {
         alive = true
         exists = true
     }
+
+
+
+    fun rect () = Rectangle(0.0, 0.0, width, height)
 }

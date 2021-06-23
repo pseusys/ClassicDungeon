@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared.ui
 
-internal class Layout: Widget() {
+internal class LayoutUI: WidgetUI() {
     override fun update(elapsed: Double) {
         TODO("Not yet implemented")
     }

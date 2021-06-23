@@ -1,25 +1,7 @@
 package com.ekdorn.classicdungeon.shared.maths
 
-internal class Color private constructor (private val lights: DoubleArray) {
-    constructor (a: Double, b: Double, c: Double, d: Double): this(doubleArrayOf(a, b, c, d))
+internal data class Color (var r: Double, var g: Double, var b: Double, var a: Double) {
     constructor (): this(0.0, 0.0, 0.0, 0.0)
-
-    inline var r: Double
-        get () = lights[0]
-        set (v) { lights[0] = v }
-
-    inline var g: Double
-        get () = lights[1]
-        set (v) { lights[1] = v }
-
-    inline var b: Double
-        get () = lights[2]
-        set (v) { lights[2] = v }
-
-    inline var a: Double
-        get () = lights[3]
-        set (v) { lights[3] = v }
-
 
     inline var int: Int
         get () = ((r * 255).toInt() and 0xFF shl 24) or ((g * 255).toInt() and 0xFF shl 16) or ((b * 255).toInt() and 0xFF shl 8) or ((a * 255).toInt() and 0xFF)
@@ -30,8 +12,12 @@ internal class Color private constructor (private val lights: DoubleArray) {
             a = (v and 0xFF).toDouble() / 255
         }
 
-
     inline var bytes: ByteArray
-        get () = lights.map { value -> (value * 255).toInt().toByte() }.toByteArray()
-        set (v): Unit = lights.forEachIndexed { index, _ -> lights[index] = v[index].toDouble() / 255 }
+        get () = byteArrayOf((r * 255).toInt().toByte(), (g * 255).toInt().toByte(), (b * 255).toInt().toByte(), (a * 255).toInt().toByte())
+        set (v) {
+            r = v[0].toDouble() / 255
+            g = v[1].toDouble() / 255
+            b = v[2].toDouble() / 255
+            a = v[3].toDouble() / 255
+        }
 }

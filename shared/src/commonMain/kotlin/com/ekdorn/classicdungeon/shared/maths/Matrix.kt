@@ -5,7 +5,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.tan
 
-internal class Matrix (private val values: DoubleArray) {
+internal data class Matrix (private val values: DoubleArray) {
     constructor (
         i11: Double, i12: Double, i13: Double,
         i21: Double, i22: Double, i23: Double,
@@ -101,4 +101,15 @@ internal class Matrix (private val values: DoubleArray) {
         values[6] += values[0] * x + values[3] * y
         values[7] += values[1] * x + values[4] * y
     }
+
+
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+        if (!values.contentEquals((other as Matrix).values)) return false
+        return true
+    }
+
+    override fun hashCode(): Int = values.contentHashCode()
 }

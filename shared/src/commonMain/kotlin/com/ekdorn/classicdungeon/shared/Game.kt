@@ -1,6 +1,7 @@
-package com.ekdorn.classicdungeon.shared.generics
+package com.ekdorn.classicdungeon.shared
 
 import com.ekdorn.classicdungeon.shared.dependant.OpenGLDispatcher
+import com.ekdorn.classicdungeon.shared.generics.Assigned
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 

@@ -40,4 +40,12 @@ actual object GLFunctions {
 
     actual fun image(w: Int, h: Int, data: ByteArray) {
     }
+
+    actual object UNIFORM {
+
+    }
+
+    actual interface O {
+
+    }
 }

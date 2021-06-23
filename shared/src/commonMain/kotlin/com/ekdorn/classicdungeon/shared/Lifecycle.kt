@@ -1,7 +1,6 @@
 package com.ekdorn.classicdungeon.shared
 
 import com.ekdorn.classicdungeon.shared.generics.Assigned
-import com.ekdorn.classicdungeon.shared.generics.Game
 import com.ekdorn.classicdungeon.shared.utils.Event
 import kotlinx.coroutines.launch
 

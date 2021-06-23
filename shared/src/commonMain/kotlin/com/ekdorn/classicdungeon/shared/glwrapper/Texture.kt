@@ -4,36 +4,42 @@ import com.ekdorn.classicdungeon.shared.dependant.GLFunctions
 import com.ekdorn.classicdungeon.shared.maths.Color
 
 internal abstract class Texture {
-    protected var id = -1
+    var id = -1
+        private set
 
     init {
-        id = GLFunctions.generate()
+        createId()
+    }
+
+
+    // Consider using TEXTURE_ARRAY_2D for items, eg
+    protected fun createId () {
+        id = GLFunctions.Texture.generate()
         bind()
         release()
     }
 
+    fun bind (): Unit = GLFunctions.Texture.bind(id)
+    //fun activate (): Unit = GLFunctions.Texture.activate(id)
+    fun release (): Unit = GLFunctions.Texture.release(id)
+    fun delete (): Unit = GLFunctions.Texture.delete(id)
 
-    fun bind (): Unit = GLFunctions.bind(id)
-    fun activate (): Unit = GLFunctions.activate(id)
-    fun release (): Unit = GLFunctions.release(id)
-    fun delete (): Unit = GLFunctions.delete(id)
-
-    fun filter (min: GLFunctions.FILTERING_MODE, mag: GLFunctions.FILTERING_MODE) {
+    open fun filter (min: GLFunctions.Texture.FILTERING_MODE, mag: GLFunctions.Texture.FILTERING_MODE) {
         bind()
-        GLFunctions.filter(min, mag)
+        GLFunctions.Texture.filter(min, mag)
         release()
     }
 
-    fun wrap (s: GLFunctions.WRAPPING_MODE, t: GLFunctions.WRAPPING_MODE) {
+    open fun wrap (s: GLFunctions.Texture.WRAPPING_MODE, t: GLFunctions.Texture.WRAPPING_MODE) {
         bind()
-        GLFunctions.wrap(s, t)
+        GLFunctions.Texture.wrap(s, t)
         release()
     }
 
 
     protected fun fill (width: Int, height: Int, pixels: ByteArray) {
         bind()
-        GLFunctions.image(width, height, pixels)
+        GLFunctions.Texture.image(width, height, pixels)
         release()
     }
 }
