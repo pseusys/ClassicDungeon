@@ -1,11 +1,13 @@
 package com.ekdorn.classicdungeon.shared.ui
 
 internal class LayoutUI: WidgetUI() {
+    val children = mutableListOf<WidgetUI>()
+
     override fun update(elapsed: Double) {
-        TODO("Not yet implemented")
+        children.forEach { if (it.exists && it.visible) it.update(elapsed) }
     }
 
     override fun draw() {
-        TODO("Not yet implemented")
+        children.forEach { if (it.exists && it.visible) it.draw() }
     }
 }

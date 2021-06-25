@@ -1,6 +1,5 @@
 package com.ekdorn.classicdungeon.shared.glwrapper
 
-@kotlin.ExperimentalUnsignedTypes
 object Mapper {
-    val INDICES = ubyteArrayOf(0u, 1u, 3u, 2u)
+    val INDICES = byteArrayOf(0, 1, 3, 2)
 }

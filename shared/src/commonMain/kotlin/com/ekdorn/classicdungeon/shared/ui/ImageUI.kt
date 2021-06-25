@@ -4,10 +4,16 @@ import com.ekdorn.classicdungeon.shared.generics.Clonable
 import com.ekdorn.classicdungeon.shared.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.glwrapper.ImageTexture
 import com.ekdorn.classicdungeon.shared.glwrapper.Script
+import com.ekdorn.classicdungeon.shared.maths.Matrix
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 
 
+// TODO: move GL + buffer from widget to other class
 internal class ImageUI private constructor (): WidgetUI(0.0, 0.0, 0.0, 0.0), Clonable<ImageUI> {
+    init {
+        Script.createBuffer(this, 2 * 4 * Double.SIZE_BYTES)
+    }
+
     constructor(resource: String): this() {
         texture(resource)
     }
@@ -62,21 +68,28 @@ internal class ImageUI private constructor (): WidgetUI(0.0, 0.0, 0.0, 0.0), Clo
         else Pair(coverPercent.top, coverPercent.bottom)
 
         textureVertices = Rectangle(x.first, y.first, x.second, y.second)
+        println(rect().toPointsArray())
+        println(textureVertices.toPointsArray())
+        Script.updateBuffer(this, 2, rect().toPointsArray(), textureVertices.toPointsArray())
     }
 
-    @kotlin.ExperimentalUnsignedTypes
     override fun draw() {
         super.draw()
 
         texture.bind()
 
         // Camera
+        Script.setCamera(Matrix())
 
         Script.setTexture(texture)
         Script.setModel(model)
         Script.setMaterial(material)
         Script.setAmbient(ambient)
 
-        Script.drawSingle(rect(), textureVertices)
+        Script.drawSingle(this)
+    }
+
+    override fun delete() {
+        Script.deleteBuffer(this)
     }
 }

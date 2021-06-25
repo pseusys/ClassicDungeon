@@ -7,12 +7,12 @@ import com.ekdorn.classicdungeon.shared.maths.Rectangle
 
 
 internal open class WidgetUI (var parent: LayoutUI? = null) {
-    private var exists: Boolean = true
+    var exists: Boolean = true
     private var alive: Boolean = true
     var active: Boolean = true
-        get() = field && (parent?.active == true)
+        get() = field && if (parent != null) (parent!!.active) else true
     var visible: Boolean = true
-        get() = field && (parent?.visible == true)
+        get() = field && if (parent != null) (parent!!.visible) else true
 
     val coords = Vector()
     var width = 0.0
@@ -101,6 +101,8 @@ internal open class WidgetUI (var parent: LayoutUI? = null) {
         alive = true
         exists = true
     }
+
+    open fun delete () {}
 
 
 

@@ -5,11 +5,12 @@ import com.ekdorn.classicdungeon.shared.generics.Assigned
 import com.ekdorn.classicdungeon.shared.maths.Color
 import com.ekdorn.classicdungeon.shared.maths.Matrix
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
+import com.ekdorn.classicdungeon.shared.ui.WidgetUI
 
 internal object Script: Assigned {
     private const val VERTEX_SHADER =
         """
-            #version 110
+            #version 100
             
             uniform mat4 camera;
             uniform mat4 model;
@@ -17,10 +18,10 @@ internal object Script: Assigned {
             attribute vec2 position;
             attribute vec2 coordinates;
             
-            varying fragment;
+            varying vec2 fragment;
             
             void main () {
-                gl_Position = camera * model * vec4(position, 0.0, 0.0);
+                gl_Position = camera * model * vec4(position, 0.0, 1.0);
                 fragment = coordinates;
             }
         """
@@ -28,23 +29,27 @@ internal object Script: Assigned {
     // TODO: revise colors
     private const val FRAGMENT_SHADER =
         """
-            #version 110
+            #version 100
+            
+            precision mediump float;
             
             uniform vec4 ambient;
             uniform vec4 material;
             uniform sampler2D texture;
             
-            varying fragment;
+            varying vec2 fragment;
             
             void main () {
-                gl_FragColor = texture2D(texture, fragment) * material + ambient;
+                gl_FragColor = texture2D(texture, fragment);// * material + ambient;
             }
         """
 
 
-    private val program: Int
-    private val vertexShader: Int
-    private val fragmentShader: Int
+    private val program = GLFunctions.Program.create()
+    private val vertexShader = GLFunctions.Shader.create(GLFunctions.Shader.TYPE.VERTEX)
+    private val fragmentShader = GLFunctions.Shader.create(GLFunctions.Shader.TYPE.FRAGMENT)
+
+    private val buffers = mutableMapOf<Int, GLFunctions.Buffer>()
 
     private val position: Int
     private val coordinates: Int
@@ -56,25 +61,21 @@ internal object Script: Assigned {
     private val texture: Int
 
     init {
-        program = GLFunctions.Program.create()
-
-        vertexShader = GLFunctions.Shader.create(GLFunctions.Shader.TYPE.VERTEX)
         prepareShader(vertexShader, VERTEX_SHADER)
-        fragmentShader = GLFunctions.Shader.create(GLFunctions.Shader.TYPE.FRAGMENT)
         prepareShader(fragmentShader, FRAGMENT_SHADER)
 
         GLFunctions.Program.link(program)?.apply { throw Exception("Program link error: $this") }
         GLFunctions.Shader.delete(vertexShader)
         GLFunctions.Shader.delete(fragmentShader)
 
-        position = GLFunctions.Value.getAttribute("position")
-        coordinates = GLFunctions.Value.getAttribute("coordinates")
+        position = GLFunctions.Value.getAttribute(program, "position")
+        coordinates = GLFunctions.Value.getAttribute(program, "coordinates")
 
-        camera = GLFunctions.Value.getUniform("camera")
-        model = GLFunctions.Value.getUniform("model")
-        ambient = GLFunctions.Value.getUniform("ambient")
-        material = GLFunctions.Value.getUniform("material")
-        texture = GLFunctions.Value.getUniform("texture")
+        camera = GLFunctions.Value.getUniform(program, "camera")
+        model = GLFunctions.Value.getUniform(program, "model")
+        ambient = GLFunctions.Value.getUniform(program, "ambient")
+        material = GLFunctions.Value.getUniform(program, "material")
+        texture = GLFunctions.Value.getUniform(program, "texture")
 
         GLFunctions.Program.use(program)
         GLFunctions.Value.enable(position)
@@ -83,45 +84,71 @@ internal object Script: Assigned {
 
     private fun prepareShader (shader: Int, code: String) {
         GLFunctions.Shader.source(shader, code)
-        GLFunctions.Shader.compile(shader)?.apply { throw Exception("Shader compile error: $this") }
+        GLFunctions.Shader.compile(shader)?.apply {
+            throw Exception("${if (shader == vertexShader) "VERTEX" else "FRAGMENT"} shader compile error: $this")
+        }
         GLFunctions.Program.attach(program, shader)
     }
 
 
-    inline fun setCamera (matrix: Matrix) {
+    fun setCamera (matrix: Matrix) {
         GLFunctions.Value.value4m(camera, matrix.to4x4())
     }
 
-    inline fun setModel (matrix: Matrix) {
+    fun setModel (matrix: Matrix) {
         GLFunctions.Value.value4m(model, matrix.to4x4())
     }
 
-    inline fun setAmbient (color: Color) {
+    fun setAmbient (color: Color) {
         GLFunctions.Value.value4f(ambient, color.r, color.g, color.b, color.a)
     }
 
-    inline fun setMaterial (color: Color) {
+    fun setMaterial (color: Color) {
         GLFunctions.Value.value4f(material, color.r, color.g, color.b, color.a)
     }
 
-    inline fun setTexture (sampler: Texture) {
+    fun setTexture (sampler: Texture) {
         GLFunctions.Value.value1i(texture, sampler.id)
     }
 
 
-    @kotlin.ExperimentalUnsignedTypes
-    fun drawSingle (image: Rectangle, texture: Rectangle) {
-        GLFunctions.Value.vertexArray(position,2, image.toPointsArray())
-        GLFunctions.Value.vertexArray(coordinates,2, texture.toPointsArray())
+    fun createBuffer (widget: WidgetUI, size: Int) {
+        buffers[widget.hashCode()] = GLFunctions.Buffer(size)
+    }
+
+    fun updateBuffer (widget: WidgetUI, fromEach: Int, vararg dataSeq: DoubleArray) {
+        if (!buffers.containsKey(widget.hashCode())) throw Exception("No buffer found for the widget $widget")
+        val size = dataSeq.size * dataSeq[0].size
+        buffers[widget.hashCode()]!!.let { buffer ->
+            if (size > buffer.size) throw Exception("Buffer for the widget $widget is shorter than expected!")
+            buffer.bind()
+            println(DoubleArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
+            buffer.fill(DoubleArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
+        }
+    }
+
+    fun deleteBuffer (widget: WidgetUI) {
+        if (!buffers.containsKey(widget.hashCode())) throw Exception("No buffer found for the widget $widget")
+        buffers[widget.hashCode()]?.delete()
+    }
+
+
+    fun drawSingle (widget: WidgetUI) {
+        if (!buffers.containsKey(widget.hashCode())) throw Exception("No buffer found for the widget $widget")
+        buffers[widget.hashCode()]!!.bind()
+        GLFunctions.Value.vertexArray(position, 2, 0, 4)
+        GLFunctions.Value.vertexArray(coordinates, 2, 2, 4)
+        println("drawing ${Mapper.INDICES.size}: ${Mapper.INDICES}")
         GLFunctions.drawElements(Mapper.INDICES.size, Mapper.INDICES)
     }
 
 
-    override fun gameStarted () {}
+    override suspend fun gameStarted () {}
 
-    override fun gameEnded() {
+    override suspend fun gameEnded() {
+        buffers.forEach { it.value.delete() }
         GLFunctions.Value.disable(position)
         GLFunctions.Value.disable(coordinates)
-        GLFunctions.Program.unuse(program)
+        GLFunctions.Program.delete(program)
     }
 }

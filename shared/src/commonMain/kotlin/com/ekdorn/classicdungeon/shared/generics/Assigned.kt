@@ -4,10 +4,10 @@ import com.ekdorn.classicdungeon.shared.Game
 import com.ekdorn.classicdungeon.shared.glwrapper.Script
 
 internal interface Assigned {
-    fun gameStarted ()
-    fun gameEnded ()
+    suspend fun gameStarted ()
+    suspend fun gameEnded ()
 
     companion object AllSet {
-        val assigned = listOf(Game, Script)
+        val assigned = listOf(Script, TextureCache, Game)
     }
 }

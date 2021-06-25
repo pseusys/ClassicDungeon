@@ -5,7 +5,7 @@ import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.utils.Image
 
 internal class ImageTexture private constructor (private var image: Image, filtering: GLFunctions.Texture.FILTERING_MODE, wrapping: GLFunctions.Texture.WRAPPING_MODE): Texture() {
-    constructor (image: Image): this(image, GLFunctions.Texture.FILTERING_MODE.LINEAR, GLFunctions.Texture.WRAPPING_MODE.NEAREST)
+    constructor (image: Image): this(image, GLFunctions.Texture.FILTERING_MODE.NEAREST, GLFunctions.Texture.WRAPPING_MODE.CLAMP)
 
     private var filteringMin: GLFunctions.Texture.FILTERING_MODE
     private var filteringMag: GLFunctions.Texture.FILTERING_MODE
@@ -22,8 +22,8 @@ internal class ImageTexture private constructor (private var image: Image, filte
     }
 
 
-    inline fun width (): Int = image.width
-    inline fun height (): Int = image.height
+    fun width (): Int = image.width
+    fun height (): Int = image.height
 
 
     override fun filter (min: GLFunctions.Texture.FILTERING_MODE, mag: GLFunctions.Texture.FILTERING_MODE) {

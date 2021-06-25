@@ -1,6 +1,10 @@
 import com.ekdorn.classicdungeon.shared.Lifecycle
+import com.ekdorn.classicdungeon.shared.dependant.GLFunctions
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 
 
@@ -8,13 +12,20 @@ const val interval = 16
 
 
 val surface = document.getElementById("surface") as HTMLCanvasElement
+lateinit var context: WebGLRenderingContext
+
+// to requestframe
 var timerEnabled = false
 
 fun main () {
     window.onload = {
-        Lifecycle.start()
-        resume()
-        println("onstart")
+        GlobalScope.launch {
+            context = surface.getContext("webgl") as WebGLRenderingContext
+            context.viewport(0, 0, surface.width, surface.height)
+            Lifecycle.start()
+            resume()
+            println("onstart")
+        }
     }
 
     window.onfocus = {
@@ -26,9 +37,11 @@ fun main () {
     }
 
     window.onunload = {
-        pause()
-        Lifecycle.end()
-        println("onend")
+        GlobalScope.launch {
+            pause()
+            Lifecycle.end()
+            println("onend")
+        }
     }
 }
 
@@ -42,7 +55,7 @@ fun resume () {
 fun update () {
     Lifecycle.update()
     println("onupdate")
-    if (timerEnabled) window.setTimeout({ update() }, interval)
+    //if (timerEnabled) window.setTimeout({ update() }, interval)
 }
 
 fun pause () {

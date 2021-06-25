@@ -21,13 +21,13 @@ kotlin {
             }
         }
     }
-    js(IR) {
+    js(LEGACY) {
         binaries.executable()
-        moduleName = "ClassicDungeon"
+        //moduleName = "ClassicDungeon"
         browser {
             commonWebpackConfig {
                 cssSupport.enabled = true
-                cssSupport.mode = "import"
+                //cssSupport.mode = "import"
             }
         }
     }
@@ -36,13 +36,19 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+            }
+        }
+
+        val jsMain by getting {
+            dependencies {
+                implementation(npm("read-pixels", "0.2.1"))
             }
         }
     }
