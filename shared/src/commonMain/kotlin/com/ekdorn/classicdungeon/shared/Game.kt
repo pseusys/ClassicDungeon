@@ -27,7 +27,7 @@ internal object Game: Assigned {
 
     override suspend fun gameStarted() {
         println("Game started!")
-        root.children.add(ImageUI("sample"))
+        root.children.add(ImageUI("sample"/*, Rectangle(0.0, 0.0, 100.0, 200.0)*/))
     }
 
     override suspend fun gameEnded() {

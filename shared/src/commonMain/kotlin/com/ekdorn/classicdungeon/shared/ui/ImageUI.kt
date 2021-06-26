@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared.ui
 
+import com.ekdorn.classicdungeon.shared.dependant.GLFunctions
 import com.ekdorn.classicdungeon.shared.generics.Clonable
 import com.ekdorn.classicdungeon.shared.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.glwrapper.ImageTexture
@@ -54,8 +55,8 @@ internal class ImageUI private constructor (): WidgetUI(0.0, 0.0, 0.0, 0.0), Clo
 
     fun frame (rect: Rectangle) {
         coverPercent = rect
-        width = rect.width() * texture.width()
-        height = rect.height() * texture.height()
+        width = rect.width() * texture.width() / 1000
+        height = rect.height() * texture.height() / 1000
         updateVertices()
     }
 
