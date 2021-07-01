@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared.ui
 
-import com.ekdorn.classicdungeon.shared.generics.Clonable
+import com.ekdorn.classicdungeon.shared.generics.Cloneable
 import com.ekdorn.classicdungeon.shared.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.glwrapper.ImageTexture
 import com.ekdorn.classicdungeon.shared.glwrapper.Script
@@ -9,9 +9,9 @@ import com.ekdorn.classicdungeon.shared.maths.Rectangle
 
 
 // TODO: move GL + buffer from widget to other class
-internal class ImageUI private constructor (rect: Rectangle): WidgetUI(rect), Clonable<ImageUI> {
+internal class ImageUI private constructor (rect: Rectangle): WidgetUI(rect), Cloneable<ImageUI> {
     init {
-        Script.createBuffer(this, 2 * 4 * Double.SIZE_BYTES)
+        Script.createBuffer(this, 2 * 4 * Float.SIZE_BYTES)
     }
 
     constructor (resource: String, rect: Rectangle, frame: Rectangle): this(rect) {
@@ -20,7 +20,7 @@ internal class ImageUI private constructor (rect: Rectangle): WidgetUI(rect), Cl
         updateVertices()
     }
 
-    constructor(resource: String, rect: Rectangle): this(resource, rect, Rectangle(0.0, 1.0, 1.0, 0.0))
+    constructor (resource: String, rect: Rectangle): this(resource, rect, Rectangle(0F, 1F, 1F, 0F))
 
     private lateinit var texture: ImageTexture
     private lateinit var frame: Rectangle
@@ -38,7 +38,7 @@ internal class ImageUI private constructor (rect: Rectangle): WidgetUI(rect), Cl
         }
 
 
-    override fun clone(): ImageUI {
+    override fun clone (): ImageUI {
         val clone = ImageUI(rect())
         clone.texture = texture
         clone.frame = frame
@@ -71,7 +71,7 @@ internal class ImageUI private constructor (rect: Rectangle): WidgetUI(rect), Cl
         Script.updateBuffer(this, 2, rect().toPointsArray(), textureVertices.toPointsArray())
     }
 
-    override fun draw() {
+    override fun draw () {
         super.draw()
 
         texture.bind()
@@ -84,9 +84,11 @@ internal class ImageUI private constructor (rect: Rectangle): WidgetUI(rect), Cl
         Script.setAmbient(ambient)
 
         Script.drawSingle(this)
+
+        texture.release()
     }
 
-    override fun delete() {
+    override fun delete () {
         Script.deleteBuffer(this)
     }
 }

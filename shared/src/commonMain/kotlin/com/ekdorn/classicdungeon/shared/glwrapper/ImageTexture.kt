@@ -1,18 +1,19 @@
 package com.ekdorn.classicdungeon.shared.glwrapper
 
-import com.ekdorn.classicdungeon.shared.dependant.GLFunctions
+import com.ekdorn.classicdungeon.shared.dependant.gl.GLTexture
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.utils.Image
 
-internal class ImageTexture private constructor (private var image: Image, filtering: GLFunctions.Texture.FILTERING_MODE, wrapping: GLFunctions.Texture.WRAPPING_MODE): Texture() {
-    constructor (image: Image): this(image, GLFunctions.Texture.FILTERING_MODE.NEAREST, GLFunctions.Texture.WRAPPING_MODE.CLAMP)
+internal class ImageTexture private constructor (private var image: Image, filtering: FILTERING, wrapping: WRAPPING): GLTexture() {
+    constructor (image: Image): this(image, FILTERING.NEAREST, WRAPPING.CLAMP)
 
-    private var filteringMin: GLFunctions.Texture.FILTERING_MODE
-    private var filteringMag: GLFunctions.Texture.FILTERING_MODE
-    private var wrappingS: GLFunctions.Texture.WRAPPING_MODE
-    private var wrappingT: GLFunctions.Texture.WRAPPING_MODE
+    private var filteringMin: FILTERING
+    private var filteringMag: FILTERING
+    private var wrappingS: WRAPPING
+    private var wrappingT: WRAPPING
+
     init {
-        fill(image)
+        image(image)
         filteringMin = filtering
         filteringMag = filtering
         filter(filteringMin, filteringMag)
@@ -22,32 +23,33 @@ internal class ImageTexture private constructor (private var image: Image, filte
     }
 
 
-    fun width (): Int = image.width
-    fun height (): Int = image.height
+
+    fun width () = image.width
+    fun height () = image.height
 
 
-    override fun filter (min: GLFunctions.Texture.FILTERING_MODE, mag: GLFunctions.Texture.FILTERING_MODE) {
-        filteringMin = min
-        filteringMag = mag
-        super.filter(min, mag)
+    override fun filter (minification: FILTERING, magnification: FILTERING) {
+        filteringMin = minification
+        filteringMag = magnification
+        super.filter(minification, magnification)
     }
 
-    override fun wrap (s: GLFunctions.Texture.WRAPPING_MODE, t: GLFunctions.Texture.WRAPPING_MODE) {
+    override fun wrap (s: WRAPPING, t: WRAPPING) {
         wrappingS = s
         wrappingT = t
         super.wrap(s, t)
     }
 
-    fun fill (image: Image): Unit = fill(image.width, image.height, image.pixels)
+    fun image (image: Image) = image(image.width, image.height, image.pixels)
 
     fun reload () {
         delete()
-        createId()
+        generate()
         filter(filteringMin, filteringMag)
         wrap(wrappingS, wrappingT)
     }
 
 
-    fun framePercent (left: Double, top: Double, right: Double, bottom: Double): Rectangle =
+    fun framePercent (left: Float, top: Float, right: Float, bottom: Float) =
         Rectangle(left / image.width, top / image.height, right / image.width, bottom / image.height)
 }

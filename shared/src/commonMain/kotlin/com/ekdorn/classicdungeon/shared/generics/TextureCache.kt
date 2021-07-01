@@ -7,7 +7,7 @@ import com.ekdorn.classicdungeon.shared.utils.Image
 internal object TextureCache: Assigned {
     private val resources = mutableMapOf<String, Image>()
 
-    fun get (resource: String): ImageTexture = ImageTexture(resources[resource]!!)
+    fun get (resource: String) = ImageTexture(resources[resource]!!)
 
     override suspend fun gameStarted () {
         resources["sample"] = ResourceLoader.loadImage("sample.png")

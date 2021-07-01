@@ -12,7 +12,7 @@ object Lifecycle {
     /**
      * Initializing features (in MAIN thread), needed for application to start (e.g. display metrics, GL surface, UI textures, etc.)
      */
-    suspend fun start (): Unit = Assigned.assigned.forEach { it.gameStarted() }
+    suspend fun start () = Assigned.assigned.forEach { it.gameStarted() }
 
     /**
      * Resuming game process async (e.g. sound, time measuring, etc.)
@@ -40,5 +40,5 @@ object Lifecycle {
     /**
      * Ceasing game functionality (without ability to resume, in MAIN thread) (e.g. freeing resources, auto-saving, closing server connection, etc.)
      */
-    suspend fun end (): Unit = Assigned.assigned.forEach { it.gameEnded() }
+    suspend fun end () = Assigned.assigned.forEach { it.gameEnded() }
 }

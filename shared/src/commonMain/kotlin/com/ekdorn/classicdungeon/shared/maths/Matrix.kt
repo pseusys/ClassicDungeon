@@ -5,31 +5,31 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.tan
 
-internal data class Matrix (private val values: DoubleArray) {
+internal data class Matrix (private val values: FloatArray) {
     constructor (
-        i11: Double, i12: Double, i13: Double,
-        i21: Double, i22: Double, i23: Double,
-        i31: Double, i32: Double, i33: Double
-    ): this(doubleArrayOf(i11, i12, i13, i21, i22, i23, i31, i32, i33))
+        i11: Float, i12: Float, i13: Float,
+        i21: Float, i22: Float, i23: Float,
+        i31: Float, i32: Float, i33: Float
+    ): this(floatArrayOf(i11, i12, i13, i21, i22, i23, i31, i32, i33))
 
     constructor (): this(
-        1.0, 0.0, 0.0,
-        0.0, 1.0, 0.0,
-        0.0, 0.0, 1.0
+        1F, 0F, 0F,
+        0F, 1F, 0F,
+        0F, 0F, 1F
     )
 
-    fun to4x4 (): DoubleArray = doubleArrayOf(
-        values[0], values[1], values[2], 0.0,
-        values[3], values[4], values[5], 0.0,
-        values[6], values[7], values[8], 0.0,
-        0.0, 0.0, 0.0, 1.0
+    fun to4x4 () = floatArrayOf(
+        values[0], values[1], values[2], 0F,
+        values[3], values[4], values[5], 0F,
+        values[6], values[7], values[8], 0F,
+        0F, 0F, 0F, 1F
     )
 
 
-    private fun toRadians (deg: Double): Double = deg * PI / 180
+    private fun toRadians (deg: Float) = (deg * PI / 180).toFloat()
 
 
-    fun toIdentity (): Unit = values.forEachIndexed { index, _ -> values[index] = if (index % 4 == 0) 1.0 else 0.0 }
+    fun toIdentity () = values.forEachIndexed { index, _ -> values[index] = if (index % 4 == 0) 1F else 0F }
 
     /**
      * ┌                  ┐   ┌       ┐   ┌                                                          ┐
@@ -38,8 +38,8 @@ internal data class Matrix (private val values: DoubleArray) {
      * │ 0       0      1 │   │ g h i │   │ g                  h                  i                  │
      * └                  ┘   └       ┘   └                                                          ┘
      */
-    fun rotate (degrees: Double) {
-        if (degrees == 0.0) return
+    fun rotate (degrees: Float) {
+        if (degrees == 0F) return
         val radians = toRadians(degrees)
         val sin = sin(radians)
         val cos = cos(radians)
@@ -57,8 +57,8 @@ internal data class Matrix (private val values: DoubleArray) {
      * │ 0      0 1 │   │ g h i │   │ g          h          i          │
      * └            ┘   └       ┘   └                                  ┘
      */
-    fun sheerX (degrees: Double) {
-        if (degrees == 0.0) return
+    fun sheerX (degrees: Float) {
+        if (degrees == 0F) return
         val tan = tan(toRadians(degrees))
         for (i in 0 .. 3) values[i + 3] += values[i] * tan
     }
@@ -70,8 +70,8 @@ internal data class Matrix (private val values: DoubleArray) {
      * │ 0 0      1 │   │ g h i │   │ g          h          i          │
      * └            ┘   └       ┘   └                                  ┘
      */
-    fun sheerY (degrees: Double) {
-        if (degrees == 0.0) return
+    fun sheerY (degrees: Float) {
+        if (degrees == 0F) return
         val tan = tan(toRadians(degrees))
         for (i in 0 .. 3) values[i] += values[i + 3] * tan
     }
@@ -83,7 +83,7 @@ internal data class Matrix (private val values: DoubleArray) {
      * │ 0 0 1 │   │ g h i │   │ g   h   i   │
      * └       ┘   └       ┘   └             ┘
      */
-    fun scale (x: Double, y: Double) {
+    fun scale (x: Float, y: Float) {
         for (i in 0 .. 3) {
             values[i] *= x
             values[i + 3] *= y
@@ -97,7 +97,7 @@ internal data class Matrix (private val values: DoubleArray) {
      * │ x y 1 │   │ g h i │   │ a*x+d*y+g b*x+e*y+h i │
      * └       ┘   └       ┘   └                       ┘
      */
-    fun translate (x: Double, y: Double) {
+    fun translate (x: Float, y: Float) {
         values[6] += values[0] * x + values[3] * y
         values[7] += values[1] * x + values[4] * y
     }
@@ -111,5 +111,5 @@ internal data class Matrix (private val values: DoubleArray) {
         return true
     }
 
-    override fun hashCode(): Int = values.contentHashCode()
+    override fun hashCode() = values.contentHashCode()
 }

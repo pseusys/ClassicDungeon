@@ -15,25 +15,25 @@ internal open class WidgetUI (var parent: LayoutUI? = null) {
         get() = field && if (parent != null) (parent!!.visible) else true
 
     val coords = Vector()
-    var width = 0.0
+    var width = 0F
         get() = field * scale.x
-    var height = 0.0
+    var height = 0F
         get() = field * scale.y
 
     // To parent percents, actual values to matrix
     private val speed = Vector()
     private val acceleration = Vector()
-    private var angle = 0.0
-    private val angleSpeed = 0.0
+    private var angle = 0F
+    private val angleSpeed = 0F
 
-    private val scale = Vector(1.0, 1.0)
+    private val scale = Vector(1F, 1F)
     private val origin = Vector()
     protected val model = Matrix()
 
-    protected val ambient = Color(1.0, 1.0, 1.0, 1.0)
+    protected val ambient = Color(1F, 1F, 1F, 1F)
     protected val material = Color()
 
-    constructor (x: Double, y: Double, w: Double, h: Double): this() {
+    constructor (x: Float, y: Float, w: Float, h: Float): this() {
         coords.x = x
         coords.y = y
         width = w
@@ -51,17 +51,17 @@ internal open class WidgetUI (var parent: LayoutUI? = null) {
             coords.y = v.y - height / 2
         }
 
-    inline var alpha: Double
+    inline var alpha: Float
         get () = material.a + ambient.a
         set (v) {
             material.a = v
-            ambient.a = 0.0
+            ambient.a = 0F
         }
 
 
-    private fun speed (speed: Double, acceleration: Double, time: Double): Double = speed + acceleration * time
+    private fun speed (speed: Float, acceleration: Float, time: Float) = speed + acceleration * time
 
-    open fun update (elapsed: Double) {
+    open fun update (elapsed: Float) {
         val halfDeltaX = (speed(speed.x, acceleration.x, elapsed) - speed.x) / 2
         speed.x += halfDeltaX
         coords.x += speed.x * elapsed
@@ -75,7 +75,7 @@ internal open class WidgetUI (var parent: LayoutUI? = null) {
         angle += angleSpeed * elapsed
     }
 
-    open fun draw (): Unit = updateModel()
+    open fun draw () = updateModel()
 
     private fun updateModel() {
         model.toIdentity()

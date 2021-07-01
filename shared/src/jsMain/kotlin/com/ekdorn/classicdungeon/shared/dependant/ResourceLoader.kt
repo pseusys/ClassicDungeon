@@ -6,7 +6,6 @@ import getPixels
 actual object ResourceLoader {
     actual suspend fun loadImage(name: String): Image {
         val png = getPixels("./sample.png")
-        //console.log(png)
         return Image(png.width, png.height, png.pixels)
     }
 }

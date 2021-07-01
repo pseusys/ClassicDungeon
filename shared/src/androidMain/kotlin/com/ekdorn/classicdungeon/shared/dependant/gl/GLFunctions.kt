@@ -1,7 +1,6 @@
-package com.ekdorn.classicdungeon.shared.dependant
+package com.ekdorn.classicdungeon.shared.dependant.gl
 
 actual object GLFunctions {
-    //actual val GL: OpenGLDispatcher = OpenGLDispatcher()
     actual enum class FILTERING_MODE {
         NEAREST, LINEAR
     }

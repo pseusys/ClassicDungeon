@@ -1,5 +1,4 @@
 import com.ekdorn.classicdungeon.shared.Lifecycle
-import com.ekdorn.classicdungeon.shared.dependant.GLFunctions
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope

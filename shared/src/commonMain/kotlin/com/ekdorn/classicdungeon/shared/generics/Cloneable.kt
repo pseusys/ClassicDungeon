@@ -1,5 +1,5 @@
 package com.ekdorn.classicdungeon.shared.generics
 
-interface Clonable <This> {
+interface Cloneable <This> {
     fun clone (): This
 }

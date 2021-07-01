@@ -1,7 +1,7 @@
 package com.ekdorn.classicdungeon.shared
 
 import com.ekdorn.classicdungeon.shared.generics.Assigned
-import com.ekdorn.classicdungeon.shared.dependant.GLFunctions
+import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.ui.ImageUI
 import com.ekdorn.classicdungeon.shared.ui.LayoutUI
@@ -11,17 +11,17 @@ import kotlin.native.concurrent.ThreadLocal
 
 @ThreadLocal
 internal object Game: Assigned {
-    private var elapsed = 0.0
+    private var elapsed = 0F
     val scope = CoroutineScope(Dispatchers.Default)
 
     val root = LayoutUI()
 
     fun resume () {}
     fun update () {
-        val current = 0.0 //Clock.System.now().toEpochMilliseconds()
+        val current = 0F //Clock.System.now().toEpochMilliseconds()
         root.update(current - elapsed)
         root.draw()
-        elapsed = current.toDouble()
+        elapsed = current
     }
     fun pause () {}
 
@@ -29,7 +29,7 @@ internal object Game: Assigned {
     override suspend fun gameStarted() {
         println("Game started!")
         GLFunctions.setup()
-        root.children.add(ImageUI("sample", Rectangle(-1.0, 1.0, 1.0, -1.0)))
+        root.children.add(ImageUI("sample", Rectangle(-1F, 1F, 1F, -1F)))
     }
 
     override suspend fun gameEnded() {

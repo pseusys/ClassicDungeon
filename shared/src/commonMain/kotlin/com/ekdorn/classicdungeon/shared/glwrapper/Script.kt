@@ -1,10 +1,9 @@
 package com.ekdorn.classicdungeon.shared.glwrapper
 
-import com.ekdorn.classicdungeon.shared.dependant.GLFunctions
+import com.ekdorn.classicdungeon.shared.dependant.gl.*
 import com.ekdorn.classicdungeon.shared.generics.Assigned
 import com.ekdorn.classicdungeon.shared.maths.Color
 import com.ekdorn.classicdungeon.shared.maths.Matrix
-import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.ui.WidgetUI
 
 internal object Script: Assigned {
@@ -45,85 +44,73 @@ internal object Script: Assigned {
         """
 
 
-    private val program = GLFunctions.Program.create()
-    private val vertexShader = GLFunctions.Shader.create(GLFunctions.Shader.TYPE.VERTEX)
-    private val fragmentShader = GLFunctions.Shader.create(GLFunctions.Shader.TYPE.FRAGMENT)
+    private val program = GLProgram()
+    private val vertexShader = GLShader(GLShader.TYPE.VERTEX)
+    private val fragmentShader = GLShader(GLShader.TYPE.FRAGMENT)
 
-    private val buffers = mutableMapOf<Int, GLFunctions.Buffer>()
+    private val buffers = mutableMapOf<Int, GLBuffer>()
 
-    private val position: Int
-    private val coordinates: Int
+    private val position: GLAttribute
+    private val coordinates: GLAttribute
 
-    private val camera: Int
-    private val model: Int
-    private val ambient: Int
-    private val material: Int
-    private val texture: Int
+    private val camera: GLUniform
+    private val model: GLUniform
+    private val ambient: GLUniform
+    private val material: GLUniform
+    private val texture: GLUniform
 
     init {
         prepareShader(vertexShader, VERTEX_SHADER)
         prepareShader(fragmentShader, FRAGMENT_SHADER)
 
-        GLFunctions.Program.link(program)?.apply { throw Exception("Program link error: $this") }
-        GLFunctions.Shader.delete(vertexShader)
-        GLFunctions.Shader.delete(fragmentShader)
+        program.link()?.apply { throw Exception("Program link error: $this") }
+        vertexShader.delete()
+        fragmentShader.delete()
 
-        position = GLFunctions.Value.getAttribute(program, "position")
-        coordinates = GLFunctions.Value.getAttribute(program, "coordinates")
+        position = GLAttribute(program, "position")
+        coordinates = GLAttribute(program, "coordinates")
 
-        camera = GLFunctions.Value.getUniform(program, "camera")
-        model = GLFunctions.Value.getUniform(program, "model")
-        ambient = GLFunctions.Value.getUniform(program, "ambient")
-        material = GLFunctions.Value.getUniform(program, "material")
-        texture = GLFunctions.Value.getUniform(program, "texture")
+        camera = GLUniform(program, "camera")
+        model = GLUniform(program, "model")
+        ambient = GLUniform(program, "ambient")
+        material = GLUniform(program, "material")
+        texture = GLUniform(program, "texture")
 
-        GLFunctions.Program.use(program)
-        GLFunctions.Value.enable(position)
-        GLFunctions.Value.enable(coordinates)
+        program.use()
+        position.enable()
+        coordinates.enable()
     }
 
-    private fun prepareShader (shader: Int, code: String) {
-        GLFunctions.Shader.source(shader, code)
-        GLFunctions.Shader.compile(shader)?.apply {
+    private fun prepareShader (shader: GLShader, code: String) {
+        shader.prepare(code)?.apply {
             throw Exception("${if (shader == vertexShader) "VERTEX" else "FRAGMENT"} shader compile error: $this")
         }
-        GLFunctions.Program.attach(program, shader)
+        program.attach(shader)
     }
 
 
-    fun setCamera (matrix: Matrix) {
-        GLFunctions.Value.value4m(camera, matrix.to4x4())
-    }
+    fun setCamera (matrix: Matrix) = camera.value4m(matrix.to4x4())
 
-    fun setModel (matrix: Matrix) {
-        GLFunctions.Value.value4m(model, matrix.to4x4())
-    }
+    fun setModel (matrix: Matrix) = model.value4m(matrix.to4x4())
 
-    fun setAmbient (color: Color) {
-        GLFunctions.Value.value4f(ambient, color.r, color.g, color.b, color.a)
-    }
+    fun setAmbient (color: Color) = ambient.value4f(color.r, color.g, color.b, color.a)
 
-    fun setMaterial (color: Color) {
-        GLFunctions.Value.value4f(material, color.r, color.g, color.b, color.a)
-    }
+    fun setMaterial (color: Color) = material.value4f(color.r, color.g, color.b, color.a)
 
-    fun setTexture (sampler: Texture) {
-        GLFunctions.Value.value1i(texture, sampler.id)
-    }
+    fun setTexture (sampler: GLTexture) = texture.value1i(sampler.id)
 
 
     fun createBuffer (widget: WidgetUI, size: Int) {
-        buffers[widget.hashCode()] = GLFunctions.Buffer(size)
+        buffers[widget.hashCode()] = GLBuffer(size)
     }
 
-    fun updateBuffer (widget: WidgetUI, fromEach: Int, vararg dataSeq: DoubleArray) {
+    fun updateBuffer (widget: WidgetUI, fromEach: Int, vararg dataSeq: FloatArray) {
         if (!buffers.containsKey(widget.hashCode())) throw Exception("No buffer found for the widget $widget")
         val size = dataSeq.size * dataSeq[0].size
         buffers[widget.hashCode()]!!.let { buffer ->
             if (size > buffer.size) throw Exception("Buffer for the widget $widget is shorter than expected!")
-            buffer.bind()
-            println(DoubleArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
-            buffer.fill(DoubleArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
+            println(FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
+            buffer.fill(FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
         }
     }
 
@@ -136,8 +123,8 @@ internal object Script: Assigned {
     fun drawSingle (widget: WidgetUI) {
         if (!buffers.containsKey(widget.hashCode())) throw Exception("No buffer found for the widget $widget")
         buffers[widget.hashCode()]!!.bind()
-        GLFunctions.Value.vertexArray(position, 2, 0, 4)
-        GLFunctions.Value.vertexArray(coordinates, 2, 2, 4)
+        position.set(2, 0, 4)
+        coordinates.set(2, 2, 4)
         println("drawing ${Mapper.INDICES.size}: ${Mapper.INDICES}")
         GLFunctions.drawElements(Mapper.INDICES.size, Mapper.INDICES)
     }
@@ -147,8 +134,8 @@ internal object Script: Assigned {
 
     override suspend fun gameEnded() {
         buffers.forEach { it.value.delete() }
-        GLFunctions.Value.disable(position)
-        GLFunctions.Value.disable(coordinates)
-        GLFunctions.Program.delete(program)
+        position.disable()
+        coordinates.disable()
+        program.delete()
     }
 }
