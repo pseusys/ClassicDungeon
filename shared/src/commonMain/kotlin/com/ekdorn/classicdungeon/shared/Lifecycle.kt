@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared
 
+import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
 import com.ekdorn.classicdungeon.shared.generics.Assigned
 import com.ekdorn.classicdungeon.shared.utils.Event
 import kotlinx.coroutines.launch
@@ -12,7 +13,12 @@ object Lifecycle {
     /**
      * Initializing features (in MAIN thread), needed for application to start (e.g. display metrics, GL surface, UI textures, etc.)
      */
-    suspend fun start () = Assigned.assigned.forEach { it.gameStarted() }
+
+    suspend fun start (screenWidth: Int, screenHeight: Int) {
+        GLFunctions.setup(screenWidth, screenHeight)
+        Assigned.assigned.forEach { it.gameStarted(screenWidth, screenHeight) }
+        Game.afterStarted(screenWidth, screenHeight)
+    }
 
     /**
      * Resuming game process async (e.g. sound, time measuring, etc.)

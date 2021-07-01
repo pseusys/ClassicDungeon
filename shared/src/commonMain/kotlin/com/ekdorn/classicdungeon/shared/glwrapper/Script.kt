@@ -130,9 +130,9 @@ internal object Script: Assigned {
     }
 
 
-    override suspend fun gameStarted () {}
+    override suspend fun gameStarted (screenWidth: Int, screenHeight: Int) {}
 
-    override suspend fun gameEnded() {
+    override suspend fun gameEnded () {
         buffers.forEach { it.value.delete() }
         position.disable()
         coordinates.disable()

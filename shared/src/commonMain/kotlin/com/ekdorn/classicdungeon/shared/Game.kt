@@ -14,7 +14,7 @@ internal object Game: Assigned {
     private var elapsed = 0F
     val scope = CoroutineScope(Dispatchers.Default)
 
-    val root = LayoutUI()
+    private lateinit var root: LayoutUI
 
     fun resume () {}
     fun update () {
@@ -26,9 +26,17 @@ internal object Game: Assigned {
     fun pause () {}
 
 
-    override suspend fun gameStarted() {
+    override suspend fun gameStarted (screenWidth: Int, screenHeight: Int) {
         println("Game started!")
-        GLFunctions.setup()
+        Input.onResized.add {
+            root.delete()
+            afterStarted(it.w, it.h)
+            false
+        }
+    }
+
+    fun afterStarted (width: Int, height: Int) {
+        root = LayoutUI(Rectangle(0F, 0F, width.toFloat(), height.toFloat()))
         root.children.add(ImageUI("sample", Rectangle(-1F, 1F, 1F, -1F)))
     }
 

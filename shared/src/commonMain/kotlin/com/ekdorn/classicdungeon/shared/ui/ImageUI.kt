@@ -1,6 +1,5 @@
 package com.ekdorn.classicdungeon.shared.ui
 
-import com.ekdorn.classicdungeon.shared.generics.Cloneable
 import com.ekdorn.classicdungeon.shared.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.glwrapper.ImageTexture
 import com.ekdorn.classicdungeon.shared.glwrapper.Script
@@ -9,7 +8,7 @@ import com.ekdorn.classicdungeon.shared.maths.Rectangle
 
 
 // TODO: move GL + buffer from widget to other class
-internal class ImageUI private constructor (rect: Rectangle): WidgetUI(rect), Cloneable<ImageUI> {
+internal class ImageUI private constructor (rect: Rectangle): ElementUI(rect) {
     init {
         Script.createBuffer(this, 2 * 4 * Float.SIZE_BYTES)
     }
@@ -72,8 +71,6 @@ internal class ImageUI private constructor (rect: Rectangle): WidgetUI(rect), Cl
     }
 
     override fun draw () {
-        super.draw()
-
         texture.bind()
 
         Script.setCamera(Matrix())

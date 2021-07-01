@@ -9,7 +9,7 @@ internal object TextureCache: Assigned {
 
     fun get (resource: String) = ImageTexture(resources[resource]!!)
 
-    override suspend fun gameStarted () {
+    override suspend fun gameStarted(screenWidth: Int, screenHeight: Int) {
         resources["sample"] = ResourceLoader.loadImage("sample.png")
     }
 

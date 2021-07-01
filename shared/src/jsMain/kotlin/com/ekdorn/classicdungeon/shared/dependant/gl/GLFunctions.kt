@@ -5,7 +5,8 @@ import org.khronos.webgl.Int8Array
 import org.khronos.webgl.WebGLRenderingContext
 
 actual object GLFunctions {
-    actual fun setup () {
+    actual fun setup (width: Int, height: Int) {
+        context.viewport(0, 0, width, height)
         context.clearColor(0.0F, 0.0F, 0.0F, 1.0F)
         context.pixelStorei(WebGLRenderingContext.UNPACK_FLIP_Y_WEBGL, 1)
     }

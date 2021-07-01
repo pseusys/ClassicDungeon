@@ -1,3 +1,4 @@
+import com.ekdorn.classicdungeon.shared.Input
 import com.ekdorn.classicdungeon.shared.Lifecycle
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -7,27 +8,28 @@ import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 
 
-const val interval = 16
-
-
 val surface = document.getElementById("surface") as HTMLCanvasElement
 lateinit var context: WebGLRenderingContext
 
-// to requestframe
 var timerEnabled = false
 
 fun main () {
     window.onload = {
         GlobalScope.launch {
             context = surface.getContext("webgl") as WebGLRenderingContext
-            context.viewport(0, 0, surface.width, surface.height)
-            Lifecycle.start()
+            Lifecycle.start(surface.width, surface.height)
             resume()
             println("onstart")
         }
     }
 
     window.onfocus = {
+        resume()
+    }
+
+    window.onresize = {
+        pause()
+        Input.onResized(surface.width, surface.height)
         resume()
     }
 
@@ -54,7 +56,7 @@ fun resume () {
 fun update () {
     Lifecycle.update()
     println("onupdate")
-    //if (timerEnabled) window.setTimeout({ update() }, interval)
+    //if (timerEnabled) window.requestAnimationFrame { update() }
 }
 
 fun pause () {
