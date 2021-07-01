@@ -1,6 +1,5 @@
 package com.ekdorn.classicdungeon.shared.ui
 
-import com.ekdorn.classicdungeon.shared.dependant.GLFunctions
 import com.ekdorn.classicdungeon.shared.generics.Clonable
 import com.ekdorn.classicdungeon.shared.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.glwrapper.ImageTexture
@@ -10,22 +9,21 @@ import com.ekdorn.classicdungeon.shared.maths.Rectangle
 
 
 // TODO: move GL + buffer from widget to other class
-internal class ImageUI private constructor (): WidgetUI(0.0, 0.0, 0.0, 0.0), Clonable<ImageUI> {
+internal class ImageUI private constructor (rect: Rectangle): WidgetUI(rect), Clonable<ImageUI> {
     init {
         Script.createBuffer(this, 2 * 4 * Double.SIZE_BYTES)
     }
 
-    constructor(resource: String): this() {
+    constructor (resource: String, rect: Rectangle, frame: Rectangle): this(rect) {
         texture(resource)
+        frame(frame)
+        updateVertices()
     }
 
-    constructor (resource: String, rect: Rectangle): this(resource) {
-        frame(rect)
-    }
+    constructor(resource: String, rect: Rectangle): this(resource, rect, Rectangle(0.0, 1.0, 1.0, 0.0))
 
     private lateinit var texture: ImageTexture
-    private lateinit var coverPercent: Rectangle
-
+    private lateinit var frame: Rectangle
     private lateinit var textureVertices: Rectangle
 
     var mirroredH: Boolean = false
@@ -41,32 +39,31 @@ internal class ImageUI private constructor (): WidgetUI(0.0, 0.0, 0.0, 0.0), Clo
 
 
     override fun clone(): ImageUI {
-        val clone = ImageUI()
+        val clone = ImageUI(rect())
         clone.texture = texture
-        clone.coverPercent = coverPercent
+        clone.frame = frame
         return clone
     }
 
 
+    // TODO: combine with updateVertices if needed!
     fun texture (resource: String) {
         texture = TextureCache.get(resource)
-        frame(Rectangle(0.0, 0.0, 1.0, 1.0))
     }
 
     fun frame (rect: Rectangle) {
-        coverPercent = rect
-        width = rect.width() * texture.width() / 1000
-        height = rect.height() * texture.height() / 1000
-        updateVertices()
+        frame = rect
+        //width = 1.0 //rect.width() * texture.width() / 1000
+        //height = 1.0 //rect.height() * texture.height() / 1000
     }
 
 
     private fun updateVertices () {
-        val x = if (mirroredH) Pair(coverPercent.left, coverPercent.right)
-        else Pair(coverPercent.right, coverPercent.left)
+        val x = if (mirroredH) Pair(frame.right, frame.left)
+        else Pair(frame.left, frame.right)
 
-        val y = if (mirroredV) Pair(coverPercent.bottom, coverPercent.top)
-        else Pair(coverPercent.top, coverPercent.bottom)
+        val y = if (mirroredV) Pair(frame.bottom, frame.top)
+        else Pair(frame.top, frame.bottom)
 
         textureVertices = Rectangle(x.first, y.first, x.second, y.second)
         println(rect().toPointsArray())
@@ -79,7 +76,6 @@ internal class ImageUI private constructor (): WidgetUI(0.0, 0.0, 0.0, 0.0), Clo
 
         texture.bind()
 
-        // Camera
         Script.setCamera(Matrix())
 
         Script.setTexture(texture)

@@ -40,6 +40,8 @@ internal open class WidgetUI (var parent: LayoutUI? = null) {
         height = h
     }
 
+    constructor (rect: Rectangle): this(rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top)
+
 
 
     inline var center: Vector
@@ -106,5 +108,5 @@ internal open class WidgetUI (var parent: LayoutUI? = null) {
 
 
 
-    fun rect () = Rectangle(0.0, 0.0, width, height)
+    fun rect () = Rectangle(coords.x, coords.y, coords.x + width, coords.y + height)
 }

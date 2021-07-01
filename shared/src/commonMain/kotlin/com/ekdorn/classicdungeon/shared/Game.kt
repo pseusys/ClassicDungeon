@@ -1,6 +1,7 @@
 package com.ekdorn.classicdungeon.shared
 
 import com.ekdorn.classicdungeon.shared.generics.Assigned
+import com.ekdorn.classicdungeon.shared.dependant.GLFunctions
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.ui.ImageUI
 import com.ekdorn.classicdungeon.shared.ui.LayoutUI
@@ -27,7 +28,8 @@ internal object Game: Assigned {
 
     override suspend fun gameStarted() {
         println("Game started!")
-        root.children.add(ImageUI("sample"/*, Rectangle(0.0, 0.0, 100.0, 200.0)*/))
+        GLFunctions.setup()
+        root.children.add(ImageUI("sample", Rectangle(-1.0, 1.0, 1.0, -1.0)))
     }
 
     override suspend fun gameEnded() {

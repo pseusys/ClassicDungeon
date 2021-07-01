@@ -23,11 +23,10 @@ kotlin {
     }
     js(LEGACY) {
         binaries.executable()
-        //moduleName = "ClassicDungeon"
         browser {
             commonWebpackConfig {
+                outputFileName = "ClassicDungeon.js"
                 cssSupport.enabled = true
-                //cssSupport.mode = "import"
             }
         }
     }

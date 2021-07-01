@@ -73,5 +73,6 @@ expect object GLFunctions {
     }
 
 
+    fun setup ()
     fun drawElements (count: Int, indices: ByteArray)
 }
