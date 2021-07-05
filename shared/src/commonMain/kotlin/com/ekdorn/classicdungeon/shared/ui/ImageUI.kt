@@ -1,6 +1,7 @@
 package com.ekdorn.classicdungeon.shared.ui
 
 import com.ekdorn.classicdungeon.shared.generics.TextureCache
+import com.ekdorn.classicdungeon.shared.glwrapper.Camera
 import com.ekdorn.classicdungeon.shared.glwrapper.ImageTexture
 import com.ekdorn.classicdungeon.shared.glwrapper.Script
 import com.ekdorn.classicdungeon.shared.maths.Matrix
@@ -73,7 +74,7 @@ internal class ImageUI private constructor (rect: Rectangle): ElementUI(rect) {
     override fun draw () {
         texture.bind()
 
-        Script.setCamera(Matrix())
+        Script.setCamera(Camera.uiCamera())
 
         Script.setTexture(texture)
         Script.setModel(model)
