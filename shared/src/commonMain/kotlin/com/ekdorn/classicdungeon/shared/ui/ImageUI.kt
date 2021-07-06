@@ -6,21 +6,47 @@ import com.ekdorn.classicdungeon.shared.glwrapper.ImageTexture
 import com.ekdorn.classicdungeon.shared.glwrapper.Script
 import com.ekdorn.classicdungeon.shared.maths.Matrix
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
+import com.ekdorn.classicdungeon.shared.maths.Vector
 
 
-// TODO: move GL + buffer from widget to other class
+// TODO: buffer to ElementUI?
 internal class ImageUI private constructor (rect: Rectangle): ElementUI(rect) {
+    private companion object ImageDelay {
+        val delay = Rectangle(0F, 0F, 1F, -1F).toPointsArray()
+    }
+
     init {
         Script.createBuffer(this, 2 * 4 * Float.SIZE_BYTES)
     }
 
-    constructor (resource: String, rect: Rectangle, frame: Rectangle): this(rect) {
+    constructor (resource: String, frame: Rectangle, pos: Vector, width: Float = -1F, height: Float = -1F): this(Rectangle(pos.x, pos.y, width, height)) {
         texture(resource)
+        if ((width == -1F) && (height == -1F)) metrics.apply { x = 1F; y = 1F }
+        else {
+            floatingWidth = width == -1F
+            floatingHeight = height == -1F
+        }
         frame(frame)
-        updateVertices()
     }
 
-    constructor (resource: String, rect: Rectangle): this(resource, rect, Rectangle(0F, 1F, 1F, 0F))
+    constructor (resource: String, pos: Vector, width: Float = -1F, height: Float = -1F): this(resource, Rectangle(0F, 1F, 1F, 0F), pos, width, height)
+
+
+    var floatingWidth = false
+    var floatingHeight = false
+    override var parent: LayoutUI? = null
+        set (value) {
+            if (value != null) {
+                if (floatingWidth) metrics.x = (value.pixelMetrics.y * metrics.y * texture.width()) / (texture.height() * value.pixelMetrics.x)
+                if (floatingHeight) metrics.y = (value.pixelMetrics.x * metrics.x * texture.height()) / (texture.width() * value.pixelMetrics.y)
+            } else {
+                if (floatingWidth) metrics.x = -1F
+                if (floatingHeight) metrics.y = -1F
+            }
+            updateVertices()
+            field = value
+        }
+
 
     private lateinit var texture: ImageTexture
     private lateinit var frame: Rectangle
@@ -38,11 +64,11 @@ internal class ImageUI private constructor (rect: Rectangle): ElementUI(rect) {
         }
 
 
-    override fun clone (): ImageUI {
-        val clone = ImageUI(rect())
-        clone.texture = texture
-        clone.frame = frame
-        return clone
+    override fun clone () = ImageUI(Rectangle(coords.x, coords.y, metrics.x, metrics.y)).also {
+        it.floatingHeight = floatingHeight
+        it.floatingWidth = floatingWidth
+        it.texture = texture
+        it.frame = frame
     }
 
 
@@ -66,15 +92,16 @@ internal class ImageUI private constructor (rect: Rectangle): ElementUI(rect) {
         else Pair(frame.top, frame.bottom)
 
         textureVertices = Rectangle(x.first, y.first, x.second, y.second)
-        println(rect().toPointsArray())
-        println(textureVertices.toPointsArray())
-        Script.updateBuffer(this, 2, rect().toPointsArray(), textureVertices.toPointsArray())
+        Script.updateBuffer(this, 2, delay, textureVertices.toPointsArray())
     }
 
     override fun draw () {
+        super.draw()
         texture.bind()
 
-        Script.setCamera(Camera.uiCamera())
+        println("Camera: ${Camera.UI}")
+        println("Model: $model")
+        Script.setCamera(Camera.UI)
 
         Script.setTexture(texture)
         Script.setModel(model)

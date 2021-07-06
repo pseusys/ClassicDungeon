@@ -89,9 +89,9 @@ internal object Script: Assigned {
     }
 
 
-    fun setCamera (matrix: Matrix) = camera.value4m(matrix.to4x4())
+    fun setCamera (matrix: Matrix) = camera.value4m(matrix.values)
 
-    fun setModel (matrix: Matrix) = model.value4m(matrix.to4x4())
+    fun setModel (matrix: Matrix) = model.value4m(matrix.values)
 
     fun setAmbient (color: Color) = ambient.value4f(color.r, color.g, color.b, color.a)
 
@@ -109,7 +109,7 @@ internal object Script: Assigned {
         val size = dataSeq.size * dataSeq[0].size
         buffers[widget.hashCode()]!!.let { buffer ->
             if (size > buffer.size) throw Exception("Buffer for the widget $widget is shorter than expected!")
-            println(FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
+            // println(FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
             buffer.fill(FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
         }
     }
@@ -125,7 +125,7 @@ internal object Script: Assigned {
         buffers[widget.hashCode()]!!.bind()
         position.set(2, 0, 4)
         coordinates.set(2, 2, 4)
-        println("drawing ${Mapper.INDICES.size}: ${Mapper.INDICES}")
+        // println("drawing ${Mapper.INDICES.size}: ${Mapper.INDICES}")
         GLFunctions.drawElements(Mapper.INDICES.size, Mapper.INDICES)
     }
 

@@ -15,8 +15,10 @@ var timerEnabled = false
 
 fun main () {
     window.onload = {
+        context = surface.getContext("webgl") as WebGLRenderingContext
+        surface.width = window.innerWidth
+        surface.height = window.innerHeight
         GlobalScope.launch {
-            context = surface.getContext("webgl") as WebGLRenderingContext
             Lifecycle.start(surface.width, surface.height)
             resume()
             println("onstart")
@@ -29,6 +31,8 @@ fun main () {
 
     window.onresize = {
         pause()
+        surface.width = window.innerWidth
+        surface.height = window.innerHeight
         Input.onResized(surface.width, surface.height)
         resume()
     }

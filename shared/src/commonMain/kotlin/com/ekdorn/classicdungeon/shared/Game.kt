@@ -3,6 +3,7 @@ package com.ekdorn.classicdungeon.shared
 import com.ekdorn.classicdungeon.shared.generics.Assigned
 import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
+import com.ekdorn.classicdungeon.shared.maths.Vector
 import com.ekdorn.classicdungeon.shared.ui.ImageUI
 import com.ekdorn.classicdungeon.shared.ui.LayoutUI
 import kotlinx.coroutines.CoroutineScope
@@ -36,8 +37,11 @@ internal object Game: Assigned {
     }
 
     fun afterStarted (width: Int, height: Int) {
+        println(Vector(width.toFloat(), height.toFloat()))
         root = LayoutUI(Rectangle(0F, 0F, width.toFloat(), height.toFloat()))
-        root.children.add(ImageUI("sample", Rectangle(-1F, 1F, 1F, -1F)))
+        val img = ImageUI("sample", Vector(0.1F, 0.1F), width = 0.5F)
+        img.parent = root
+        root.children.add(img)
     }
 
     override suspend fun gameEnded() {

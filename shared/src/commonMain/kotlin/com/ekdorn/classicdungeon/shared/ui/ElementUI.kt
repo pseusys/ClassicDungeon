@@ -49,13 +49,14 @@ internal open class ElementUI (rect: Rectangle): WidgetUI(rect), Cloneable<Eleme
     }
 
 
-    private fun updateModel () {
+    protected open fun updateModel () {
         parent?.let {
-            val pixelCoords = it.pixelCoords each coords
-            // val pixelDimens = it.pixelMetrics each metrics
+            val pixelCoords = it.pixelMetrics each coords
+            val pixelDimens = it.pixelMetrics each metrics
 
             model.toIdentity()
-            model.translate(pixelCoords.x, pixelCoords.y)
+            model.translate(pixelCoords.x, -pixelCoords.y)
+            model.scale(pixelDimens.x, pixelDimens.y)
             // model.translate(origin.x, origin.y) // Needed?
             model.rotate(angle)
             // model.translate(-origin.x, -origin.y) // Needed?

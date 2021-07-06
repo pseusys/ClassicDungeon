@@ -15,13 +15,13 @@ internal abstract class WidgetUI (rect: Rectangle) {
     val coords = Vector()
     val metrics = Vector()
 
-    var parent: LayoutUI? = null
+    open var parent: LayoutUI? = null
 
     init {
         coords.x = rect.left
         coords.y = rect.top
-        metrics.x = rect.right - rect.left
-        metrics.y = rect.bottom - rect.top
+        metrics.x = rect.right
+        metrics.y = rect.bottom
     }
 
 
@@ -56,8 +56,4 @@ internal abstract class WidgetUI (rect: Rectangle) {
     }
 
     abstract fun delete ()
-
-
-
-    fun rect () = Rectangle(coords.x, coords.y, coords.x + metrics.x, coords.y + metrics.y)
 }

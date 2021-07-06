@@ -1,6 +1,7 @@
 package com.ekdorn.classicdungeon.shared.generics
 
 import com.ekdorn.classicdungeon.shared.Game
+import com.ekdorn.classicdungeon.shared.glwrapper.Camera
 import com.ekdorn.classicdungeon.shared.glwrapper.Script
 
 internal interface Assigned {
@@ -8,6 +9,6 @@ internal interface Assigned {
     suspend fun gameEnded ()
 
     companion object AllSet {
-        val assigned = listOf(Game, Script, TextureCache)
+        val assigned = listOf(Game, Script, TextureCache, Camera)
     }
 }
