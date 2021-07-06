@@ -37,7 +37,6 @@ internal object Game: Assigned {
     }
 
     fun afterStarted (width: Int, height: Int) {
-        println(Vector(width.toFloat(), height.toFloat()))
         root = LayoutUI(Rectangle(0F, 0F, width.toFloat(), height.toFloat()))
         val img = ImageUI("sample", Vector(0.1F, 0.1F), width = 0.5F)
         img.parent = root

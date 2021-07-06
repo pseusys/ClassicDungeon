@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared.maths
 
+// TODO: replace color with array
 internal data class Color (var r: Float, var g: Float, var b: Float, var a: Float) {
     constructor (): this(0F, 0F, 0F, 0F)
 

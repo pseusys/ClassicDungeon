@@ -127,6 +127,7 @@ internal object Script: Assigned {
         coordinates.set(2, 2, 4)
         // println("drawing ${Mapper.INDICES.size}: ${Mapper.INDICES}")
         GLFunctions.drawElements(Mapper.INDICES.size, Mapper.INDICES)
+        buffers[widget.hashCode()]!!.release()
     }
 
 

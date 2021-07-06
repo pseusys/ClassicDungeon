@@ -5,13 +5,13 @@ import com.ekdorn.classicdungeon.shared.glwrapper.ImageTexture
 import com.ekdorn.classicdungeon.shared.utils.Image
 
 internal object TextureCache: Assigned {
-    private val resources = mutableMapOf<String, Image>()
+    private val resources = mutableMapOf<String, ImageTexture>()
 
-    fun get (resource: String) = ImageTexture(resources[resource]!!)
+    fun get (resource: String) = resources[resource]!!
 
     override suspend fun gameStarted(screenWidth: Int, screenHeight: Int) {
-        resources["sample"] = ResourceLoader.loadImage("sample.png")
+        resources["sample"] = ImageTexture(ResourceLoader.loadImage("sample.png"))
     }
 
-    override suspend fun gameEnded () {}
+    override suspend fun gameEnded () = resources.forEach { it.value.delete() }
 }

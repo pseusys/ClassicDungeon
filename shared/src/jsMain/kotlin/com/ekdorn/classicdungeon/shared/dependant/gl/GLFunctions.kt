@@ -5,11 +5,12 @@ import org.khronos.webgl.Int8Array
 import org.khronos.webgl.WebGLRenderingContext
 
 actual object GLFunctions {
-    actual fun setup (width: Int, height: Int) {
-        context.viewport(0, 0, width, height)
+    actual fun setup () {
         context.clearColor(0.0F, 0.0F, 0.0F, 1.0F)
         context.pixelStorei(WebGLRenderingContext.UNPACK_FLIP_Y_WEBGL, 1)
     }
+
+    actual fun viewport (width: Int, height: Int) = context.viewport(0, 0, width, height)
 
     // TODO: extract buffer!
     actual fun drawElements (count: Int, indices: ByteArray) {

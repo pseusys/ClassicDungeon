@@ -15,7 +15,13 @@ object Lifecycle {
      */
 
     suspend fun start (screenWidth: Int, screenHeight: Int) {
-        GLFunctions.setup(screenWidth, screenHeight)
+        GLFunctions.setup()
+        GLFunctions.viewport(screenWidth, screenHeight)
+        Input.onResized.add {
+            GLFunctions.viewport(it.w, it.h)
+            false
+        }
+
         Assigned.assigned.forEach { it.gameStarted(screenWidth, screenHeight) }
         Game.afterStarted(screenWidth, screenHeight)
     }
