@@ -1,10 +1,9 @@
-package com.ekdorn.classicdungeon.shared.glwrapper
+package com.ekdorn.classicdungeon.shared.glextensions
 
 import com.ekdorn.classicdungeon.shared.dependant.gl.*
 import com.ekdorn.classicdungeon.shared.generics.Assigned
 import com.ekdorn.classicdungeon.shared.maths.Color
 import com.ekdorn.classicdungeon.shared.maths.Matrix
-import com.ekdorn.classicdungeon.shared.ui.WidgetUI
 
 internal object Script: Assigned {
     private const val VERTEX_SHADER =
@@ -47,8 +46,6 @@ internal object Script: Assigned {
     private val program = GLProgram()
     private val vertexShader = GLShader(GLShader.TYPE.VERTEX)
     private val fragmentShader = GLShader(GLShader.TYPE.FRAGMENT)
-
-    private val buffers = mutableMapOf<Int, GLBuffer>()
 
     private val position: GLAttribute
     private val coordinates: GLAttribute
@@ -100,41 +97,17 @@ internal object Script: Assigned {
     fun setTexture (sampler: GLTexture) = texture.value1i(sampler.id)
 
 
-    fun createBuffer (widget: WidgetUI, size: Int) {
-        buffers[widget.hashCode()] = GLBuffer(size)
-    }
-
-    fun updateBuffer (widget: WidgetUI, fromEach: Int, vararg dataSeq: FloatArray) {
-        if (!buffers.containsKey(widget.hashCode())) throw Exception("No buffer found for the widget $widget")
-        val size = dataSeq.size * dataSeq[0].size
-        buffers[widget.hashCode()]!!.let { buffer ->
-            if (size > buffer.size) throw Exception("Buffer for the widget $widget is shorter than expected!")
-            // println(FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
-            buffer.fill(FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
-        }
-    }
-
-    fun deleteBuffer (widget: WidgetUI) {
-        if (!buffers.containsKey(widget.hashCode())) throw Exception("No buffer found for the widget $widget")
-        buffers[widget.hashCode()]?.delete()
-    }
-
-
-    fun drawSingle (widget: WidgetUI) {
-        if (!buffers.containsKey(widget.hashCode())) throw Exception("No buffer found for the widget $widget")
-        buffers[widget.hashCode()]!!.bind()
+    fun drawSingle () {
         position.set(2, 0, 4)
         coordinates.set(2, 2, 4)
         // println("drawing ${Mapper.INDICES.size}: ${Mapper.INDICES}")
         GLFunctions.drawElements(Mapper.INDICES.size, Mapper.INDICES)
-        buffers[widget.hashCode()]!!.release()
     }
 
 
     override suspend fun gameStarted (screenWidth: Int, screenHeight: Int) {}
 
     override suspend fun gameEnded () {
-        buffers.forEach { it.value.delete() }
         position.disable()
         coordinates.disable()
         program.delete()

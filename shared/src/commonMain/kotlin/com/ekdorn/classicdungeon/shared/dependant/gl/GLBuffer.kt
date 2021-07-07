@@ -29,13 +29,6 @@ expect class GLBuffer (size: Int) {
     fun fill (data: FloatArray)
 
     /**
-     * Release this buffer.
-     * Should be called after draw event.
-     * @see GLFunctions.drawElements draw event
-     */
-    fun release ()
-
-    /**
      * Delete this buffer.
      * Should be called once associated UI element is about to be deleted.
      */

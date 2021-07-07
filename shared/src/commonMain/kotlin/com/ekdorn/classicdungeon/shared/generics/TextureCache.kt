@@ -1,8 +1,7 @@
 package com.ekdorn.classicdungeon.shared.generics
 
 import com.ekdorn.classicdungeon.shared.dependant.ResourceLoader
-import com.ekdorn.classicdungeon.shared.glwrapper.ImageTexture
-import com.ekdorn.classicdungeon.shared.utils.Image
+import com.ekdorn.classicdungeon.shared.glextensions.ImageTexture
 
 internal object TextureCache: Assigned {
     private val resources = mutableMapOf<String, ImageTexture>()

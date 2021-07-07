@@ -1,22 +1,16 @@
 package com.ekdorn.classicdungeon.shared.ui
 
 import com.ekdorn.classicdungeon.shared.generics.TextureCache
-import com.ekdorn.classicdungeon.shared.glwrapper.Camera
-import com.ekdorn.classicdungeon.shared.glwrapper.ImageTexture
-import com.ekdorn.classicdungeon.shared.glwrapper.Script
-import com.ekdorn.classicdungeon.shared.maths.Matrix
+import com.ekdorn.classicdungeon.shared.glextensions.ImageTexture
+import com.ekdorn.classicdungeon.shared.glextensions.Script
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 
 
-// TODO: buffer to ElementUI?
-internal class ImageUI private constructor (rect: Rectangle): ElementUI(rect) {
+// 8 = 2 coords per vertex, 4 vertexes
+internal class ImageUI private constructor (rect: Rectangle): ElementUI(rect, 8) {
     private companion object ImageDelay {
         val delay = Rectangle(0F, 0F, 1F, -1F).toPointsArray()
-    }
-
-    init {
-        Script.createBuffer(this, 2 * 4 * Float.SIZE_BYTES)
     }
 
     constructor (resource: String, frame: Rectangle, pos: Vector, width: Float = -1F, height: Float = -1F): this(Rectangle(pos.x, pos.y, width, height)) {
@@ -92,28 +86,14 @@ internal class ImageUI private constructor (rect: Rectangle): ElementUI(rect) {
         else Pair(frame.top, frame.bottom)
 
         textureVertices = Rectangle(x.first, y.first, x.second, y.second)
-        Script.updateBuffer(this, 2, delay, textureVertices.toPointsArray())
+        updateBuffer(2, delay, textureVertices.toPointsArray())
     }
 
     override fun draw () {
         super.draw()
         texture.bind()
-
-        println("Camera: ${Camera.UI}")
-        println("Model: $model")
-        Script.setCamera(Camera.UI)
-
         Script.setTexture(texture)
-        Script.setModel(model)
-        Script.setMaterial(material)
-        Script.setAmbient(ambient)
-
-        Script.drawSingle(this)
-
+        Script.drawSingle()
         texture.release()
-    }
-
-    override fun delete () {
-        Script.deleteBuffer(this)
     }
 }

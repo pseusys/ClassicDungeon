@@ -1,4 +1,4 @@
-package com.ekdorn.classicdungeon.shared.glwrapper
+package com.ekdorn.classicdungeon.shared.glextensions
 
 import com.ekdorn.classicdungeon.shared.Input
 import com.ekdorn.classicdungeon.shared.generics.Assigned

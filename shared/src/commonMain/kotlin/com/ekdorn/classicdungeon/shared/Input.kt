@@ -18,5 +18,5 @@ object Input {
     fun onPointerUp (x: Int, y: Int) = Game.scope.launch { onTouchedDown.fire(Vector(x, y)) }.start()
     fun onPointerMoved (x: Int, y: Int) = Game.scope.launch { onMoved.fire(Vector(x, y)) }.start()
     fun onZoomed (x: Int, y: Int) = Game.scope.launch { onZoomed.fire(Vector(x, y)) }.start()
-    fun onResized (w: Int, h: Int) = Game.scope.launch { onZoomed.fire(Vector(w, h)) }.start()
+    fun onResized (w: Int, h: Int) = Game.scope.launch { onResized.fire(Vector(w, h)) }.start()
 }

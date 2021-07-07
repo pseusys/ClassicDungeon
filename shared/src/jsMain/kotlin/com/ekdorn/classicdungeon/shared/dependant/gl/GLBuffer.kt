@@ -16,7 +16,5 @@ actual class GLBuffer actual constructor (actual val size: Int) {
         context.bufferData(WebGLRenderingContext.ARRAY_BUFFER, Float32Array(data.toTypedArray()), WebGLRenderingContext.DYNAMIC_DRAW)
     }
 
-    actual fun release () {}
-
     actual fun delete () = context.deleteBuffer(self)
 }

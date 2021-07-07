@@ -1,4 +1,4 @@
-package com.ekdorn.classicdungeon.shared.glwrapper
+package com.ekdorn.classicdungeon.shared.glextensions
 
 import com.ekdorn.classicdungeon.shared.dependant.gl.GLTexture
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
