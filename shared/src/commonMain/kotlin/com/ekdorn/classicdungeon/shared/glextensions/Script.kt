@@ -105,9 +105,7 @@ internal object Script: Assigned {
     }
 
 
-    override suspend fun gameStarted (screenWidth: Int, screenHeight: Int) {}
-
-    override suspend fun gameEnded () {
+    override fun gameEnded () {
         position.disable()
         coordinates.disable()
         program.delete()

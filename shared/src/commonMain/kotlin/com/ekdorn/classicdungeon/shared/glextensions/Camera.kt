@@ -13,13 +13,8 @@ internal object Camera: Assigned {
         UI.scale(2 / width.toFloat(), 2 / height.toFloat())
     }
 
-    override suspend fun gameStarted (screenWidth: Int, screenHeight: Int) {
-        calibrate(screenWidth, screenHeight)
-        Input.onResized.add {
-            calibrate(it.w, it.h)
-            false
-        }
+    override fun gameStarted () = Input.onResized.add {
+        calibrate(it.w, it.h)
+        false
     }
-
-    override suspend fun gameEnded () {}
 }

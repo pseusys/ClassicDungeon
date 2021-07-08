@@ -30,16 +30,19 @@ internal class ImageUI private constructor (rect: Rectangle): ElementUI(rect, 8)
     var floatingHeight = false
     override var parent: LayoutUI? = null
         set (value) {
-            if (value != null) {
-                if (floatingWidth) metrics.x = (value.pixelMetrics.y * metrics.y * texture.width()) / (texture.height() * value.pixelMetrics.x)
-                if (floatingHeight) metrics.y = (value.pixelMetrics.x * metrics.x * texture.height()) / (texture.width() * value.pixelMetrics.y)
-            } else {
+            if (value != null) parentalResize(value.pixelMetrics.w, value.pixelMetrics.h)
+            else {
                 if (floatingWidth) metrics.x = -1F
                 if (floatingHeight) metrics.y = -1F
             }
-            updateVertices()
             field = value
         }
+
+    fun parentalResize (pixelWidth: Int, pixelHeight: Int) {
+        if (floatingWidth) metrics.x = (pixelHeight * metrics.y * texture.width()) / (texture.height() * pixelWidth)
+        if (floatingHeight) metrics.y = (pixelWidth * metrics.x * texture.height()) / (texture.width() * pixelHeight)
+        updateVertices()
+    }
 
 
     private lateinit var texture: ImageTexture

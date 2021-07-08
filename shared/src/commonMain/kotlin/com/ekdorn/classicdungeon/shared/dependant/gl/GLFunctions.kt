@@ -11,12 +11,18 @@ expect object GLFunctions {
     fun setup ()
 
     /**
-     * Function, adjusting viewport size.
+     * Function, adjusting viewport size and setting scissor rect.
      * Should be called after GL surface dimensions changed.
      * @param width screen width
      * @param height screen height
      */
-    fun viewport (width: Int, height: Int)
+    fun portal (width: Int, height: Int)
+
+    /**
+     * Function, clearing screen.
+     * Should be called on each frame.
+     */
+    fun clear ()
 
     // TODO: fix indices array.
     /**

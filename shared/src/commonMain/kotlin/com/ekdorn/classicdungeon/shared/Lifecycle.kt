@@ -2,8 +2,9 @@ package com.ekdorn.classicdungeon.shared
 
 import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
 import com.ekdorn.classicdungeon.shared.generics.Assigned
+import com.ekdorn.classicdungeon.shared.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.utils.Event
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 
 
 object Lifecycle {
@@ -11,19 +12,25 @@ object Lifecycle {
     internal val onPause = Event<Unit>()
 
     /**
-     * Initializing features (in MAIN thread), needed for application to start (e.g. display metrics, GL surface, UI textures, etc.)
+     * Initializing features (blocking MAIN thread), needed for application to start (e.g. display metrics, GL surface, UI textures, etc.)
      */
-
-    suspend fun start (screenWidth: Int, screenHeight: Int) {
-        GLFunctions.setup()
-        GLFunctions.viewport(screenWidth, screenHeight)
+    suspend fun start (width: Int, height: Int) {
         Input.onResized.add {
-            GLFunctions.viewport(it.w, it.h)
+            GLFunctions.portal(it.w, it.h)
             false
         }
 
-        Assigned.assigned.forEach { it.gameStarted(screenWidth, screenHeight) }
-        Game.afterStarted(screenWidth, screenHeight)
+        GLFunctions.setup()
+        Assigned.assigned.forEach { it.gameStarted() }
+        Input.onResized(width, height)
+
+        TextureCache.load("sample")
+        Game.splash(width, height)
+        Game.update()
+        
+        delay(1000)
+        // TextureCache.load("sample") load other
+        Game.start()
     }
 
     /**
@@ -31,7 +38,7 @@ object Lifecycle {
      */
     fun resume () {
         Game.resume()
-        Game.scope.launch { onResume.fire(Unit) }.start()
+        onResume.fire(Unit)
     }
 
     /**
@@ -46,11 +53,14 @@ object Lifecycle {
      */
     fun pause () {
         Game.pause()
-        Game.scope.launch { onPause.fire(Unit) }.start()
+        onPause.fire(Unit)
     }
 
     /**
      * Ceasing game functionality (without ability to resume, in MAIN thread) (e.g. freeing resources, auto-saving, closing server connection, etc.)
      */
-    suspend fun end () = Assigned.assigned.forEach { it.gameEnded() }
+    fun end () {
+        Game.end()
+        Assigned.assigned.forEach { it.gameEnded() }
+    }
 }

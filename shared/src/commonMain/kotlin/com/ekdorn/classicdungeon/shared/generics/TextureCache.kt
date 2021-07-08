@@ -8,9 +8,9 @@ internal object TextureCache: Assigned {
 
     fun get (resource: String) = resources[resource]!!
 
-    override suspend fun gameStarted(screenWidth: Int, screenHeight: Int) {
-        resources["sample"] = ImageTexture(ResourceLoader.loadImage("sample.png"))
+    suspend fun load (vararg textures: String) = textures.forEach {
+        resources[it] = ImageTexture(ResourceLoader.loadImage("$it.png"))
     }
 
-    override suspend fun gameEnded () = resources.forEach { it.value.delete() }
+    override fun gameEnded () = resources.forEach { it.value.delete() }
 }

@@ -15,8 +15,9 @@ internal data class Vector (var x: Float, var y: Float) {
         get () = y.toInt()
         set (v) { y = v.toFloat() }
 
-    fun rangeTo (other: Vector) = Vector(x - other.x, y - other.y)
-    fun length () = sqrt(x * x + y * y)
-
+    operator fun rangeTo (other: Vector) = Vector(x - other.x, y - other.y)
+    operator fun plus (other: Vector) = Vector(x + other.x, y + other.y)
     infix fun each (other: Vector) = Vector(x * other.x, y * other.y)
+
+    fun length () = sqrt(x * x + y * y)
 }

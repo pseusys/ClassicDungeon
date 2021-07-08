@@ -11,6 +11,4 @@ class PNG (val height: Int, val width: Int, val pixels: ByteArray)
 @JsNonModule
 private external fun readPixels (data: Data): Promise<PNG>
 
-suspend fun getPixels (resource: String): PNG {
-    return readPixels(Data(window.fetch(resource), false)).await()
-}
+suspend fun getPixels (resource: String) = readPixels(Data(window.fetch(resource), false)).await()

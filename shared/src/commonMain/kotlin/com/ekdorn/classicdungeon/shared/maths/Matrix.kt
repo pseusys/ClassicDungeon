@@ -43,34 +43,36 @@ internal data class Matrix (val values: FloatArray) {
         val mat = values.copyOf()
         for (i in 0 .. 4) {
             values[i] = cos * mat[i] + sin * mat[i + 4]
-            values[i + 4] = -sin * mat[i] + cos * mat[i + 4]
+            values[i + 3] = -sin * mat[i] + cos * mat[i + 4]
         }
     }
 
     /**
-     * ┌            ┐   ┌       ┐   ┌                                  ┐
-     * │ 1      0 0 │   │ a b c │   │ a          b          c          │
-     * │ tan(t) 1 0 │ X │ d e f │ = │ a*tan(t)+d b*tan(t)+e c*tan(t)+f │
-     * │ 0      0 1 │   │ g h i │   │ g          h          i          │
-     * └            ┘   └       ┘   └                                  ┘
+     * ┌              ┐   ┌         ┐   ┌                                             ┐
+     * │ 1      0 0 0 │   │ a b c d │   │ a          b          c          d          │
+     * │ tan(t) 1 0 0 │ X │ e f g h │ = │ a*tan(t)+e b*tan(t)+f c*tan(t)+g d*tan(t)+h │
+     * │ 0      0 1 0 │   │ i j k l │   │ i          j          k          l          │
+     * │ 0      0 0 1 │   │ m n o p │   │ m          n          o          p          │
+     * └              ┘   └         ┘   └                                             ┘
      */
     fun sheerX (degrees: Float) {
         if (degrees == 0F) return
         val tan = tan(toRadians(degrees))
-        for (i in 0 .. 4) values[i + 4] += values[i] * tan
+        for (i in 0 .. 3) values[i + 4] += values[i] * tan
     }
 
     /**
-     * ┌            ┐   ┌       ┐   ┌                                  ┐
-     * │ 1 tan(t) 0 │   │ a b c │   │ a+d*tan(t) b+e*tan(t) c+f*tan(t) │
-     * │ 0 1      0 │ X │ d e f │ = │ d          e          f          │
-     * │ 0 0      1 │   │ g h i │   │ g          h          i          │
-     * └            ┘   └       ┘   └                                  ┘
+     * ┌              ┐   ┌         ┐   ┌                                             ┐
+     * │ 1 tan(t) 0 0 │   │ a b c d │   │ a+e*tan(t) b+f*tan(t) c+g*tan(t) d+h*tan(t) │
+     * │ 0 1      0 0 │ X │ e f g h │ = │ e          f          g          h          │
+     * │ 0 0      1 0 │   │ i j k l │   │ i          j          k          l          │
+     * │ 0 0      0 1 │   │ m n o p │   │ m          n          o          p          │
+     * └              ┘   └         ┘   └                                             ┘
      */
     fun sheerY (degrees: Float) {
         if (degrees == 0F) return
         val tan = tan(toRadians(degrees))
-        for (i in 0 .. 4) values[i] += values[i + 4] * tan
+        for (i in 0 .. 3) values[i] += values[i + 4] * tan
     }
 
     /**
@@ -82,7 +84,7 @@ internal data class Matrix (val values: FloatArray) {
      * └         ┘   └         ┘   └                 ┘
      */
     fun scale (x: Float, y: Float) {
-        for (i in 0 .. 4) {
+        for (i in 0 .. 3) {
             values[i] *= x
             values[i + 4] *= y
         }
@@ -97,7 +99,7 @@ internal data class Matrix (val values: FloatArray) {
      * └         ┘   └         ┘   └                                         ┘
      */
     fun translate (x: Float, y: Float) {
-        for (i in 0 .. 4) values[i + 12] += values[i] * x + values[i + 4] * y
+        for (i in 0 .. 3) values[i + 12] += values[i] * x + values[i + 4] * y
     }
 
 

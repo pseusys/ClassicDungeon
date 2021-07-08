@@ -1,7 +1,7 @@
 package com.ekdorn.classicdungeon.shared.utils
 
 
-internal typealias Listener <Target> = suspend (Target)->Boolean
+internal typealias Listener <Target> = (Target)->Boolean
 
 internal class Event <Target> (private val mode: TriggerMode = TriggerMode.STACK) {
     enum class TriggerMode { STACK, QUEUE }
@@ -19,7 +19,7 @@ internal class Event <Target> (private val mode: TriggerMode = TriggerMode.STACK
 
     fun remove (listener: Listener<Target>) = listeners.remove(listener)
 
-    suspend fun fire (target: Target) {
+    fun fire (target: Target) {
         for (listener in listeners) if (listener.invoke(target)) return
     }
 }

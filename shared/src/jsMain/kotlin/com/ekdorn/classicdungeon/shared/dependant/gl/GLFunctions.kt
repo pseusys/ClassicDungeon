@@ -8,9 +8,15 @@ actual object GLFunctions {
     actual fun setup () {
         context.clearColor(0.0F, 0.0F, 0.0F, 1.0F)
         context.pixelStorei(WebGLRenderingContext.UNPACK_FLIP_Y_WEBGL, 1)
+        context.enable(WebGLRenderingContext.SCISSOR_TEST)
     }
 
-    actual fun viewport (width: Int, height: Int) = context.viewport(0, 0, width, height)
+    actual fun portal (width: Int, height: Int) {
+        context.viewport(0, 0, width, height)
+        context.scissor(0, 0, width, height)
+    }
+
+    actual fun clear () = context.clear(WebGLRenderingContext.COLOR_BUFFER_BIT)
 
     // TODO: extract buffer!
     actual fun drawElements (count: Int, indices: ByteArray) {

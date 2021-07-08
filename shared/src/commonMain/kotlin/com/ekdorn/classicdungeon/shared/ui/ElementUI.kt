@@ -9,19 +9,19 @@ import com.ekdorn.classicdungeon.shared.maths.Matrix
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 
-internal open class ElementUI (rect: Rectangle, bufferSize: Int): WidgetUI(rect), Cloneable<ElementUI> {
+internal abstract class ElementUI (rect: Rectangle, bufferSize: Int): WidgetUI(rect), Cloneable<ElementUI> {
     private val speed = Vector()
     private val acceleration = Vector()
     private var angle = 0F
     private val angleSpeed = 0F
 
     // private val origin = Vector()
-    protected val model = Matrix()
+    private val model = Matrix()
 
     protected val ambient = Color(1F, 1F, 1F, 1F)
     protected val material = Color()
 
-    protected val buffer = GLBuffer(bufferSize * Float.SIZE_BYTES)
+    private val buffer = GLBuffer(bufferSize * Float.SIZE_BYTES)
 
 
     inline var alpha: Float
@@ -30,11 +30,6 @@ internal open class ElementUI (rect: Rectangle, bufferSize: Int): WidgetUI(rect)
             material.a = v
             ambient.a = 0F
         }
-
-
-    override fun clone(): ElementUI {
-        TODO("Not yet implemented")
-    }
 
 
     private fun speed (speed: Float, acceleration: Float, time: Float) = speed + acceleration * time
@@ -53,8 +48,9 @@ internal open class ElementUI (rect: Rectangle, bufferSize: Int): WidgetUI(rect)
         angle += angleSpeed * elapsed
 
         parent?.let {
-            val pixelCoords = it.pixelMetrics each coords
+            val pixelCoords = it.pixelCoords + (it.pixelMetrics each coords)
             val pixelDimens = it.pixelMetrics each metrics
+            println("METRICS: $metrics")
 
             model.toIdentity()
             model.translate(pixelCoords.x, -pixelCoords.y)
