@@ -9,7 +9,7 @@ import com.ekdorn.classicdungeon.shared.maths.Matrix
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 
-internal abstract class ElementUI (rect: Rectangle, bufferSize: Int): WidgetUI(rect), Cloneable<ElementUI> {
+internal abstract class ElementUI (rect: Rectangle): WidgetUI(rect) {
     private val speed = Vector()
     private val acceleration = Vector()
     private var angle = 0F
@@ -21,7 +21,7 @@ internal abstract class ElementUI (rect: Rectangle, bufferSize: Int): WidgetUI(r
     protected val ambient = Color(1F, 1F, 1F, 1F)
     protected val material = Color()
 
-    private val buffer = GLBuffer(bufferSize * Float.SIZE_BYTES)
+    private val buffer = GLBuffer(GLBuffer.TYPE.COMMON)
 
 
     inline var alpha: Float
@@ -50,7 +50,6 @@ internal abstract class ElementUI (rect: Rectangle, bufferSize: Int): WidgetUI(r
         parent?.let {
             val pixelCoords = it.pixelCoords + (it.pixelMetrics each coords)
             val pixelDimens = it.pixelMetrics each metrics
-            println("METRICS: $metrics")
 
             model.toIdentity()
             model.translate(pixelCoords.x, -pixelCoords.y)
@@ -63,9 +62,9 @@ internal abstract class ElementUI (rect: Rectangle, bufferSize: Int): WidgetUI(r
 
     protected fun updateBuffer (fromEach: Int, vararg dataSeq: FloatArray) {
         val size = dataSeq.size * dataSeq[0].size
-        if (size > buffer.size) throw Exception("Buffer for the widget $this is shorter than expected!")
         // println(FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
-        buffer.fill(FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
+        val arr = FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] }
+        buffer.fillDynamic(arr)
     }
 
 

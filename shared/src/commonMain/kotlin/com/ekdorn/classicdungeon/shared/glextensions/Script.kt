@@ -97,12 +97,15 @@ internal object Script: Assigned {
     fun setTexture (sampler: GLTexture) = texture.value1i(sampler.id)
 
 
-    fun drawSingle () {
+    fun drawMultiple (textures: Int) {
         position.set(2, 0, 4)
         coordinates.set(2, 2, 4)
-        // println("drawing ${Mapper.INDICES.size}: ${Mapper.INDICES}")
-        GLFunctions.drawElements(Mapper.INDICES.size, Mapper.INDICES)
+        Mapper.requestFor(textures)
+        Mapper.buffer.bind()
+        GLFunctions.drawElements(Mapper.elementsForTextures(textures))
     }
+
+    fun drawSingle () = drawMultiple(1)
 
 
     override fun gameEnded () {

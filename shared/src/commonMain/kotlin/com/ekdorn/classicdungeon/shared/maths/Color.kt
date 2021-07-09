@@ -2,6 +2,7 @@ package com.ekdorn.classicdungeon.shared.maths
 
 // TODO: replace color with array
 internal data class Color (var r: Float, var g: Float, var b: Float, var a: Float) {
+    constructor (r: Byte, g: Byte, b: Byte, a: Byte): this(r.toFloat() / 255, g.toFloat() / 255, b.toFloat() / 255, a.toFloat() / 255)
     constructor (): this(0F, 0F, 0F, 0F)
 
     inline var int: Int

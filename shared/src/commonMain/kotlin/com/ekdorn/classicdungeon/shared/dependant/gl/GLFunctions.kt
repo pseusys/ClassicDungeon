@@ -24,12 +24,11 @@ expect object GLFunctions {
      */
     fun clear ()
 
-    // TODO: fix indices array.
     /**
      * Function drawing elements on screen.
      * It uses currently set uniform parameters and attribute parameters from currently bound VBO.
      * It also uses an indices array, that is to be fixed in future.
      * @param count count of vertexes to draw
      */
-    fun drawElements (count: Int, indices: ByteArray)
+    fun drawElements (count: Int)
 }

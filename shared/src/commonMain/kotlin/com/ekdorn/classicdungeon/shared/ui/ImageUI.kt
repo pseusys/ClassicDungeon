@@ -8,39 +8,23 @@ import com.ekdorn.classicdungeon.shared.maths.Vector
 
 
 // 8 = 2 coords per vertex, 4 vertexes
-internal class ImageUI private constructor (rect: Rectangle): ElementUI(rect, 8) {
+internal class ImageUI private constructor (pos: Vector, width: Float, height: Float): PreservingUI(pos, width, height) {
     private companion object ImageDelay {
         val delay = Rectangle(0F, 0F, 1F, -1F).toPointsArray()
     }
 
-    constructor (resource: String, frame: Rectangle, pos: Vector, width: Float = -1F, height: Float = -1F): this(Rectangle(pos.x, pos.y, width, height)) {
+    constructor (resource: String, frame: Rectangle, pos: Vector, width: Float = -1F, height: Float = -1F): this(pos, width, height) {
         texture(resource)
-        if ((width == -1F) && (height == -1F)) metrics.apply { x = 1F; y = 1F }
-        else {
-            floatingWidth = width == -1F
-            floatingHeight = height == -1F
-        }
         frame(frame)
+        updateVertices()
     }
 
     constructor (resource: String, pos: Vector, width: Float = -1F, height: Float = -1F): this(resource, Rectangle(0F, 1F, 1F, 0F), pos, width, height)
 
 
-    var floatingWidth = false
-    var floatingHeight = false
-    override var parent: LayoutUI? = null
-        set (value) {
-            if (value != null) parentalResize(value.pixelMetrics.w, value.pixelMetrics.h)
-            else {
-                if (floatingWidth) metrics.x = -1F
-                if (floatingHeight) metrics.y = -1F
-            }
-            field = value
-        }
-
-    fun parentalResize (pixelWidth: Int, pixelHeight: Int) {
-        if (floatingWidth) metrics.x = (pixelHeight * metrics.y * texture.width()) / (texture.height() * pixelWidth)
-        if (floatingHeight) metrics.y = (pixelWidth * metrics.x * texture.height()) / (texture.width() * pixelHeight)
+    override fun parentalResize (pixelWidth: Int, pixelHeight: Int) {
+        if (floatingWidth) metrics.x = (pixelHeight * metrics.y * texture.image.width) / (texture.image.height * pixelWidth)
+        if (floatingHeight) metrics.y = (pixelWidth * metrics.x * texture.image.height) / (texture.image.width * pixelHeight)
         updateVertices()
     }
 
@@ -59,14 +43,6 @@ internal class ImageUI private constructor (rect: Rectangle): ElementUI(rect, 8)
             field = v
             updateVertices()
         }
-
-
-    override fun clone () = ImageUI(Rectangle(coords.x, coords.y, metrics.x, metrics.y)).also {
-        it.floatingHeight = floatingHeight
-        it.floatingWidth = floatingWidth
-        it.texture = texture
-        it.frame = frame
-    }
 
 
     // TODO: combine with updateVertices if needed!

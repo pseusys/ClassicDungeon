@@ -5,14 +5,20 @@ package com.ekdorn.classicdungeon.shared.dependant.gl
  * A buffer is associated with each UI element. Should be created along with each element.
  *
  * [OpenGL wiki entry](https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Buffer_Object)
- * @param size initial size of the VBO in bytes
+ * @param type buffer type
  * @see com.ekdorn.classicdungeon.shared.ui.ElementUI UI element
  */
-expect class GLBuffer (size: Int) {
+expect class GLBuffer (type: TYPE) {
+    val type: TYPE
+
     /**
-     * Buffer size
+     * Types of the buffer:
+     * - COMMON: ARRAY_BUFFER, keeps vertex data.
+     * - ELEMENT: ELEMENT_ARRAY_BUFFER, keeps vertex drawing data.
      */
-    val size: Int
+    enum class TYPE {
+        COMMON, ELEMENT
+    }
 
     /**
      * Bind this buffer.
@@ -22,11 +28,18 @@ expect class GLBuffer (size: Int) {
     fun bind ()
 
     /**
-     * Fill this buffer with data.
+     * Fill this buffer with float data. Used for array buffers.
      * Should be called once associated UI element has changed.
      * @param data array to fill data from
      */
-    fun fill (data: FloatArray)
+    fun fillDynamic (data: FloatArray)
+
+    /**
+     * Fill this buffer with int data. Used for element array buffers.
+     * Should be called once associated UI element has changed.
+     * @param data array to fill data from
+     */
+    fun fillStatic (data: ShortArray)
 
     /**
      * Delete this buffer.

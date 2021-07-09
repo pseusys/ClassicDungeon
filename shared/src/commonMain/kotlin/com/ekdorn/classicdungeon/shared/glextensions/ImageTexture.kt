@@ -4,7 +4,7 @@ import com.ekdorn.classicdungeon.shared.dependant.gl.GLTexture
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.utils.Image
 
-internal class ImageTexture private constructor (private var image: Image, filtering: FILTERING, wrapping: WRAPPING): GLTexture() {
+internal class ImageTexture private constructor (img: Image, filtering: FILTERING, wrapping: WRAPPING): GLTexture() {
     constructor (image: Image): this(image, FILTERING.NEAREST, WRAPPING.CLAMP)
 
     private var filteringMin: FILTERING
@@ -12,11 +12,19 @@ internal class ImageTexture private constructor (private var image: Image, filte
     private var wrappingS: WRAPPING
     private var wrappingT: WRAPPING
 
+    var image = img
+        set (v) {
+            image(v.width, v.height, v.pixels)
+            field = v
+        }
+
     init {
-        image(image)
+        image = img
+
         filteringMin = filtering
         filteringMag = filtering
         filter(filteringMin, filteringMag)
+
         wrappingS = wrapping
         wrappingT = wrapping
         wrap(wrappingS, wrappingT)
@@ -39,8 +47,6 @@ internal class ImageTexture private constructor (private var image: Image, filte
         wrappingT = t
         super.wrap(s, t)
     }
-
-    fun image (image: Image) = image(image.width, image.height, image.pixels)
 
     fun reload () {
         delete()

@@ -1,19 +1,25 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
 import context
-import org.khronos.webgl.Float32Array
-import org.khronos.webgl.WebGLBuffer
-import org.khronos.webgl.WebGLRenderingContext
+import org.khronos.webgl.*
 
-actual class GLBuffer actual constructor (actual val size: Int) {
+actual class GLBuffer actual constructor (actual val type: TYPE) {
+    actual enum class TYPE (val id: Int) {
+        COMMON(WebGLRenderingContext.ARRAY_BUFFER), ELEMENT(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER)
+    }
+
     private val self: WebGLBuffer? = context.createBuffer()
 
+    actual fun bind () = context.bindBuffer(type.id, self)
 
-    actual fun bind () = context.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, self)
+    actual fun fillDynamic (data: FloatArray) {
+        context.bindBuffer(type.id, self)
+        context.bufferData(type.id, Float32Array(data.toTypedArray()), WebGLRenderingContext.DYNAMIC_DRAW)
+    }
 
-    actual fun fill (data: FloatArray) {
-        context.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, self)
-        context.bufferData(WebGLRenderingContext.ARRAY_BUFFER, Float32Array(data.toTypedArray()), WebGLRenderingContext.DYNAMIC_DRAW)
+    actual fun fillStatic(data: ShortArray) {
+        context.bindBuffer(type.id, self)
+        context.bufferData(type.id, Int16Array(data.toTypedArray()), WebGLRenderingContext.STATIC_DRAW)
     }
 
     actual fun delete () = context.deleteBuffer(self)

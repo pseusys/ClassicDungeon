@@ -4,6 +4,7 @@ import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 import com.ekdorn.classicdungeon.shared.ui.ImageUI
 import com.ekdorn.classicdungeon.shared.ui.LayoutUI
+import com.ekdorn.classicdungeon.shared.ui.TextUI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlin.native.concurrent.ThreadLocal
@@ -42,6 +43,9 @@ internal object Game {
     fun start () {
         println("Game started!")
         root.children.remove(splash)
+        val hello = TextUI(Vector(0F, 0F), "Hello, World!", "font", 0.5F, 0.2F)
+        hello.parent = root
+        root.children.add(hello)
     }
 
     fun end () {

@@ -4,6 +4,9 @@ import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
 import com.ekdorn.classicdungeon.shared.generics.Assigned
 import com.ekdorn.classicdungeon.shared.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.utils.Event
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 
 
@@ -27,9 +30,12 @@ object Lifecycle {
         TextureCache.load("sample")
         Game.splash(width, height)
         Game.update()
-        
-        delay(1000)
-        // TextureCache.load("sample") load other
+
+        coroutineScope {
+            awaitAll(async { delay(2000) }, async {
+                TextureCache.load("font")
+            })
+        }
         Game.start()
     }
 

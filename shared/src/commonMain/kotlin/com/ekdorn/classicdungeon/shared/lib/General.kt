@@ -17,3 +17,5 @@ fun Float.str(ints: Int, floats: Int): String {
     val floatDigits = ((this - integerDigits) * 10F.pow(floats)).roundToInt().absoluteValue
     return "${integerDigits.toString().padStart(ints)}.${floatDigits.toString().padEnd(floats, '0')}"
 }
+
+fun <E> MutableCollection<E>.addAll (vararg values: E) = addAll(values)
