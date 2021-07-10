@@ -60,6 +60,8 @@ internal abstract class ElementUI (rect: Rectangle): WidgetUI(rect) {
         }
     }
 
+    protected abstract fun updateVertices ()
+
     protected fun updateBuffer (fromEach: Int, vararg dataSeq: FloatArray) {
         val size = dataSeq.size * dataSeq[0].size
         // println(FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })

@@ -57,7 +57,7 @@ internal class ImageUI private constructor (pos: Vector, width: Float, height: F
     }
 
 
-    private fun updateVertices () {
+    override fun updateVertices () {
         val x = if (mirroredH) Pair(frame.right, frame.left)
         else Pair(frame.left, frame.right)
 
