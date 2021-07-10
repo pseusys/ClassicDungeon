@@ -42,22 +42,19 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
             val charWidth = (ch.width() * lineHeight * ratio) / (metrics.x * ch.height())
 
             if (multiline && char.isEmpty() && (past.x + charWidth > 1)) {
-                past.apply { y += lineHeight; x = 0F }
+                past.apply { y -= 1; x = 0F }
                 textLen--
                 continue
             }
 
-            verticesList.add(Rectangle(past.x, -past.y, past.x + charWidth, -(lineHeight + past.y)))
+            verticesList.add(Rectangle(past.x, past.y, past.x + charWidth, past.y - 1))
             texturesList.add(Rectangle(ch.left / font.width, 1F, ch.right / font.width, 0F))
             past.x += charWidth
         }
 
-        metrics.y = past.y + lineHeight
-        val heights = metrics.y / lineHeight
-        verticesList.forEach {
-            it.top /= lineHeight * heights
-            it.bottom /= lineHeight * heights
-        }
+        val heights = -(past.y - 1)
+        verticesList.forEach { it.apply { top /= heights; bottom /= heights } }
+        metrics.y = heights * lineHeight
 
         val vertices = verticesList.flatMap { it.toPointsArray().asIterable() }.toFloatArray()
         val textures = texturesList.flatMap { it.toPointsArray().asIterable() }.toFloatArray()
