@@ -33,8 +33,8 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
 
     override fun updateVertices () {
         val past = Vector()
-        val verticesList = mutableListOf<Float>()
-        val texturesList = mutableListOf<Float>()
+        val verticesList = mutableListOf<Rectangle>()
+        val texturesList = mutableListOf<Rectangle>()
         textLen = text.length
 
         for (char in text.toCharArray()) {
@@ -42,18 +42,26 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
             val charWidth = (ch.width() * lineHeight * ratio) / (metrics.x * ch.height())
 
             if (multiline && char.isEmpty() && (past.x + charWidth > 1)) {
-                past.y += lineHeight
-                past.x = 0F
+                past.apply { y += lineHeight; x = 0F }
                 textLen--
                 continue
             }
 
-            verticesList.addAll(Rectangle(past.x, -past.y, past.x + charWidth, -(lineHeight + past.y)).toPointsArray().toTypedArray())
-            texturesList.addAll(Rectangle(ch.left / font.width, 1F, ch.right / font.width, 0F).toPointsArray().toTypedArray())
+            verticesList.add(Rectangle(past.x, -past.y, past.x + charWidth, -(lineHeight + past.y)))
+            texturesList.add(Rectangle(ch.left / font.width, 1F, ch.right / font.width, 0F))
             past.x += charWidth
         }
 
-        updateBuffer(2, verticesList.toFloatArray(), texturesList.toFloatArray())
+        metrics.y = past.y + lineHeight
+        val heights = metrics.y / lineHeight
+        verticesList.forEach {
+            it.top /= lineHeight * heights
+            it.bottom /= lineHeight * heights
+        }
+
+        val vertices = verticesList.flatMap { it.toPointsArray().asIterable() }.toFloatArray()
+        val textures = texturesList.flatMap { it.toPointsArray().asIterable() }.toFloatArray()
+        updateBuffer(2, vertices, textures)
     }
 
     override fun draw () {
