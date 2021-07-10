@@ -8,7 +8,6 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     google()
-    jcenter()
     mavenCentral()
 }
 
@@ -61,9 +60,3 @@ android {
         targetSdkVersion(30)
     }
 }
-
-tasks.withType<Wrapper> {
-    gradleVersion = "7.1.1"
-    distributionType = Wrapper.DistributionType.ALL
-}
-

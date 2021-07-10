@@ -1,7 +1,11 @@
+tasks.withType<Wrapper> {
+    gradleVersion = "7.1.1"
+    distributionType = Wrapper.DistributionType.ALL
+}
+
 buildscript {
     repositories {
         gradlePluginPortal()
-        jcenter()
         google()
         mavenCentral()
     }

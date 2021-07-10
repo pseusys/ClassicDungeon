@@ -1,14 +1,13 @@
 pluginManagement {
     repositories {
         google()
-        jcenter()
         gradlePluginPortal()
         mavenCentral()
     }
     
 }
-rootProject.name = "ClassicDungeon"
 
+rootProject.name = "ClassicDungeon"
 
 include(":android")
 include(":shared")
