@@ -15,12 +15,20 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
 
     private var ratio = 1F
     private var textLen = txt.length
+
+    var multiline = true
     var text = txt
+        set (v) {
+            field = v
+            updateVertices()
+        }
 
 
     override fun parentalResize (pixelWidth: Int, pixelHeight: Int) {
-        ratio = pixelHeight.toFloat() / pixelWidth.toFloat()
-        updateVertices()
+        if (preserving) {
+            ratio = pixelHeight.toFloat() / pixelWidth.toFloat()
+            updateVertices()
+        }
     }
 
     override fun updateVertices () {
@@ -33,7 +41,7 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
             val ch = font[char]!!
             val charWidth = (ch.width() * lineHeight * ratio) / (metrics.x * ch.height())
 
-            if (char.isEmpty() && (past.x + charWidth > 1)) {
+            if (multiline && char.isEmpty() && (past.x + charWidth > 1)) {
                 past.y += lineHeight
                 past.x = 0F
                 textLen--

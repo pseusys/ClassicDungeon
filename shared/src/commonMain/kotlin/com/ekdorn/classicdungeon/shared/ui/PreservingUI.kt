@@ -12,6 +12,8 @@ internal abstract class PreservingUI private constructor (rect: Rectangle): Elem
         }
     }
 
+    var preserving = true
+
     protected var floatingWidth = false
     protected var floatingHeight = false
 

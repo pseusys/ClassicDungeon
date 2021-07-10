@@ -23,9 +23,13 @@ internal class ImageUI private constructor (pos: Vector, width: Float, height: F
 
 
     override fun parentalResize (pixelWidth: Int, pixelHeight: Int) {
-        if (floatingWidth) metrics.x = (pixelHeight * metrics.y * texture.image.width) / (texture.image.height * pixelWidth)
-        if (floatingHeight) metrics.y = (pixelWidth * metrics.x * texture.image.height) / (texture.image.width * pixelHeight)
-        updateVertices()
+        if (preserving) {
+            if (floatingWidth) metrics.x = (pixelHeight * metrics.y * texture.image.width) / (texture.image.height * pixelWidth)
+            if (floatingHeight) metrics.y = (pixelWidth * metrics.x * texture.image.height) / (texture.image.width * pixelHeight)
+        } else {
+            if (floatingWidth) metrics.x = 1F - coords.x
+            if (floatingHeight) metrics.y = 1F - coords.y
+        }
     }
 
 
@@ -45,15 +49,14 @@ internal class ImageUI private constructor (pos: Vector, width: Float, height: F
         }
 
 
-    // TODO: combine with updateVertices if needed!
+    // TODO: remove if not needed!!
     fun texture (resource: String) {
         texture = TextureCache.get(resource)
     }
 
     fun frame (rect: Rectangle) {
         frame = rect
-        //width = 1.0 //rect.width() * texture.width() / 1000
-        //height = 1.0 //rect.height() * texture.height() / 1000
+        updateVertices()
     }
 
 
