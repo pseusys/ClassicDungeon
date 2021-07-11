@@ -63,8 +63,8 @@ internal abstract class ElementUI (rect: Rectangle): WidgetUI(rect) {
 
 
     override fun draw () {
-        println("Camera: ${Camera.UI}")
-        println("Model: $model")
+        // println("Camera: ${Camera.UI}")
+        // println("Model: $model")
 
         Script.setCamera(Camera.UI)
         Script.setModel(model)

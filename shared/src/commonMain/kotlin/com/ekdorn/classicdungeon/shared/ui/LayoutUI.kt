@@ -4,7 +4,7 @@ import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 
-internal class LayoutUI (private val rect: Rectangle): WidgetUI(Rectangle (0F, 0F, 0F, 0F)) {
+internal class LayoutUI (rect: Rectangle): WidgetUI(Rectangle (0F, 0F, 0F, 0F)) {
     val children = mutableListOf<WidgetUI>()
 
     // TODO: refactor!
@@ -15,7 +15,7 @@ internal class LayoutUI (private val rect: Rectangle): WidgetUI(Rectangle (0F, 0
 
     fun resize (pixelWidth: Int, pixelHeight: Int) {
         pixelMetrics = Vector(pixelWidth, pixelHeight)
-        children.forEach { if (it.exists && it.visible && it is PreservingUI) { it.parentalResize(pixelWidth, pixelHeight) } }
+        children.forEach { if (it.exists && it.visible && it is PreservingUI) { it.parentalResize(pixelMetrics.ratio) } }
     }
 
     override fun update (elapsed: Int) {

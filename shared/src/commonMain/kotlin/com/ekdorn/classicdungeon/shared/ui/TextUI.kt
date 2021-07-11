@@ -13,7 +13,7 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
         updateVertices()
     }
 
-    private var ratio = 1F
+    private var rat = 1F
     private var textLen = txt.length
 
     var multiline = true
@@ -24,9 +24,9 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
         }
 
 
-    override fun parentalResize (pixelWidth: Int, pixelHeight: Int) {
+    override fun parentalResize (ratio: Float) {
         if (preserving) {
-            ratio = pixelHeight.toFloat() / pixelWidth.toFloat()
+            rat = ratio
             updateVertices()
         }
     }
@@ -37,9 +37,13 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
         val texturesList = mutableListOf<Rectangle>()
         textLen = text.length
 
+        val font = ImageFont("font")
+
         for (char in text.toCharArray()) {
+            println("contains: ${font.contains(char)}")
+            println("containsKey: ${font.containsKey(char)}")
             val ch = font[char]!!
-            val charWidth = (ch.width() * lineHeight * ratio) / (metrics.x * ch.height())
+            val charWidth = (ch.ratio * lineHeight) / (metrics.x * rat)
 
             if (multiline && char.isEmpty() && (past.x + charWidth > 1)) {
                 past.apply { y -= 1; x = 0F }

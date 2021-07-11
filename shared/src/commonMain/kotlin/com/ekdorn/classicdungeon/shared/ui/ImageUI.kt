@@ -22,10 +22,10 @@ internal open class ImageUI private constructor (pos: Vector, width: Float, heig
     constructor (resource: String, pos: Vector, width: Float = -1F, height: Float = -1F): this(resource, Rectangle(0F, 1F, 1F, 0F), pos, width, height)
 
 
-    override fun parentalResize (pixelWidth: Int, pixelHeight: Int) {
+    override fun parentalResize (ratio: Float) {
         if (preserving) {
-            if (floatingWidth) metrics.x = (pixelHeight * metrics.y * texture.image.width * frame.width()) / (texture.image.height * frame.height() * pixelWidth)
-            if (floatingHeight) metrics.y = (pixelWidth * metrics.x * texture.image.height * frame.height()) / (texture.image.width * frame.width() * pixelHeight)
+            if (floatingWidth) metrics.x = (metrics.y * texture.image.ratio * frame.ratio) / ratio
+            if (floatingHeight) metrics.y = (metrics.x * ratio) / (texture.image.ratio * frame.ratio)
         } else {
             if (floatingWidth) metrics.x = 1F - coords.x
             if (floatingHeight) metrics.y = 1F - coords.y

@@ -21,7 +21,7 @@ internal abstract class PreservingUI private constructor (rect: Rectangle): Elem
 
     override var parent: LayoutUI? = null
         set (value) {
-            if (value != null) parentalResize(value.pixelMetrics.w, value.pixelMetrics.h)
+            if (value != null) parentalResize(value.pixelMetrics.ratio)
             else {
                 if (floatingWidth) metrics.x = -1F
                 if (floatingHeight) metrics.y = -1F
@@ -29,5 +29,5 @@ internal abstract class PreservingUI private constructor (rect: Rectangle): Elem
             field = value
         }
 
-    abstract fun parentalResize (pixelWidth: Int, pixelHeight: Int)
+    abstract fun parentalResize (ratio: Float)
 }

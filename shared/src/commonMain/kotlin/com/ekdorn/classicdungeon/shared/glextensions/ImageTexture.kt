@@ -14,7 +14,7 @@ internal open class ImageTexture private constructor (img: Image, filtering: FIL
 
     var image = img
         set (v) {
-            image(v.width, v.height, v.pixels)
+            image(v.width.toInt(), v.height.toInt(), v.pixels)
             field = v
         }
 
@@ -31,18 +31,13 @@ internal open class ImageTexture private constructor (img: Image, filtering: FIL
     }
 
 
-
-    fun width () = image.width
-    fun height () = image.height
-
-
-    override fun filter (minification: FILTERING, magnification: FILTERING) {
+    final override fun filter (minification: FILTERING, magnification: FILTERING) {
         filteringMin = minification
         filteringMag = magnification
         super.filter(minification, magnification)
     }
 
-    override fun wrap (s: WRAPPING, t: WRAPPING) {
+    final override fun wrap (s: WRAPPING, t: WRAPPING) {
         wrappingS = s
         wrappingT = t
         super.wrap(s, t)

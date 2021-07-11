@@ -7,7 +7,6 @@ import com.ekdorn.classicdungeon.shared.ui.ClipUI
 import com.ekdorn.classicdungeon.shared.ui.ImageUI
 import com.ekdorn.classicdungeon.shared.ui.LayoutUI
 import com.ekdorn.classicdungeon.shared.ui.TextUI
-import com.ekdorn.classicdungeon.shared.utils.Animation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
@@ -54,7 +53,7 @@ internal object Game {
         root.children.add(hello)
 
         val bee = ClipUI("bee", Vector(0F, 0.3F), height = 0.2F)
-        bee.play(Animation(20, true, 7, 8, 9, 10))
+        bee.play(20, true, 7, 8, 9, 10)
         bee.parent = root
         root.children.add(bee)
     }

@@ -12,15 +12,15 @@ internal val ImageFonts by lazy { hashMapOf(
     //Pair("large", ImageFont("font_large"))
 )}
 
-internal class ImageFont (resource: String): HashMap<Char, Rectangle>(ALPHABET.size) {
+internal class ImageFont (resource: String): MutableMap<Char, Rectangle> by HashMap(ALPHABET.size) {
     private companion object {
         val ALPHABET = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007FАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя".toCharArray().toTypedArray()
         val SPLIT = Color()
     }
 
     val texture = TextureCache.get(resource)
-    val width = texture.image.width
-    val height = texture.image.height
+    val width = texture.image.width.toInt()
+    val height = texture.image.height.toInt()
 
     init {
         var gap: Boolean
