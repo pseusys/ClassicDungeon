@@ -8,7 +8,7 @@ import com.ekdorn.classicdungeon.shared.maths.Vector
 
 
 // 8 = 2 coords per vertex, 4 vertexes
-internal class ImageUI private constructor (pos: Vector, width: Float, height: Float): PreservingUI(pos, width, height) {
+internal open class ImageUI private constructor (pos: Vector, width: Float, height: Float): PreservingUI(pos, width, height) {
     private companion object ImageDelay {
         val delay = Rectangle(0F, 0F, 1F, -1F).toPointsArray()
     }
@@ -24,8 +24,8 @@ internal class ImageUI private constructor (pos: Vector, width: Float, height: F
 
     override fun parentalResize (pixelWidth: Int, pixelHeight: Int) {
         if (preserving) {
-            if (floatingWidth) metrics.x = (pixelHeight * metrics.y * texture.image.width) / (texture.image.height * pixelWidth)
-            if (floatingHeight) metrics.y = (pixelWidth * metrics.x * texture.image.height) / (texture.image.width * pixelHeight)
+            if (floatingWidth) metrics.x = (pixelHeight * metrics.y * texture.image.width * frame.width()) / (texture.image.height * frame.height() * pixelWidth)
+            if (floatingHeight) metrics.y = (pixelWidth * metrics.x * texture.image.height * frame.height()) / (texture.image.width * frame.width() * pixelHeight)
         } else {
             if (floatingWidth) metrics.x = 1F - coords.x
             if (floatingHeight) metrics.y = 1F - coords.y
@@ -33,7 +33,7 @@ internal class ImageUI private constructor (pos: Vector, width: Float, height: F
     }
 
 
-    private lateinit var texture: ImageTexture
+    protected lateinit var texture: ImageTexture
     private lateinit var frame: Rectangle
     private lateinit var textureVertices: Rectangle
 
@@ -60,7 +60,7 @@ internal class ImageUI private constructor (pos: Vector, width: Float, height: F
     }
 
 
-    override fun updateVertices () {
+    final override fun updateVertices () {
         val x = if (mirroredH) Pair(frame.right, frame.left)
         else Pair(frame.left, frame.right)
 

@@ -63,7 +63,7 @@ fun resume () {
 fun update () {
     Lifecycle.update()
     println("onupdate")
-    // if (timerEnabled) window.requestAnimationFrame { update() }
+    if (timerEnabled) window.requestAnimationFrame { update() }
 }
 
 fun pause () {

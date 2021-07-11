@@ -34,7 +34,7 @@ internal abstract class WidgetUI (rect: Rectangle) {
         }
 
 
-    abstract fun update (elapsed: Float)
+    abstract fun update (elapsed: Int)
 
     abstract fun draw ()
 

@@ -1,7 +1,7 @@
 package com.ekdorn.classicdungeon.shared.utils
 
 
-internal typealias Listener <Target> = (Target)->Boolean
+internal typealias Listener <Target> = (Target) -> Boolean
 
 internal class Event <Target> (private val mode: TriggerMode = TriggerMode.STACK) {
     enum class TriggerMode { STACK, QUEUE }

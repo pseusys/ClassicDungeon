@@ -18,23 +18,15 @@ internal abstract class ElementUI (rect: Rectangle): WidgetUI(rect) {
     // private val origin = Vector()
     private val model = Matrix()
 
-    protected val ambient = Color(1F, 1F, 1F, 1F)
-    protected val material = Color()
+    protected val ambient = Color()
+    protected val material = Color(1F, 1F, 1F, 1F)
 
     private val buffer = GLBuffer(GLBuffer.TYPE.COMMON)
 
 
-    inline var alpha: Float
-        get () = material.a + ambient.a
-        set (v) {
-            material.a = v
-            ambient.a = 0F
-        }
+    private fun speed (speed: Float, acceleration: Float, time: Int) = speed + acceleration * time
 
-
-    private fun speed (speed: Float, acceleration: Float, time: Float) = speed + acceleration * time
-
-    override fun update (elapsed: Float) {
+    override fun update (elapsed: Int) {
         val halfDeltaX = (speed(speed.x, acceleration.x, elapsed) - speed.x) / 2
         speed.x += halfDeltaX
         coords.x += speed.x * elapsed
@@ -84,4 +76,28 @@ internal abstract class ElementUI (rect: Rectangle): WidgetUI(rect) {
     }
 
     override fun delete () = buffer.delete()
+
+
+
+    inline var alpha: Float
+        get () = material.a + ambient.a
+        set (v) {
+            material.a = v
+            ambient.a = 0F
+        }
+
+    fun resetColor () {
+        material.apply { r = 1F; g = 1F; b = 1F; a = 1F }
+        ambient.apply { r = 0F; g = 0F; b = 0F; a = 0F }
+    }
+
+    fun multiplyColor (color: Color) {
+        ambient.apply { r = 0F; g = 0F; b = 0F }
+        material.apply { r = color.r; g = color.g; b = color.b }
+    }
+
+    fun addColor (color: Color) {
+        material.apply { r = 0F; g = 0F; b = 0F }
+        ambient.apply { r = color.r; g = color.g; b = color.b }
+    }
 }

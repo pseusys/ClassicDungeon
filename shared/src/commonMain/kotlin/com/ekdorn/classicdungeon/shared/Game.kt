@@ -1,18 +1,22 @@
 package com.ekdorn.classicdungeon.shared
 
+import com.ekdorn.classicdungeon.shared.maths.Color
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
+import com.ekdorn.classicdungeon.shared.ui.ClipUI
 import com.ekdorn.classicdungeon.shared.ui.ImageUI
 import com.ekdorn.classicdungeon.shared.ui.LayoutUI
 import com.ekdorn.classicdungeon.shared.ui.TextUI
+import com.ekdorn.classicdungeon.shared.utils.Animation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.datetime.Clock
 import kotlin.native.concurrent.ThreadLocal
 
 
 @ThreadLocal
 internal object Game {
-    private var elapsed = 0F
+    private var elapsed = 0
     val scope = CoroutineScope(Dispatchers.Default)
 
     private lateinit var root: LayoutUI
@@ -20,7 +24,7 @@ internal object Game {
 
     fun resume () {}
     fun update () {
-        val current = 0F //Clock.System.now().toEpochMilliseconds()
+        val current = Clock.System.now().toEpochMilliseconds().toInt()
         root.update(current - elapsed)
         root.draw()
         elapsed = current
@@ -43,9 +47,16 @@ internal object Game {
     fun start () {
         println("Game started!")
         root.children.remove(splash)
+
         val hello = TextUI(Vector(0F, 0F), "Hello, World!", "font", 0.5F, 0.2F)
+        hello.multiplyColor(Color(1F, 1F, 0F, 1F))
         hello.parent = root
         root.children.add(hello)
+
+        val bee = ClipUI("bee", Vector(0F, 0.3F), height = 0.2F)
+        bee.play(Animation(20, true, 7, 8, 9, 10))
+        bee.parent = root
+        root.children.add(bee)
     }
 
     fun end () {

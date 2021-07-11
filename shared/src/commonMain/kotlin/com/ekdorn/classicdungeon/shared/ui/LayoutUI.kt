@@ -18,7 +18,7 @@ internal class LayoutUI (private val rect: Rectangle): WidgetUI(Rectangle (0F, 0
         children.forEach { if (it.exists && it.visible && it is PreservingUI) { it.parentalResize(pixelWidth, pixelHeight) } }
     }
 
-    override fun update (elapsed: Float) {
+    override fun update (elapsed: Int) {
         children.forEach { if (it.exists && it.visible) it.update(elapsed) }
     }
 

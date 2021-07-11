@@ -4,7 +4,7 @@ import com.ekdorn.classicdungeon.shared.dependant.gl.GLTexture
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.utils.Image
 
-internal class ImageTexture private constructor (img: Image, filtering: FILTERING, wrapping: WRAPPING): GLTexture() {
+internal open class ImageTexture private constructor (img: Image, filtering: FILTERING, wrapping: WRAPPING): GLTexture() {
     constructor (image: Image): this(image, FILTERING.NEAREST, WRAPPING.CLAMP)
 
     private var filteringMin: FILTERING

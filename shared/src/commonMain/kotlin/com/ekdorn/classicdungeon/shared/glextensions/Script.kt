@@ -38,7 +38,7 @@ internal object Script: Assigned {
             varying vec2 fragment;
             
             void main () {
-                gl_FragColor = texture2D(texture, fragment);// * material + ambient;
+                gl_FragColor = texture2D(texture, fragment) * material + ambient;
             }
         """
 
