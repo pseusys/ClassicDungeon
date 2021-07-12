@@ -8,7 +8,7 @@ import com.ekdorn.classicdungeon.shared.utils.ImageFont
 import com.ekdorn.classicdungeon.shared.utils.ImageFonts
 
 
-internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, width: Float, var lineHeight: Float): PreservingUI(pos, width, 1 - pos.y) {
+internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, width: Float, var lineHeight: Float): ElementUI(pos, width, 1 - pos.y) {
     constructor (pos: Vector, txt: String, font: String, width: Float, lineHeight: Float): this(pos, txt, ImageFonts[font]!!, width, lineHeight) {
         updateVertices()
     }
@@ -24,7 +24,7 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
         }
 
 
-    override fun parentalResize (ratio: Float) {
+    override fun resize (ratio: Float) {
         if (preserving) {
             rat = ratio
             updateVertices()

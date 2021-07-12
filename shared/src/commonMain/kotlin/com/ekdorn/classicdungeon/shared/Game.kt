@@ -1,11 +1,12 @@
 package com.ekdorn.classicdungeon.shared
 
+import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
 import com.ekdorn.classicdungeon.shared.maths.Color
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 import com.ekdorn.classicdungeon.shared.ui.ClipUI
 import com.ekdorn.classicdungeon.shared.ui.ImageUI
-import com.ekdorn.classicdungeon.shared.ui.LayoutUI
+import com.ekdorn.classicdungeon.shared.ui.RootUI
 import com.ekdorn.classicdungeon.shared.ui.TextUI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,13 +19,14 @@ internal object Game {
     private var elapsed = 0
     val scope = CoroutineScope(Dispatchers.Default)
 
-    private lateinit var root: LayoutUI
+    private lateinit var root: RootUI
     private lateinit var splash: ImageUI
 
     fun resume () {}
     fun update () {
         val current = Clock.System.now().toEpochMilliseconds().toInt()
         root.update(current - elapsed)
+        GLFunctions.clear()
         root.draw()
         elapsed = current
     }
@@ -32,10 +34,9 @@ internal object Game {
 
 
     fun splash (width: Int, height: Int) {
-        root = LayoutUI(Rectangle(0F, 0F, width.toFloat(), height.toFloat()))
+        root = RootUI(Rectangle(0F, 0F, 1F, 1F), width, height)
         splash = ImageUI("sample", Vector(0.1F, 0.1F), width = 0.5F)
-        splash.parent = root
-        root.children.add(splash)
+        root.add(splash)
 
         Input.onResized.add {
             root.resize(it.w, it.h)
@@ -45,17 +46,15 @@ internal object Game {
 
     fun start () {
         println("Game started!")
-        root.children.remove(splash)
+        root.remove(splash)
 
         val hello = TextUI(Vector(0F, 0F), "Hello, World!", "font", 0.5F, 0.2F)
         hello.multiplyColor(Color(1F, 1F, 0F, 1F))
-        hello.parent = root
-        root.children.add(hello)
+        root.add(hello)
 
         val bee = ClipUI("bee", Vector(0F, 0.3F), height = 0.2F)
         bee.play(20, true, 7, 8, 9, 10)
-        bee.parent = root
-        root.children.add(bee)
+        root.add(bee)
     }
 
     fun end () {

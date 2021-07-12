@@ -1,7 +1,6 @@
 package com.ekdorn.classicdungeon.shared.ui
 
 import com.ekdorn.classicdungeon.shared.dependant.gl.GLBuffer
-import com.ekdorn.classicdungeon.shared.generics.Cloneable
 import com.ekdorn.classicdungeon.shared.glextensions.Camera
 import com.ekdorn.classicdungeon.shared.glextensions.Script
 import com.ekdorn.classicdungeon.shared.maths.Color
@@ -10,6 +9,22 @@ import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 
 internal abstract class ElementUI (rect: Rectangle): WidgetUI(rect) {
+    constructor (pos: Vector, width: Float, height: Float): this(Rectangle(pos.x, pos.y, width, height)) {
+        if ((width == -1F) && (height == -1F)) metrics.apply { x = 1F; y = 1F }
+        else {
+            floatingWidth = width == -1F
+            floatingHeight = height == -1F
+        }
+    }
+
+    protected var pixelCoords = Vector()
+    protected var pixelMetrics = Vector()
+
+    var preserving = true
+
+    protected var floatingWidth = false
+    protected var floatingHeight = false
+
     private val speed = Vector()
     private val acceleration = Vector()
     private var angle = 0F
@@ -39,18 +54,24 @@ internal abstract class ElementUI (rect: Rectangle): WidgetUI(rect) {
 
         angle += angleSpeed * elapsed
 
-        parent?.let {
-            val pixelCoords = it.pixelCoords + (it.pixelMetrics each coords)
-            val pixelDimens = it.pixelMetrics each metrics
-
-            model.toIdentity()
-            model.translate(pixelCoords.x, -pixelCoords.y)
-            model.scale(pixelDimens.x, pixelDimens.y)
-            // model.translate(origin.x, origin.y) // Needed?
-            model.rotate(angle)
-            // model.translate(-origin.x, -origin.y) // Needed?
-        }
+        model.toIdentity()
+        model.translate(pixelCoords.x, -pixelCoords.y)
+        model.scale(pixelMetrics.x, pixelMetrics.y)
+        // model.translate(origin.x, origin.y) // Needed?
+        model.rotate(angle)
+        // model.translate(-origin.x, -origin.y) // Needed?
     }
+
+
+    open fun translate (parentCoords: Vector, parentMetrics: Vector) {
+        pixelCoords = parentCoords + (parentMetrics each coords)
+        val newMetrics = parentMetrics each metrics
+        if (newMetrics != pixelMetrics) resize(parentMetrics.ratio)
+        pixelMetrics = parentMetrics each metrics
+    }
+
+    abstract fun resize (ratio: Float)
+
 
     protected abstract fun updateVertices ()
 

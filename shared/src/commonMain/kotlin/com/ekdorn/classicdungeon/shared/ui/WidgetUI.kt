@@ -15,7 +15,7 @@ internal abstract class WidgetUI (rect: Rectangle) {
     val coords = Vector()
     val metrics = Vector()
 
-    open var parent: LayoutUI? = null
+    var parent: LayoutUI? = null
 
     init {
         coords.x = rect.left
@@ -38,13 +38,6 @@ internal abstract class WidgetUI (rect: Rectangle) {
 
     abstract fun draw ()
 
-
-    fun detach () {
-        parent = null
-    }
-    fun attach (root: LayoutUI) {
-        parent = root
-    }
 
     fun kill () {
         alive = false

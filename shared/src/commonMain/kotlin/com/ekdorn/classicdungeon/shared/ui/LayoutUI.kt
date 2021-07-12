@@ -1,31 +1,35 @@
 package com.ekdorn.classicdungeon.shared.ui
 
-import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 
-internal class LayoutUI (rect: Rectangle): WidgetUI(Rectangle (0F, 0F, 0F, 0F)) {
-    val children = mutableListOf<WidgetUI>()
+internal abstract class LayoutUI (rect: Rectangle): ElementUI(rect) {
+    private val children = mutableListOf<ElementUI>()
 
-    // TODO: refactor!
-    var pixelCoords = Vector(rect.left, rect.top)
-        private set
-    var pixelMetrics = Vector(rect.right, rect.bottom)
-        private set
+    fun add (element: ElementUI) {
+        element.translate(pixelCoords, pixelMetrics)
+        element.parent = this
+        children.add(element)
+    }
 
-    fun resize (pixelWidth: Int, pixelHeight: Int) {
-        pixelMetrics = Vector(pixelWidth, pixelHeight)
-        children.forEach { if (it.exists && it.visible && it is PreservingUI) { it.parentalResize(pixelMetrics.ratio) } }
+    fun remove (element: ElementUI) {
+        element.parent = null
+        children.remove(element)
+    }
+
+    override fun translate (parentCoords: Vector, parentMetrics: Vector) {
+        super.translate(parentCoords, parentMetrics)
+        children.forEach { if (it.exists && it.visible) it.translate(pixelCoords, pixelMetrics) }
     }
 
     override fun update (elapsed: Int) {
-        children.forEach { if (it.exists && it.visible) it.update(elapsed) }
+        children.forEach { if (it.exists && it.visible) {
+            it.translate(pixelCoords, pixelMetrics)
+            it.update(elapsed)
+        } }
     }
 
     override fun draw () {
-        GLFunctions.clear() // TODO: look where it was cleared!
         children.forEach { if (it.exists && it.visible) it.draw() }
     }
-
-    override fun delete() {}
 }

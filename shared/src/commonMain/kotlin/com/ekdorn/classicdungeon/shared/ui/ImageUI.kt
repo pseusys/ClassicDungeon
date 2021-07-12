@@ -8,7 +8,7 @@ import com.ekdorn.classicdungeon.shared.maths.Vector
 
 
 // 8 = 2 coords per vertex, 4 vertexes
-internal open class ImageUI private constructor (pos: Vector, width: Float, height: Float): PreservingUI(pos, width, height) {
+internal open class ImageUI private constructor (pos: Vector, width: Float, height: Float): ElementUI(pos, width, height) {
     private companion object ImageDelay {
         val delay = Rectangle(0F, 0F, 1F, -1F).toPointsArray()
     }
@@ -22,7 +22,7 @@ internal open class ImageUI private constructor (pos: Vector, width: Float, heig
     constructor (resource: String, pos: Vector, width: Float = -1F, height: Float = -1F): this(resource, Rectangle(0F, 1F, 1F, 0F), pos, width, height)
 
 
-    override fun parentalResize (ratio: Float) {
+    override fun resize (ratio: Float) {
         if (preserving) {
             if (floatingWidth) metrics.x = (metrics.y * texture.image.ratio * frame.ratio) / ratio
             if (floatingHeight) metrics.y = (metrics.x * ratio) / (texture.image.ratio * frame.ratio)
