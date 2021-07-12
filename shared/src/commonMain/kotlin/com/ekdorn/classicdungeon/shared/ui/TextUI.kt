@@ -37,11 +37,7 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
         val texturesList = mutableListOf<Rectangle>()
         textLen = text.length
 
-        val font = ImageFont("font")
-
         for (char in text.toCharArray()) {
-            println("contains: ${font.contains(char)}")
-            println("containsKey: ${font.containsKey(char)}")
             val ch = font[char]!!
             val charWidth = (ch.ratio * lineHeight) / (metrics.x * rat)
 

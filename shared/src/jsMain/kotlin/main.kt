@@ -2,14 +2,11 @@ import com.ekdorn.classicdungeon.shared.Input
 import com.ekdorn.classicdungeon.shared.Lifecycle
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.promise
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLImageElement
+import org.w3c.dom.get
 
 
 val surface = document.getElementById("surface") as HTMLCanvasElement
@@ -30,10 +27,6 @@ fun main () {
         }.then { resume() }
     }
 
-    window.onfocus = {
-        resume()
-    }
-
     window.onresize = {
         pause()
         surface.width = window.innerWidth
@@ -42,15 +35,16 @@ fun main () {
         resume()
     }
 
-    window.onblur = {
-        pause()
-    }
-
     window.onunload = {
         pause()
         Lifecycle.end()
         println("onend")
     }
+
+    document.addEventListener("visibilitychange", {
+        if (document["hidden"] as Boolean) pause()
+        else resume()
+    })
 }
 
 fun resume () {
