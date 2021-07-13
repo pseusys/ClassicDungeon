@@ -8,7 +8,7 @@ import com.ekdorn.classicdungeon.shared.utils.ImageFont
 import com.ekdorn.classicdungeon.shared.utils.ImageFonts
 
 
-internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, width: Float, var lineHeight: Float): ElementUI(pos, width, 1 - pos.y) {
+internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, width: Float, var lineHeight: Float): ElementUI(Rectangle(pos.x, pos.y, width, 1 - pos.y)) {
     constructor (pos: Vector, txt: String, font: String, width: Float, lineHeight: Float): this(pos, txt, ImageFonts[font]!!, width, lineHeight) {
         updateVertices()
     }

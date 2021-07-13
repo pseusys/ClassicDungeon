@@ -2,6 +2,7 @@ package com.ekdorn.classicdungeon.shared.ui
 
 import com.ekdorn.classicdungeon.shared.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.glextensions.Script
+import com.ekdorn.classicdungeon.shared.lib.RDP
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 
@@ -10,31 +11,17 @@ internal class FrameUI (resource: String, rect: Rectangle, private val frame: Re
     constructor (resource: String, margin: Int): this(resource, Rectangle(margin, margin, 1 - 2 * margin, 1 - 2 * margin))
 
     private val image = TextureCache.get(resource)
-    private var realFactor = Vector()
+    private val factorRDP = RDP(Vector(), { 1F / it }, { it })
 
-    var factor = Vector(0.1F, 0.1F)
     var border = 0.31818181818F
 
     init {
         updateVertices()
+        factorRDP.setIdeal(Vector(0.1F, 0.1F), 0.1F, 0.1F)
     }
 
     override fun resize (ratio: Float) {
-        if (preserving) {
-            if (factor.x == -1F) realFactor.x = factor.y * ratio
-            else if (factor.y == -1F) realFactor.y = factor.x / ratio
-            else {
-                val factorWidth = factor.x / ratio
-                val factorHeight = factor.y * ratio
-                if (factorWidth <= factor.x) {
-                    realFactor.x = factorWidth
-                    realFactor.y = factor.y
-                } else {
-                    realFactor.x = factor.x
-                    realFactor.y = factorHeight
-                }
-            }
-        }
+        factorRDP.resize(ratio)
         updateVertices()
     }
 
@@ -54,20 +41,19 @@ internal class FrameUI (resource: String, rect: Rectangle, private val frame: Re
             Rectangle(frame.left + borderWidth, frame.bottom + borderHeight, frame.right - borderWidth, frame.bottom),
             Rectangle(frame.right - borderWidth, frame.bottom + borderHeight, frame.right, frame.bottom)
         )
-        println(factor)
-        println(realFactor)
+        println(factorRDP.value)
         val coords = arrayOf(
-            Rectangle(0F, 0F, realFactor.x, -realFactor.y),
-            Rectangle(realFactor.x, 0F, 1 - realFactor.x, -realFactor.y),
-            Rectangle(1 - realFactor.x, 0F, 1F, -realFactor.y),
+            Rectangle(0F, 0F, factorRDP.value.x, -factorRDP.value.y),
+            Rectangle(factorRDP.value.x, 0F, 1 - factorRDP.value.x, -factorRDP.value.y),
+            Rectangle(1 - factorRDP.value.x, 0F, 1F, -factorRDP.value.y),
 
-            Rectangle(0F, -realFactor.y, realFactor.x, realFactor.y - 1),
-            Rectangle(realFactor.x, -realFactor.y, 1 - realFactor.x, realFactor.y - 1),
-            Rectangle(1 - realFactor.x, -realFactor.y, 1F, realFactor.y - 1),
+            Rectangle(0F, -factorRDP.value.y, factorRDP.value.x, factorRDP.value.y - 1),
+            Rectangle(factorRDP.value.x, -factorRDP.value.y, 1 - factorRDP.value.x, factorRDP.value.y - 1),
+            Rectangle(1 - factorRDP.value.x, -factorRDP.value.y, 1F, factorRDP.value.y - 1),
 
-            Rectangle(0F, realFactor.y - 1, realFactor.x, -1F),
-            Rectangle(realFactor.x, realFactor.y - 1, 1 - realFactor.x, -1F),
-            Rectangle(1 - realFactor.x, realFactor.y - 1, 1F, -1F),
+            Rectangle(0F, factorRDP.value.y - 1, factorRDP.value.x, -1F),
+            Rectangle(factorRDP.value.x, factorRDP.value.y - 1, 1 - factorRDP.value.x, -1F),
+            Rectangle(1 - factorRDP.value.x, factorRDP.value.y - 1, 1F, -1F),
         )
         updateBuffer(2, coords.flatMap { it.toPointsArray().asIterable() }.toFloatArray(), edges.flatMap { it.toPointsArray().asIterable() }.toFloatArray())
     }

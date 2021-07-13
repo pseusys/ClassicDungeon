@@ -37,7 +37,7 @@ internal object Game {
 
     fun splash (width: Int, height: Int) {
         root = RootUI(Rectangle(0F, 0F, 1F, 1F), width, height)
-        splash = ImageUI("sample", Vector(0.1F, 0.1F), 0.8F, 0.8F)
+        splash = ImageUI("sample", Vector(0.1F, 0.1F), 0.8F)
         root.add(splash)
 
         Input.onResized.add {

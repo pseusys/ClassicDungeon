@@ -9,21 +9,10 @@ import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 
 internal abstract class ElementUI (rect: Rectangle): WidgetUI(rect) {
-    constructor (pos: Vector, width: Float = -1F, height: Float = -1F): this(Rectangle(pos.x, pos.y, width, height)) {
-        if ((width == -1F) && (height == -1F)) metrics.apply { x = 1F; y = 1F }
-        else {
-            idealWidth = width
-            idealHeight = height
-        }
-    }
-
     protected var pixelCoords = Vector()
     protected var pixelMetrics = Vector()
 
     var preserving = true
-
-    protected var idealWidth = -1F
-    protected var idealHeight = -1F
 
     private val speed = Vector()
     private val acceleration = Vector()
