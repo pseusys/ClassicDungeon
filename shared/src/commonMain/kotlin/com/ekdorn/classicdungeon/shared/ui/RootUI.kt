@@ -13,7 +13,9 @@ internal class RootUI (rect: Rectangle, screenWidth: Int, screenHeight: Int): La
         pixelMetrics = Vector(screenWidth, screenHeight)
     }
 
-    override fun resize(ratio: Float) {}
+    override fun drawSelf () {}
 
-    override fun updateVertices() {}
+    override fun resize (ratio: Float) {}
+
+    override fun updateVertices () {}
 }

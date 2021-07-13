@@ -24,18 +24,28 @@ internal open class ImageUI private constructor (pos: Vector, width: Float, heig
 
     override fun resize (ratio: Float) {
         if (preserving) {
-            if (floatingWidth) metrics.x = (metrics.y * texture.image.ratio * frame.ratio) / ratio
-            if (floatingHeight) metrics.y = (metrics.x * ratio) / (texture.image.ratio * frame.ratio)
+            if (idealWidth == -1F) metrics.x = (idealWidth * texture.image.ratio * frame.ratio) / ratio
+            else if (idealHeight == -1F) metrics.y = (idealHeight * ratio) / (texture.image.ratio * frame.ratio)
+            else {
+                val newWidth = (idealHeight * texture.image.ratio * frame.ratio) / ratio
+                val newHeight = (idealWidth * ratio) / (texture.image.ratio * frame.ratio)
+                if (newWidth <= idealWidth) {
+                    metrics.x = newWidth
+                    metrics.y = idealHeight
+                } else {
+                    metrics.x = idealWidth
+                    metrics.y = newHeight
+                }
+            }
         } else {
-            if (floatingWidth) metrics.x = 1F - coords.x
-            if (floatingHeight) metrics.y = 1F - coords.y
+            if (idealWidth == -1F) metrics.x = 1F - coords.x
+            if (idealHeight == -1F) metrics.y = 1F - coords.y
         }
     }
 
 
     protected lateinit var texture: ImageTexture
     private lateinit var frame: Rectangle
-    private lateinit var textureVertices: Rectangle
 
     var mirroredH: Boolean = false
         set (v) {
@@ -67,7 +77,7 @@ internal open class ImageUI private constructor (pos: Vector, width: Float, heig
         val y = if (mirroredV) Pair(frame.bottom, frame.top)
         else Pair(frame.top, frame.bottom)
 
-        textureVertices = Rectangle(x.first, y.first, x.second, y.second)
+        val textureVertices = Rectangle(x.first, y.first, x.second, y.second)
         updateBuffer(2, delay, textureVertices.toPointsArray())
     }
 

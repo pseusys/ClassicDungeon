@@ -24,4 +24,6 @@ internal open class Rectangle (var left: Float, var top: Float, var right: Float
 
 
     fun toPointsArray () = floatArrayOf(left, top, right, top, right, bottom, left, bottom)
+
+    override fun toString() =  "Rectangle: (left: $left; top: $top; right: $right; bottom: $bottom)"
 }

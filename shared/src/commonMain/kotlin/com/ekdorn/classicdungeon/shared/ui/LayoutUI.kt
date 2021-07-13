@@ -23,13 +23,17 @@ internal abstract class LayoutUI (rect: Rectangle): ElementUI(rect) {
     }
 
     override fun update (elapsed: Int) {
+        super.update(elapsed)
         children.forEach { if (it.exists && it.visible) {
             it.translate(pixelCoords, pixelMetrics)
             it.update(elapsed)
         } }
     }
 
-    override fun draw () {
+    final override fun draw () {
+        super.draw()
+        drawSelf()
         children.forEach { if (it.exists && it.visible) it.draw() }
     }
+    abstract fun drawSelf ()
 }

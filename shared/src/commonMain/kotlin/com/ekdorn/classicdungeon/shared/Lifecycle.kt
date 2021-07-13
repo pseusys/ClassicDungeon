@@ -33,7 +33,7 @@ object Lifecycle {
 
         coroutineScope {
             awaitAll(async { delay(2000) }, async {
-                TextureCache.load("font")
+                TextureCache.load("font", "chrome")
                 TextureCache.loadAtlas("bee", List(16) { it }, 16)
             })
         }

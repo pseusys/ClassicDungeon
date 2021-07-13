@@ -14,7 +14,6 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
     }
 
     private var rat = 1F
-    private var textLen = txt.length
 
     var multiline = true
     var text = txt
@@ -35,22 +34,38 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
         val past = Vector()
         val verticesList = mutableListOf<Rectangle>()
         val texturesList = mutableListOf<Rectangle>()
-        textLen = text.length
 
-        for (char in text.toCharArray()) {
-            val ch = font[char]!!
-            val charWidth = (ch.ratio * lineHeight) / (metrics.x * rat)
+        for (word in text.split(' ', '\t', '\n')) {
+            val wordPast = past.copy()
+            val wordVertices = mutableListOf<Rectangle>()
+            val wordTextures = mutableListOf<Rectangle>()
 
-            if (multiline && char.isEmpty() && (past.x + charWidth > 1)) {
-                past.apply { y -= 1; x = 0F }
-                textLen--
-                continue
+            val addChar = { char: Char ->
+                val ch = font[char]!!
+                val charWidth = (ch.ratio * lineHeight) / (metrics.x * rat)
+                wordVertices.add(Rectangle(wordPast.x, wordPast.y, wordPast.x + charWidth, wordPast.y - 1))
+                wordTextures.add(Rectangle(ch.left / font.width, 1F, ch.right / font.width, 0F))
+                wordPast.x += charWidth
             }
 
-            verticesList.add(Rectangle(past.x, past.y, past.x + charWidth, past.y - 1))
-            texturesList.add(Rectangle(ch.left / font.width, 1F, ch.right / font.width, 0F))
-            past.x += charWidth
+            for (char in word.toCharArray()) addChar(char)
+            val pureLen = wordPast.x
+            addChar(' ')
+
+            if (multiline && (past.x > 0) && (pureLen > 1)) {
+                wordVertices.forEach {
+                    it.left -= past.x
+                    it.right -= past.x
+                    it.top -= 1
+                    it.bottom -= 1
+                }
+                past.apply { y -= 1; x = wordPast.x - x }
+            } else past.x = wordPast.x
+
+            verticesList.addAll(wordVertices)
+            texturesList.addAll(wordTextures)
         }
+
 
         val heights = -(past.y - 1)
         verticesList.forEach { it.apply { top /= heights; bottom /= heights } }
@@ -65,7 +80,7 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
         super.draw()
         font.texture.bind()
         Script.setTexture(font.texture)
-        Script.drawMultiple(textLen)
+        Script.drawMultiple(text.length)
         font.texture.release()
     }
 }

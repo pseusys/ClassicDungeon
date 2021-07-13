@@ -4,7 +4,9 @@ import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
 import com.ekdorn.classicdungeon.shared.maths.Color
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
+import com.ekdorn.classicdungeon.shared.ui.*
 import com.ekdorn.classicdungeon.shared.ui.ClipUI
+import com.ekdorn.classicdungeon.shared.ui.FrameUI
 import com.ekdorn.classicdungeon.shared.ui.ImageUI
 import com.ekdorn.classicdungeon.shared.ui.RootUI
 import com.ekdorn.classicdungeon.shared.ui.TextUI
@@ -35,7 +37,7 @@ internal object Game {
 
     fun splash (width: Int, height: Int) {
         root = RootUI(Rectangle(0F, 0F, 1F, 1F), width, height)
-        splash = ImageUI("sample", Vector(0.1F, 0.1F), width = 0.5F)
+        splash = ImageUI("sample", Vector(0.1F, 0.1F), 0.8F, 0.8F)
         root.add(splash)
 
         Input.onResized.add {
@@ -48,13 +50,21 @@ internal object Game {
         println("Game started!")
         root.remove(splash)
 
-        val hello = TextUI(Vector(0F, 0F), "Hello, World!", "font", 0.5F, 0.2F)
-        hello.multiplyColor(Color(1F, 1F, 0F, 1F))
-        root.add(hello)
+        val frame = FrameUI("chrome", Rectangle(0.2F, 0.1F, 0.6F, 0.8F), Rectangle(0F, 1F, 0.171875F, 0.65625F))
 
-        val bee = ClipUI("bee", Vector(0F, 0.3F), height = 0.2F)
+        val hello = TextUI(Vector(0.1F, 0.1F), "Please, enjoy this fine animation:", "font", 0.8F, 0.075F)
+        hello.multiplyColor(Color(1F, 1F, 0F, 1F))
+        frame.add(hello)
+
+        val bee = ClipUI("bee", Vector(0.15F, 0.4F), 0.3F, 0.5F)
         bee.play(20, true, 7, 8, 9, 10)
-        root.add(bee)
+        frame.add(bee)
+
+        val bee1 = ClipUI("bee", Vector(0.55F, 0.4F), 0.3F, 0.5F)
+        bee1.play(20, true, 7, 8, 9, 10)
+        frame.add(bee1)
+
+        root.add(frame)
     }
 
     fun end () {
