@@ -12,12 +12,11 @@ internal abstract class ResizableUI (initializer: Map<String, *>): WidgetUI(init
     }
 
 
-    // WARNING: need t divide by pixelation in order to scale pixels only and not metrics
-    override fun translate (parentAnchor: Vector, parentMetrics: Vector) {
-        super.translate(parentAnchor, parentMetrics)
-        val newMetrics = parentMetrics * dimens / pixelation
+    override fun translate (parentCoords: Vector, parentMetrics: Vector) {
+        val newMetrics = parentMetrics * dimens
         if (newMetrics != metrics) resize(newMetrics)
         metrics = newMetrics
+        super.translate(parentCoords, parentMetrics)
     }
 
     open fun resize (newMetrics: Vector) = updateVertices()

@@ -6,11 +6,13 @@ import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.engine.maths.Color
 import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
+import com.ekdorn.classicdungeon.shared.engine.ui.*
 import com.ekdorn.classicdungeon.shared.engine.ui.ClipUI
-import com.ekdorn.classicdungeon.shared.engine.ui.LayoutUI
 import com.ekdorn.classicdungeon.shared.engine.ui.FrameUI
 import com.ekdorn.classicdungeon.shared.engine.ui.ImageUI
+import com.ekdorn.classicdungeon.shared.engine.ui.LayoutUI
 import com.ekdorn.classicdungeon.shared.engine.ui.RootUI
+import com.ekdorn.classicdungeon.shared.engine.ui.WidgetUI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
@@ -39,7 +41,7 @@ internal object Game {
     fun splash (width: Int, height: Int) {
         root = RootUI(Rectangle(0F, 0F, 1F, 1F), width, height)
         splash = ImageUI()
-        splash.anchor = Vector(0.1F, 0.1F)
+        splash.anchor = Vector(0.5F, 0.5F)
         splash.pixelation = 4F
         root.add(splash)
 
@@ -56,11 +58,13 @@ internal object Game {
 
         val container = LayoutUI()
         container.addColor(Color(0, 1, 0, 1))
-        container.anchor = Vector(0.2F, 0.1F)
+        container.anchor = Vector(0.5F, 0.5F)
         container.dimens = Vector(0.6F, 0.8F)
 
         val frame = FrameUI()
         frame.anchor = Vector(0F, 0F)
+        frame.verticalAlignment = WidgetUI.ALIGNMENT.START
+        frame.horizontalAlignment = WidgetUI.ALIGNMENT.START
         frame.dimens = Vector(1F, 1F)
         frame.texture = TextureCache.get("chrome")
         frame.pixelation = 8F
@@ -69,13 +73,14 @@ internal object Game {
         container.add(frame)
 
         val bee = ClipUI()
-        bee.anchor = Vector(0.15F, 0.4F)
+        bee.anchor = Vector(0.5F, 0.5F)
         bee.texture = TextureCache.getAtlas<Int>("bee")
         bee.pixelation = 8F
         bee.play(20, true, 7, 8, 9, 10)
         container.add(bee)
 
         root.add(container)
+
         /*
         val hello = TextUI(Vector(0.1F, 0.1F), "Please, enjoy this fine animation:", "font", 0.8F, 0.075F)
         hello.multiplyColor(Color(1F, 1F, 0F, 1F))

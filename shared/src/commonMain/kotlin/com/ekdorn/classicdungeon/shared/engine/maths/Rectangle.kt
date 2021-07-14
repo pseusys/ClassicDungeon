@@ -8,15 +8,20 @@ internal open class Rectangle (var left: Float, var top: Float, var right: Float
 
     inline var width: Float
         get () = abs(left - right)
-        set (v) {
-            right = left + if (right > left) v else -v
-        }
+        set (v) { right = left + if (right > left) v else -v }
 
     inline var height: Float
         get () = abs(top - bottom)
-        set (v) {
-            bottom = top + if (bottom > top) v else -v
-        }
+        set (v) { bottom = top + if (bottom > top) v else -v }
+
+
+    inline var coords: Vector
+        get () = Vector(left, top)
+        set (v) { left = v.x; top = v.y }
+
+    inline var metrics: Vector
+        get () = Vector(width, height)
+        set (v) { width = v.x; height = v.y }
 
 
     inline val ratio: Float

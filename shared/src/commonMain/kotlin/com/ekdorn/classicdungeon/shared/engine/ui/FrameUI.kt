@@ -70,7 +70,7 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
             Rectangle(frame.right - bord.x, frame.bottom + bord.y, frame.right, frame.bottom)
         )
 
-        val pxlbrd = Vector(texture.image.width * frame.width, texture.image.height * frame.height) * border / metrics
+        val pxlbrd = texture.image.metrics * frame.metrics * border * pixelation / metrics
         val coords = arrayOf(
             Rectangle(0F, 0F, pxlbrd.x, -pxlbrd.y),
             Rectangle(pxlbrd.x, 0F, 1 - pxlbrd.x, -pxlbrd.y),

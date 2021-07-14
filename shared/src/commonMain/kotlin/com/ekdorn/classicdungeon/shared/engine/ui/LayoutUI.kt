@@ -3,12 +3,6 @@ package com.ekdorn.classicdungeon.shared.engine.ui
 
 // FINAL
 internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
-    enum class ALIGNMENT {
-        START, CENTER, END
-    }
-
-
-
     @Implicit
     private val children = mutableListOf<WidgetUI>()
 

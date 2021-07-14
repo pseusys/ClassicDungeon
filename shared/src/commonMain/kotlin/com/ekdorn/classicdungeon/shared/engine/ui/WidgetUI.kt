@@ -9,6 +9,12 @@ import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
 
 internal abstract class WidgetUI (initializer: Map<String, *>) {
+    enum class ALIGNMENT {
+        START, CENTER, END
+    }
+
+
+
     @Target(AnnotationTarget.PROPERTY)
     @Retention(AnnotationRetention.SOURCE)
     @MustBeDocumented
@@ -44,6 +50,9 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
     var pixelation = 1F
     var visible: Boolean = true
         // get() = field && if (parent != null) (parent!!.visible) else true
+
+    var verticalAlignment = ALIGNMENT.CENTER
+    var horizontalAlignment = ALIGNMENT.CENTER
 
     var speed = Vector()
     var acceleration = Vector()
@@ -104,7 +113,7 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
 
         model.toIdentity()
         model.translate(coords.x, -coords.y)
-        model.scale(metrics.x * pixelation, metrics.y * pixelation)
+        model.scale(metrics.x, metrics.y)
         // model.translate(origin.x, origin.y) // Needed?
         model.rotate(angle)
         // model.translate(-origin.x, -origin.y) // Needed?
@@ -125,8 +134,16 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
 
 
 
-    open fun translate (parentAnchor: Vector, parentMetrics: Vector) {
-        coords = parentAnchor + (parentMetrics * anchor)
+    open fun translate (parentCoords: Vector, parentMetrics: Vector) {
+        coords = parentCoords + Vector(when (horizontalAlignment) {
+            ALIGNMENT.START -> parentMetrics.x * anchor.x
+            ALIGNMENT.CENTER -> parentMetrics.x * anchor.x - metrics.x / 2
+            ALIGNMENT.END -> parentMetrics.x * anchor.x - metrics.x
+        }, when (verticalAlignment) {
+            ALIGNMENT.START -> parentMetrics.y * anchor.y
+            ALIGNMENT.CENTER -> parentMetrics.y * anchor.y - metrics.y / 2
+            ALIGNMENT.END -> parentMetrics.y * anchor.y - metrics.y
+        })
     }
 
     protected open fun updateVertices () { dirty = false }
