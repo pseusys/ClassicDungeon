@@ -17,7 +17,7 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
 
     var texture = TextureCache.get(TextureCache.NO_TEXTURE)
 
-    var frame: Rectangle =  Rectangle(0F, 1F, 1F, 0F)
+    var frame: Rectangle = Rectangle(0F, 1F, 1F, 0F)
         set (v) {
             metrics = Vector(texture.image.width * v.width, texture.image.height * v.height)
             dirty = true

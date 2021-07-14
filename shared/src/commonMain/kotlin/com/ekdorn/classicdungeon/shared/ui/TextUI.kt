@@ -1,15 +1,12 @@
 package com.ekdorn.classicdungeon.shared.ui
 
 import com.ekdorn.classicdungeon.shared.glextensions.Script
-import com.ekdorn.classicdungeon.shared.lib.isEmpty
-import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 import com.ekdorn.classicdungeon.shared.utils.ImageFont
-import com.ekdorn.classicdungeon.shared.utils.ImageFonts
 
 
 internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, width: Float, var lineHeight: Float): ResizableUI(hashMapOf<String, Any>()) {
-    constructor (pos: Vector, txt: String, font: String, width: Float, lineHeight: Float): this(pos, txt, ImageFonts[font]!!, width, lineHeight) {
+    constructor (pos: Vector, txt: String, font: String, width: Float, lineHeight: Float): this(pos, txt, ImageFont.SMALL, width, lineHeight) {
         updateVertices()
     }
 

@@ -70,7 +70,7 @@ internal object Game {
 
         val bee = ClipUI()
         bee.anchor = Vector(0.15F, 0.4F)
-        bee.texture = TextureCache.get("bee")
+        bee.texture = TextureCache.getAtlas<Int>("bee")
         bee.pixelation = 8F
         bee.play(20, true, 7, 8, 9, 10)
         container.add(bee)

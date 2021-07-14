@@ -1,20 +1,32 @@
 package com.ekdorn.classicdungeon.shared.ui
 
+import com.ekdorn.classicdungeon.shared.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.glextensions.Atlas
 import com.ekdorn.classicdungeon.shared.lib.Listener
 
 
 // FINAL
-internal class ClipUI: ImageUI() {
+internal class ClipUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ImageUI(initializer) {
     private class Animation (fps: Int, val looped: Boolean, val order: IntArray) { val delay = 1000 / fps }
 
-    var paused = false
-    var finishedListener: Listener? = null
 
-    private var finished = false
-    private var cut = 0
-    private var timer = 0
-    private var current: Animation? = null
+
+    @Implicit private var finished = false
+    @Implicit private var cut = 0
+    @Implicit private var timer = 0
+    @Implicit private var current: Animation? = null
+
+    @Implicit var finishedListener: Listener? = null
+
+    var paused = false
+
+
+    init {
+        texture = TextureCache.getAtlas<Int>(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
+        paused = initializer.getOrElse("paused") { paused } as Boolean
+    }
+
+
 
     override fun update (elapsed: Int) {
         super.update(elapsed)
@@ -34,6 +46,7 @@ internal class ClipUI: ImageUI() {
             if (lastCut != cut) frame = (texture as Atlas<*>)[cut]!!
         }
     }
+
 
     fun play (fps: Int, looped: Boolean = false, vararg order: Int) {
         current = Animation(fps, looped, order)
