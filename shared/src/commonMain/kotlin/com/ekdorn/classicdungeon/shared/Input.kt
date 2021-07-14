@@ -1,8 +1,7 @@
 package com.ekdorn.classicdungeon.shared
 
-import com.ekdorn.classicdungeon.shared.maths.Vector
-import com.ekdorn.classicdungeon.shared.utils.Event
-import kotlinx.coroutines.launch
+import com.ekdorn.classicdungeon.shared.engine.maths.Vector
+import com.ekdorn.classicdungeon.shared.engine.utils.Event
 
 
 object Input {

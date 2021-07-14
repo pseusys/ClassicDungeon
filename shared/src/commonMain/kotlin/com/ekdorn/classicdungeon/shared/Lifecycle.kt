@@ -1,9 +1,10 @@
 package com.ekdorn.classicdungeon.shared
 
 import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
-import com.ekdorn.classicdungeon.shared.generics.Assigned
-import com.ekdorn.classicdungeon.shared.generics.TextureCache
-import com.ekdorn.classicdungeon.shared.utils.Event
+import com.ekdorn.classicdungeon.shared.engine.Game
+import com.ekdorn.classicdungeon.shared.engine.generics.Assigned
+import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.utils.Event
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
