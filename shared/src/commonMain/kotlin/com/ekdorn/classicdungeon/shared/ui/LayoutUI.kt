@@ -1,39 +1,40 @@
 package com.ekdorn.classicdungeon.shared.ui
 
-import com.ekdorn.classicdungeon.shared.maths.Rectangle
-import com.ekdorn.classicdungeon.shared.maths.Vector
 
-internal abstract class LayoutUI (rect: Rectangle): ElementUI(rect) {
-    private val children = mutableListOf<ElementUI>()
+// FINAL
+internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
+    private val children = mutableListOf<WidgetUI>()
 
-    fun add (element: ElementUI) {
-        element.translate(pixelCoords, pixelMetrics)
+
+    fun add (element: WidgetUI) {
         element.parent = this
         children.add(element)
     }
 
-    fun remove (element: ElementUI) {
+    fun remove (element: WidgetUI) {
         element.parent = null
         children.remove(element)
     }
 
-    override fun translate (parentCoords: Vector, parentMetrics: Vector) {
-        super.translate(parentCoords, parentMetrics)
-        children.forEach { if (it.exists && it.visible) it.translate(pixelCoords, pixelMetrics) }
-    }
+
 
     override fun update (elapsed: Int) {
         super.update(elapsed)
-        children.forEach { if (it.exists && it.visible) {
-            it.translate(pixelCoords, pixelMetrics)
+        children.forEach { if (it.visible) {
+            it.translate(coords, metrics)
             it.update(elapsed)
         } }
     }
 
-    final override fun draw () {
+
+    override fun draw () {
         super.draw()
-        drawSelf()
-        children.forEach { if (it.exists && it.visible) it.draw() }
+        children.forEach { if (it.visible) it.draw() }
     }
-    abstract fun drawSelf ()
+
+
+    override fun delete() {
+        super.delete()
+        children.forEach { it.delete() }
+    }
 }

@@ -1,6 +1,7 @@
 package com.ekdorn.classicdungeon.shared
 
 import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
+import com.ekdorn.classicdungeon.shared.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.maths.Color
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
@@ -37,7 +38,9 @@ internal object Game {
 
     fun splash (width: Int, height: Int) {
         root = RootUI(Rectangle(0F, 0F, 1F, 1F), width, height)
-        splash = ImageUI("sample", Vector(0.1F, 0.1F), 0.8F)
+        splash = ImageUI()
+        splash.anchor = Vector(0.1F, 0.1F)
+        splash.pixelation = 4F
         root.add(splash)
 
         Input.onResized.add {
@@ -49,22 +52,39 @@ internal object Game {
     fun start () {
         println("Game started!")
         root.remove(splash)
+        splash.delete()
 
-        val frame = FrameUI("chrome", Rectangle(0.2F, 0.1F, 0.6F, 0.8F), Rectangle(0F, 1F, 0.171875F, 0.65625F))
+        val container = LayoutUI()
+        container.addColor(Color(0, 1, 0, 1))
+        container.anchor = Vector(0.2F, 0.1F)
+        container.dimens = Vector(0.6F, 0.8F)
 
+        val frame = FrameUI()
+        frame.anchor = Vector(0F, 0F)
+        frame.dimens = Vector(1F, 1F)
+        frame.texture = TextureCache.get("chrome")
+        frame.pixelation = 8F
+        frame.frame = Rectangle(0F, 1F, 0.171875F, 0.65625F)
+        frame.border = Vector(0.31818181818F, 0.31818181818F)
+        container.add(frame)
+
+        val bee = ClipUI()
+        bee.anchor = Vector(0.15F, 0.4F)
+        bee.texture = TextureCache.get("bee")
+        bee.pixelation = 8F
+        bee.play(20, true, 7, 8, 9, 10)
+        container.add(bee)
+
+        root.add(container)
+        /*
         val hello = TextUI(Vector(0.1F, 0.1F), "Please, enjoy this fine animation:", "font", 0.8F, 0.075F)
         hello.multiplyColor(Color(1F, 1F, 0F, 1F))
         frame.add(hello)
 
-        val bee = ClipUI("bee", Vector(0.15F, 0.4F), 0.3F, 0.5F)
-        bee.play(20, true, 7, 8, 9, 10)
-        frame.add(bee)
-
         val bee1 = ClipUI("bee", Vector(0.55F, 0.4F), 0.3F, 0.5F)
         bee1.play(20, true, 7, 8, 9, 10)
         frame.add(bee1)
-
-        root.add(frame)
+        */
     }
 
     fun end () {

@@ -27,7 +27,7 @@ object Lifecycle {
         Assigned.assigned.forEach { it.gameStarted() }
         Input.onResized(width, height)
 
-        TextureCache.load("sample")
+        TextureCache.load(/* splash image */)
         Game.splash(width, height)
         Game.update()
 

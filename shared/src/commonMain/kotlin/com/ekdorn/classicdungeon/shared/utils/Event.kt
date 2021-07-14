@@ -1,15 +1,15 @@
 package com.ekdorn.classicdungeon.shared.utils
 
+import com.ekdorn.classicdungeon.shared.lib.TCListener
 
-internal typealias Listener <Target> = (Target) -> Boolean
 
 internal class Event <Target> (private val mode: TriggerMode = TriggerMode.STACK) {
     enum class TriggerMode { STACK, QUEUE }
 
-    private val listeners = mutableListOf<Listener<Target>>()
+    private val listeners = mutableListOf<TCListener<Target>>()
 
 
-    fun add (listener: Listener<Target>) {
+    fun add (listener: TCListener<Target>) {
         if (!listeners.contains(listener)) {
             if (mode == TriggerMode.STACK) listeners.add(listener)
             else listeners.add(0, listener)
@@ -17,7 +17,7 @@ internal class Event <Target> (private val mode: TriggerMode = TriggerMode.STACK
     }
 
 
-    fun remove (listener: Listener<Target>) = listeners.remove(listener)
+    fun remove (listener: TCListener<Target>) = listeners.remove(listener)
 
     fun fire (target: Target) {
         for (listener in listeners) if (listener.invoke(target)) return

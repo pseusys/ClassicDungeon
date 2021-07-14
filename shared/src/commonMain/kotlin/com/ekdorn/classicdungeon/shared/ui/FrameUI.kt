@@ -2,66 +2,88 @@ package com.ekdorn.classicdungeon.shared.ui
 
 import com.ekdorn.classicdungeon.shared.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.glextensions.Script
-import com.ekdorn.classicdungeon.shared.lib.RDP
 import com.ekdorn.classicdungeon.shared.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.maths.Vector
 
-internal class FrameUI (resource: String, rect: Rectangle, private val frame: Rectangle): LayoutUI(rect) {
-    constructor (resource: String, rect: Rectangle): this(resource, rect, Rectangle(0F, 1F, 1F, 0F))
-    constructor (resource: String, margin: Int): this(resource, Rectangle(margin, margin, 1 - 2 * margin, 1 - 2 * margin))
+internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
+    var frame = Rectangle(0F, 1F, 1F, 0F)
+        set (v) {
+            dirty = true
+            field = v
+        }
 
-    private val image = TextureCache.get(resource)
-    private val factorRDP = RDP(Vector(), { 1F / it }, { it })
+    var texture = TextureCache.get(TextureCache.NO_TEXTURE)
 
-    var border = 0.31818181818F
+    var horizontal = true
+        set (v) {
+            dirty = true
+            field = v
+        }
+
+    var vertical = true
+        set (v) {
+            dirty = true
+            field = v
+        }
+
+    var border = Vector()
+        set (v) {
+            dirty = true
+            field = v
+        }
+
 
     init {
+        texture = TextureCache.get(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
+        frame = initializer.getOrElse("frame") { frame } as Rectangle
+        horizontal = initializer.getOrElse("horizontal") { horizontal } as Boolean
+        vertical = initializer.getOrElse("vertical") { vertical } as Boolean
+        border = initializer.getOrElse("border") { border } as Vector
         updateVertices()
-        factorRDP.setIdeal(Vector(0.1F, 0.1F), 0.1F, 0.1F)
     }
 
-    override fun resize (ratio: Float) {
-        factorRDP.resize(ratio)
-        updateVertices()
+
+
+    override fun draw () {
+        super.draw()
+        texture.bind()
+        Script.setTexture(texture)
+        Script.drawMultiple(9)
+        texture.release()
     }
+
+
 
     override fun updateVertices() {
-        val borderWidth = border * frame.width
-        val borderHeight = border * frame.height
+        val bord = Vector(border.x * frame.width, border.y * frame.height)
         val edges = arrayOf(
-            Rectangle(frame.left, frame.top, frame.left + borderWidth, frame.top - borderHeight),
-            Rectangle(frame.left + borderWidth, frame.top, frame.right - borderWidth, frame.top - borderHeight),
-            Rectangle(frame.right - borderWidth, frame.top, frame.right, frame.top - borderHeight),
+            Rectangle(frame.left, frame.top, frame.left + bord.x, frame.top - bord.y),
+            Rectangle(frame.left + bord.x, frame.top, frame.right - bord.x, frame.top - bord.y),
+            Rectangle(frame.right - bord.x, frame.top, frame.right, frame.top - bord.y),
 
-            Rectangle(frame.left, frame.top - borderHeight, frame.left + borderWidth, frame.bottom + borderHeight),
-            Rectangle(frame.left + borderWidth, frame.top - borderHeight, frame.right - borderWidth, frame.bottom + borderHeight),
-            Rectangle(frame.right - borderWidth, frame.top - borderHeight, frame.right, frame.bottom + borderHeight),
+            Rectangle(frame.left, frame.top - bord.y, frame.left + bord.x, frame.bottom + bord.y),
+            Rectangle(frame.left + bord.x, frame.top - bord.y, frame.right - bord.x, frame.bottom + bord.y),
+            Rectangle(frame.right - bord.x, frame.top - bord.y, frame.right, frame.bottom + bord.y),
 
-            Rectangle(frame.left, frame.bottom + borderHeight, frame.left + borderWidth, frame.bottom),
-            Rectangle(frame.left + borderWidth, frame.bottom + borderHeight, frame.right - borderWidth, frame.bottom),
-            Rectangle(frame.right - borderWidth, frame.bottom + borderHeight, frame.right, frame.bottom)
+            Rectangle(frame.left, frame.bottom + bord.y, frame.left + bord.x, frame.bottom),
+            Rectangle(frame.left + bord.x, frame.bottom + bord.y, frame.right - bord.x, frame.bottom),
+            Rectangle(frame.right - bord.x, frame.bottom + bord.y, frame.right, frame.bottom)
         )
-        println(factorRDP.value)
+
+        val pxlbrd = Vector(texture.image.width * frame.width, texture.image.height * frame.height) * border / metrics
         val coords = arrayOf(
-            Rectangle(0F, 0F, factorRDP.value.x, -factorRDP.value.y),
-            Rectangle(factorRDP.value.x, 0F, 1 - factorRDP.value.x, -factorRDP.value.y),
-            Rectangle(1 - factorRDP.value.x, 0F, 1F, -factorRDP.value.y),
+            Rectangle(0F, 0F, pxlbrd.x, -pxlbrd.y),
+            Rectangle(pxlbrd.x, 0F, 1 - pxlbrd.x, -pxlbrd.y),
+            Rectangle(1 - pxlbrd.x, 0F, 1F, -pxlbrd.y),
 
-            Rectangle(0F, -factorRDP.value.y, factorRDP.value.x, factorRDP.value.y - 1),
-            Rectangle(factorRDP.value.x, -factorRDP.value.y, 1 - factorRDP.value.x, factorRDP.value.y - 1),
-            Rectangle(1 - factorRDP.value.x, -factorRDP.value.y, 1F, factorRDP.value.y - 1),
+            Rectangle(0F, -pxlbrd.y, pxlbrd.x, pxlbrd.y - 1),
+            Rectangle(pxlbrd.x, -pxlbrd.y, 1 - pxlbrd.x, pxlbrd.y - 1),
+            Rectangle(1 - pxlbrd.x, -pxlbrd.y, 1F, pxlbrd.y - 1),
 
-            Rectangle(0F, factorRDP.value.y - 1, factorRDP.value.x, -1F),
-            Rectangle(factorRDP.value.x, factorRDP.value.y - 1, 1 - factorRDP.value.x, -1F),
-            Rectangle(1 - factorRDP.value.x, factorRDP.value.y - 1, 1F, -1F),
+            Rectangle(0F, pxlbrd.y - 1, pxlbrd.x, -1F),
+            Rectangle(pxlbrd.x, pxlbrd.y - 1, 1 - pxlbrd.x, -1F),
+            Rectangle(1 - pxlbrd.x, pxlbrd.y - 1, 1F, -1F),
         )
         updateBuffer(2, coords.flatMap { it.toPointsArray().asIterable() }.toFloatArray(), edges.flatMap { it.toPointsArray().asIterable() }.toFloatArray())
-    }
-
-    override fun drawSelf () {
-        image.bind()
-        Script.setTexture(image)
-        Script.drawMultiple(9)
-        image.release()
     }
 }

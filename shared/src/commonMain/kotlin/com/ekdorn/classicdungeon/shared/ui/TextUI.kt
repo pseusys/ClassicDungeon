@@ -8,7 +8,7 @@ import com.ekdorn.classicdungeon.shared.utils.ImageFont
 import com.ekdorn.classicdungeon.shared.utils.ImageFonts
 
 
-internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, width: Float, var lineHeight: Float): ElementUI(Rectangle(pos.x, pos.y, width, 1 - pos.y)) {
+internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, width: Float, var lineHeight: Float): ResizableUI(hashMapOf<String, Any>()) {
     constructor (pos: Vector, txt: String, font: String, width: Float, lineHeight: Float): this(pos, txt, ImageFonts[font]!!, width, lineHeight) {
         updateVertices()
     }
@@ -23,15 +23,13 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
         }
 
 
-    override fun resize (ratio: Float) {
-        if (preserving) {
-            rat = ratio
-            updateVertices()
-        }
+    override fun resize (newMetrics: Vector) {
+        //rat = ratio
+        updateVertices()
     }
 
     override fun updateVertices () {
-        val past = Vector()
+        /*val past = Vector()
         val verticesList = mutableListOf<Rectangle>()
         val texturesList = mutableListOf<Rectangle>()
 
@@ -73,14 +71,14 @@ internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, wi
 
         val vertices = verticesList.flatMap { it.toPointsArray().asIterable() }.toFloatArray()
         val textures = texturesList.flatMap { it.toPointsArray().asIterable() }.toFloatArray()
-        updateBuffer(2, vertices, textures)
+        updateBuffer(2, vertices, textures)*/
     }
 
     override fun draw () {
         super.draw()
         font.texture.bind()
         Script.setTexture(font.texture)
-        Script.drawMultiple(text.length)
+        //Script.drawMultiple(text.length)
         font.texture.release()
     }
 }

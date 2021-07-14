@@ -5,11 +5,13 @@ import com.ekdorn.classicdungeon.shared.glextensions.ImageTexture
 import com.ekdorn.classicdungeon.shared.glextensions.Atlas
 
 internal object TextureCache: Assigned {
+    const val NO_TEXTURE = "notex"
+
     private val resources = mutableMapOf<String, ImageTexture>()
 
     fun get (resource: String) = resources[resource]!!
 
-    suspend fun load (vararg textures: String) = textures.forEach {
+    suspend fun load (vararg textures: String) = textures.asIterable().plus(NO_TEXTURE).forEach {
         resources[it] = ImageTexture(ResourceLoader.loadImage("$it.png"))
     }
 

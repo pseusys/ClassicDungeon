@@ -20,7 +20,11 @@ internal data class Vector (var x: Float, var y: Float) {
 
     operator fun rangeTo (other: Vector) = Vector(x - other.x, y - other.y)
     operator fun plus (other: Vector) = Vector(x + other.x, y + other.y)
-    infix fun each (other: Vector) = Vector(x * other.x, y * other.y)
+    operator fun times (other: Vector) = Vector(x * other.x, y * other.y)
+    operator fun div (other: Vector) = Vector(x / other.x, y / other.y)
+
+    operator fun times (oper: Float) = Vector(x * oper, y * oper)
+    operator fun div (oper: Float) = Vector(x / oper, y / oper)
 
     fun length () = sqrt(x * x + y * y)
 }
