@@ -35,6 +35,12 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
             field = v.replace("\t", "    ")
         }
 
+    var textAlignment = ALIGNMENT.CENTER
+        set (v) {
+            dirty = true
+            field = v
+        }
+
 
     init {
         stretchY = false
@@ -42,6 +48,7 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
         font = ImageFont.valueOf(initializer.getOrElse("font") { font.name } as String)
         multiline = initializer.getOrElse("multiline") { multiline } as Boolean
         text = initializer.getOrElse("text") { text } as String
+        textAlignment = ALIGNMENT.valueOf(initializer.getOrElse("textAlignment") { textAlignment.name } as String)
         updateVertices()
     }
 
@@ -99,9 +106,11 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
                     lines.add(iterator + 1, words.subList(word.index, words.size).joinToString(" "))
                     break
                 } else {
-                    wordTextures.add(font[' ']!!)
-                    wordVertices.add(Rectangle(wordPast, 0F, wordPast + space.x, -1F))
-                    wordPast += space.x
+                    if (word.index != words.size - 1) {
+                        wordTextures.add(font[' ']!!)
+                        wordVertices.add(Rectangle(wordPast, 0F, wordPast + space.x, -1F))
+                        wordPast += space.x
+                    }
 
                     wordVertices.forEach { it.translate(x = past) }
                     past += wordPast
@@ -111,7 +120,21 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
                 lineTextures.addAll(wordTextures)
             }
 
-            vertices.addAll(lineVertices.map { it.translate(y = -iterator.toFloat()) })
+            val rem = 1 - past
+            lineVertices.forEach { it.translate(y = -iterator.toFloat()) }
+            vertices.addAll(when (textAlignment) {
+                ALIGNMENT.START -> lineVertices
+                ALIGNMENT.CENTER -> lineVertices.map { it.apply { horizontal += rem / 2 } }
+                ALIGNMENT.END -> lineVertices.map { it.apply { horizontal += rem } }
+                ALIGNMENT.FILL -> {
+                    val spaces = lineTextures.indices.filter { lineTextures[it] == font[' ']!! }
+                    var sp = 0F
+                    lineVertices.mapIndexed { index, rect -> spaces.indexOfFirst { it == index }.let {
+                        if (it == -1) rect.apply { horizontal += sp }
+                        else rect.apply { left += sp; sp += rem / spaces.size; right += sp }
+                    } }
+                }
+            })
             textures.addAll(lineTextures)
 
             iterator++

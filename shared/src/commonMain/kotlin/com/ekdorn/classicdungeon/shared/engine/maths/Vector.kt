@@ -23,6 +23,7 @@ internal data class Vector (var x: Float, var y: Float) {
     operator fun times (other: Vector) = Vector(x * other.x, y * other.y)
     operator fun div (other: Vector) = Vector(x / other.x, y / other.y)
 
+    operator fun plus (oper: Float) = Vector(x + oper, y + oper)
     operator fun times (oper: Float) = Vector(x * oper, y * oper)
     operator fun div (oper: Float) = Vector(x / oper, y / oper)
 
