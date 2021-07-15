@@ -42,7 +42,7 @@ internal object Game {
         root = RootUI(Rectangle(0F, 0F, 1F, 1F), width, height)
         splash = ImageUI()
         splash.anchor = Vector(0.5F, 0.5F)
-        splash.pixelation = 4F
+        splash.pixelation = 8F
         root.add(splash)
 
         Input.onResized.add {

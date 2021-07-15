@@ -7,41 +7,34 @@ import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
 internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
-    var frame = Rectangle(0F, 1F, 1F, 0F)
+    var frame = initializer.getOrElse("frame") { Rectangle(0F, 1F, 1F, 0F) } as Rectangle
         set (v) {
             dirty = true
             field = v
         }
 
-    var texture = TextureCache.get(TextureCache.NO_TEXTURE)
+    var texture = TextureCache.get(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
 
-    var horizontal = true
+    var horizontal = initializer.getOrElse("horizontal") { true } as Boolean
         set (v) {
             dirty = true
             field = v
         }
 
-    var vertical = true
+    var vertical = initializer.getOrElse("vertical") { true } as Boolean
         set (v) {
             dirty = true
             field = v
         }
 
-    var border = Vector()
+    var border = initializer.getOrElse("border") { Vector() } as Vector
         set (v) {
             dirty = true
             field = v
         }
 
 
-    init {
-        texture = TextureCache.get(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
-        frame = initializer.getOrElse("frame") { frame } as Rectangle
-        horizontal = initializer.getOrElse("horizontal") { horizontal } as Boolean
-        vertical = initializer.getOrElse("vertical") { vertical } as Boolean
-        border = initializer.getOrElse("border") { border } as Vector
-        updateVertices()
-    }
+    init { updateVertices() }
 
 
 

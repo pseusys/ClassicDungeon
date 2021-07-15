@@ -18,12 +18,11 @@ internal class ClipUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
 
     @Implicit var finishedListener: Listener? = null
 
-    var paused = false
+    var paused = initializer.getOrElse("paused") { false } as Boolean
 
 
     init {
         texture = TextureCache.getAtlas<Int>(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
-        paused = initializer.getOrElse("paused") { paused } as Boolean
     }
 
 

@@ -15,11 +15,6 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
         }
 
 
-    init {
-        // background = initializer.getOrElse("border") { border } as Vector
-    }
-
-
 
     fun add (element: WidgetUI) {
         element.parent = this

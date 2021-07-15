@@ -17,25 +17,25 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
     @Implicit private var textLength = 0
 
 
-    var font = ImageFont.MEDIUM
+    var font = ImageFont.valueOf(initializer.getOrElse("font") { ImageFont.MEDIUM.name } as String)
         set (v) {
             dirty = true
             field = v
         }
 
-    var multiline = true
+    var multiline = initializer.getOrElse("multiline") { true } as Boolean
         set (v) {
             dirty = true
             field = v
         }
 
-    var text = ""
+    var text = initializer.getOrElse("text") { "" } as String
         set (v) {
             dirty = true
             field = v.replace("\t", "    ")
         }
 
-    var textAlignment = ALIGNMENT.CENTER
+    var textAlignment = ALIGNMENT.valueOf(initializer.getOrElse("textAlignment") { ALIGNMENT.CENTER.name } as String)
         set (v) {
             dirty = true
             field = v
@@ -43,12 +43,7 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
 
 
     init {
-        stretchY = false
-
-        font = ImageFont.valueOf(initializer.getOrElse("font") { font.name } as String)
-        multiline = initializer.getOrElse("multiline") { multiline } as Boolean
-        text = initializer.getOrElse("text") { text } as String
-        textAlignment = ALIGNMENT.valueOf(initializer.getOrElse("textAlignment") { textAlignment.name } as String)
+        stretchH = false
         updateVertices()
     }
 
@@ -129,15 +124,16 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
                     lines.add(index + 1, words.subList(word.index, words.size).joinToString(" "))
                     break
                 } else {
-                    // Adding space if not at the end of the line.
-                    if (word.index != words.size - 1) {
-                        wordTextures.add(font[' ']!!)
-                        wordVertices.add(Rectangle(wordPast, 0F, wordPast + space.x, -1F))
+                    // Translating word to the line ebd.
+                    wordVertices.forEach { it.translate(x = (past + font[' ']!!.width)) }
+
+                    // Adding space before the word if it is not the first word of the line.
+                    if (word.index != 0) {
+                        wordTextures.add(0, font[' ']!!)
+                        wordVertices.add(0, Rectangle(past, 0F, past + space.x, -1F))
                         wordPast += space.x
                     }
 
-                    // Translating word to the line ebd.
-                    wordVertices.forEach { it.translate(x = past) }
                     past += wordPast
                 }
 

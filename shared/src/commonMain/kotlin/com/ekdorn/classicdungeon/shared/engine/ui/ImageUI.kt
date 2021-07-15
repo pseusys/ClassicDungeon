@@ -15,33 +15,33 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
     @Implicit override var dimens = super.dimens
         get () = if (parent != null) metrics / parentMetrics()!! else field
 
-    var texture = TextureCache.get(TextureCache.NO_TEXTURE)
+    var texture = TextureCache.get(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
+        set (v) {
+            metrics = v.image.metrics * frame.metrics * pixelation
+            field = v
+        }
 
-    var frame: Rectangle = Rectangle(0F, 1F, 1F, 0F)
+    var frame = initializer.getOrElse("frame") { Rectangle(0F, 1F, 1F, 0F) } as Rectangle
         set (v) {
             metrics = texture.image.metrics * v.metrics * pixelation
             dirty = true
             field = v
         }
 
-    var mirroredH: Boolean = false
+    var mirroredH = initializer.getOrElse("mirroredH") { false } as Boolean
         set (v) {
             dirty = true
             field = v
         }
 
-    var mirroredV: Boolean = false
+    var mirroredV = initializer.getOrElse("mirroredV") { false } as Boolean
         set (v) {
             dirty = true
             field = v
         }
 
 
-    init {
-        texture = TextureCache.get(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
-        frame = initializer.getOrElse("frame") { frame } as Rectangle
-        updateVertices()
-    }
+    init { updateVertices() }
 
 
 
@@ -54,6 +54,10 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
     }
 
 
+    override fun translate(parentCoords: Vector, parentMetrics: Vector) {
+        metrics = texture.image.metrics * frame.metrics * pixelation
+        super.translate(parentCoords, parentMetrics)
+    }
 
     final override fun updateVertices () {
         super.updateVertices()

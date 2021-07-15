@@ -31,6 +31,7 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
     @Implicit var parent: LayoutUI? = null
     @Implicit protected var coords = Vector()
     @Implicit protected var metrics = Vector()
+    @Implicit protected var model = Matrix()
 
     @Implicit protected var dirty = false
 
@@ -40,29 +41,25 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
     @Implicit open var dimens = Vector()
         protected set
 
-    var anchor = Vector()
-    var pixelation = 1F
-    var visible: Boolean = true
+
+    var anchor = initializer.getOrElse("anchor") { Vector() } as Vector
+    var pixelation = initializer.getOrElse("pixelation") { 1F } as Float
+
+    var visible = initializer.getOrElse("visible") { true } as Boolean
         // get() = field && if (parent != null) (parent!!.visible) else true
 
-    var verticalAlignment = ALIGNMENT.CENTER
-    var horizontalAlignment = ALIGNMENT.CENTER
+    var verticalAlignment = ALIGNMENT.valueOf(initializer.getOrElse("verticalAlignment") { ALIGNMENT.CENTER.name } as String)
+    var horizontalAlignment = ALIGNMENT.valueOf(initializer.getOrElse("horizontalAlignment") { ALIGNMENT.CENTER.name } as String)
 
-    var speed = Vector()
-    var acceleration = Vector()
-    var angle = 0F
-    var angleSpeed = 0F
-
+    var speed = initializer.getOrElse("speed") { Vector() } as Vector
+    var acceleration = initializer.getOrElse("acceleration") { Vector() } as Vector
+    var angle = initializer.getOrElse("angle") { 0F } as Float
+    var angleSpeed = initializer.getOrElse("angleSpeed") { 0F } as Float
     // var origin = Vector()
-    var model = Matrix()
 
-    var ambient = Color()
-    var material = Color(1F, 1F, 1F, 1F)
+    var ambient = initializer.getOrElse("ambient") { Color() } as Color
+    var material = initializer.getOrElse("material") { Color(1F, 1F, 1F, 1F) } as Color
 
-
-    init {
-        anchor = initializer.getOrElse("anchor") { anchor } as Vector
-    }
 
 
     /*
