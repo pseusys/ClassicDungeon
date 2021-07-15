@@ -45,6 +45,10 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
 
 
 
+    fun pixelBorder () = texture.image.metrics * frame.metrics * border * pixelation
+
+
+
     override fun draw () {
         super.draw()
         texture.bind()
@@ -57,7 +61,7 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
 
     override fun updateVertices() {
         super.updateVertices()
-        val pixelBorder = texture.image.metrics * frame.metrics * border * pixelation / metrics
+        val pixelBorder = pixelBorder() / metrics
         val vertices = listOf(
             Rectangle(0F, 0F, pixelBorder.x, -pixelBorder.y),
             Rectangle(pixelBorder.x, 0F, 1 - pixelBorder.x, -pixelBorder.y),
@@ -72,7 +76,7 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
             Rectangle(1 - pixelBorder.x, pixelBorder.y - 1, 1F, -1F),
         )
 
-        val bord = Vector(border.x * frame.width, border.y * frame.height)
+        val bord = border * frame.metrics
         val textures = listOf(
             Rectangle(frame.left, frame.top, frame.left + bord.x, frame.top - bord.y),
             Rectangle(frame.left + bord.x, frame.top, frame.right - bord.x, frame.top - bord.y),

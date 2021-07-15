@@ -18,7 +18,7 @@ internal data class Vector (var x: Float, var y: Float) {
     inline val ratio: Float
         get () = x / y
 
-    operator fun rangeTo (other: Vector) = Vector(x - other.x, y - other.y)
+    operator fun minus (other: Vector) = Vector(x - other.x, y - other.y)
     operator fun plus (other: Vector) = Vector(x + other.x, y + other.y)
     operator fun times (other: Vector) = Vector(x * other.x, y * other.y)
     operator fun div (other: Vector) = Vector(x / other.x, y / other.y)

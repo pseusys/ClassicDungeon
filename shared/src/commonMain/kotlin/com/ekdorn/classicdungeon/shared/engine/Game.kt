@@ -70,46 +70,20 @@ internal object Game {
         frame.pixelation = 8F
         frame.frame = Rectangle(0F, 1F, 0.171875F, 0.65625F)
         frame.border = Vector(0.31818181818F, 0.31818181818F)
-        container.add(frame)
+        container.background = frame
 
         val hello = TextUI()
-        hello.anchor = Vector(0.5F, 0.1F)
+        hello.anchor = Vector(0.5F, 0F)
         hello.verticalAlignment = WidgetUI.ALIGNMENT.START
-        hello.textAlignment = TextUI.ALIGNMENT.START
-        hello.dimens.x = 0.8F
+        hello.textAlignment = TextUI.ALIGNMENT.FILL
+        hello.dimens.x = 1F
+        hello.pixelation = 2F
         hello.text = "Please, enjoy this fine animation:\n"
         hello.material = Color(1F, 1F, 0F, 1F)
         container.add(hello)
 
-        val hello1 = TextUI()
-        hello1.anchor = Vector(0.5F, 0.3F)
-        hello1.verticalAlignment = WidgetUI.ALIGNMENT.START
-        hello1.textAlignment = TextUI.ALIGNMENT.CENTER
-        hello1.dimens.x = 0.8F
-        hello1.text = "Please, enjoy this fine animation:\n"
-        hello1.material = Color(1F, 1F, 0F, 1F)
-        container.add(hello1)
-
-        val hello2 = TextUI()
-        hello2.anchor = Vector(0.5F, 0.5F)
-        hello2.verticalAlignment = WidgetUI.ALIGNMENT.START
-        hello2.textAlignment = TextUI.ALIGNMENT.FILL
-        hello2.dimens.x = 0.8F
-        hello2.text = "Please, enjoy this fine animation:\n"
-        hello2.material = Color(1F, 1F, 0F, 1F)
-        container.add(hello2)
-
-        val hello3 = TextUI()
-        hello3.anchor = Vector(0.5F, 0.7F)
-        hello3.verticalAlignment = WidgetUI.ALIGNMENT.START
-        hello3.textAlignment = TextUI.ALIGNMENT.END
-        hello3.dimens.x = 0.8F
-        hello3.text = "Please, enjoy this fine animation:\n"
-        hello3.material = Color(1F, 1F, 0F, 1F)
-        container.add(hello3)
-
         val bee = ClipUI()
-        bee.anchor = Vector(0.5F, 0.6F)
+        bee.anchor = Vector(0.5F, 0.5F)
         bee.texture = TextureCache.getAtlas<Int>("bee")
         bee.pixelation = 8F
         bee.play(20, true, 7, 8, 9, 10)
