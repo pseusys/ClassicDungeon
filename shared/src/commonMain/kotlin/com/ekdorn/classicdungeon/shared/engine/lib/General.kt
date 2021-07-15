@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.lib
 
+import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -18,3 +19,5 @@ fun Float.str(ints: Int, floats: Int): String {
 }
 
 fun Char.isEmpty () = (this == ' ') || (this == '\n') || (this == '\t')
+
+internal fun Collection<Rectangle>.toFloatArray () = flatMap { it.toPointsArray().asIterable() }.toFloatArray()

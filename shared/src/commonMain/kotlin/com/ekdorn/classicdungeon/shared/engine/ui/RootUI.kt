@@ -12,6 +12,4 @@ internal class RootUI (rect: Rectangle, screenWidth: Int, screenHeight: Int): La
     fun resize (screenWidth: Int, screenHeight: Int) {
         metrics = Vector(screenWidth, screenHeight)
     }
-
-    override fun updateVertices () {}
 }

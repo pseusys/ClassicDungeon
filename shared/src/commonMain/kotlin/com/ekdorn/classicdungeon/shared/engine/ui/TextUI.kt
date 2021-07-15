@@ -1,87 +1,126 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.glextensions.Script
+import com.ekdorn.classicdungeon.shared.engine.lib.toFloatArray
+import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 import com.ekdorn.classicdungeon.shared.engine.utils.ImageFont
 
 
-internal class TextUI (pos: Vector, txt: String, private val font: ImageFont, width: Float, var lineHeight: Float): ResizableUI(hashMapOf<String, Any>()) {
+internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(hashMapOf<String, Any>()) {
     enum class ALIGNMENT {
         START, CENTER, END, FILL
     }
 
 
 
-    constructor (pos: Vector, txt: String, font: String, width: Float, lineHeight: Float): this(pos, txt, ImageFont.SMALL, width, lineHeight) {
-        updateVertices()
-    }
+    @Implicit private var textLength = 0
 
-    private var rat = 1F
+
+    var font = ImageFont.MEDIUM
+        set (v) {
+            dirty = true
+            field = v
+        }
 
     var multiline = true
-    var text = txt
         set (v) {
+            dirty = true
             field = v
-            updateVertices()
+        }
+
+    var text = ""
+        set (v) {
+            dirty = true
+            field = v.replace("\t", "    ")
         }
 
 
-    override fun resize (newMetrics: Vector) {
-        //rat = ratio
+    init {
+        stretchY = false
+
+        font = ImageFont.valueOf(initializer.getOrElse("font") { font.name } as String)
+        multiline = initializer.getOrElse("multiline") { multiline } as Boolean
+        text = initializer.getOrElse("text") { text } as String
         updateVertices()
     }
 
-    override fun updateVertices () {
-        /*val past = Vector()
-        val verticesList = mutableListOf<Rectangle>()
-        val texturesList = mutableListOf<Rectangle>()
 
-        for (word in text.split(' ', '\t', '\n')) {
-            val wordPast = past.copy()
-            val wordVertices = mutableListOf<Rectangle>()
-            val wordTextures = mutableListOf<Rectangle>()
-
-            val addChar = { char: Char ->
-                val ch = font[char]!!
-                val charWidth = (ch.ratio * lineHeight) / (metrics.x * rat)
-                wordVertices.add(Rectangle(wordPast.x, wordPast.y, wordPast.x + charWidth, wordPast.y - 1))
-                wordTextures.add(Rectangle(ch.left / font.width, 1F, ch.right / font.width, 0F))
-                wordPast.x += charWidth
-            }
-
-            for (char in word.toCharArray()) addChar(char)
-            val pureLen = wordPast.x
-            addChar(' ')
-
-            if (multiline && (past.x > 0) && (pureLen > 1)) {
-                wordVertices.forEach {
-                    it.left -= past.x
-                    it.right -= past.x
-                    it.top -= 1
-                    it.bottom -= 1
-                }
-                past.apply { y -= 1; x = wordPast.x - x }
-            } else past.x = wordPast.x
-
-            verticesList.addAll(wordVertices)
-            texturesList.addAll(wordTextures)
-        }
-
-
-        val heights = -(past.y - 1)
-        verticesList.forEach { it.apply { top /= heights; bottom /= heights } }
-        metrics.y = heights * lineHeight
-
-        val vertices = verticesList.flatMap { it.toPointsArray().asIterable() }.toFloatArray()
-        val textures = texturesList.flatMap { it.toPointsArray().asIterable() }.toFloatArray()
-        updateBuffer(2, vertices, textures)*/
-    }
 
     override fun draw () {
         super.draw()
         font.texture.bind()
         Script.setTexture(font.texture)
-        //Script.drawMultiple(text.length)
+        Script.drawMultiple(textLength)
         font.texture.release()
+    }
+
+
+    override fun translate (parentCoords: Vector, parentMetrics: Vector) {
+        if (dirty) updateVertices()
+        super.translate(parentCoords, parentMetrics)
+    }
+
+    override fun updateVertices () {
+        super.updateVertices()
+        if (parent == null) return
+
+        val vertices = mutableListOf<Rectangle>()
+        val textures = mutableListOf<Rectangle>()
+
+        if (!multiline) text.replace('\n', ' ')
+        val space = font.texture.image.metrics * font[' ']!!.metrics * pixelation / Vector(metrics.x, parentMetrics()!!.y)
+
+        val lines = text.split('\n').filter { it.isNotEmpty() }.toMutableList()
+        var iterator = 0
+        do {
+            if (lines.isEmpty()) break
+
+            var past = 0F
+            val lineVertices = mutableListOf<Rectangle>()
+            val lineTextures = mutableListOf<Rectangle>()
+
+            val words = lines[iterator].split(' ')
+            for (word in words.withIndex()) {
+                var wordPast = 0F
+                val wordVertices = mutableListOf<Rectangle>()
+                val wordTextures = mutableListOf<Rectangle>()
+
+                for (char in word.value) {
+                    val ch = font[char]!!
+                    wordTextures.add(ch)
+
+                    val charWidth = font.width * ch.width * pixelation / metrics.x
+                    wordVertices.add(Rectangle(wordPast, 0F, wordPast + charWidth, -1F))
+                    wordPast += charWidth
+                }
+
+                if (multiline && (past > 0) && (past + wordPast > 1)) {
+                    lines.add(iterator + 1, words.subList(word.index, words.size).joinToString(" "))
+                    break
+                } else {
+                    wordTextures.add(font[' ']!!)
+                    wordVertices.add(Rectangle(wordPast, 0F, wordPast + space.x, -1F))
+                    wordPast += space.x
+
+                    wordVertices.forEach { it.translate(x = past) }
+                    past += wordPast
+                }
+
+                lineVertices.addAll(wordVertices)
+                lineTextures.addAll(wordTextures)
+            }
+
+            vertices.addAll(lineVertices.map { it.translate(y = -iterator.toFloat()) })
+            textures.addAll(lineTextures)
+
+            iterator++
+        } while (iterator < lines.size)
+
+        textLength = vertices.size
+        vertices.forEach { it.vertical /= lines.size.toFloat() }
+        dimens.y = lines.size * space.y
+
+        updateBuffer(2, vertices.toFloatArray(), textures.toFloatArray())
     }
 }

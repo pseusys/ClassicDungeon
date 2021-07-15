@@ -4,6 +4,9 @@ import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
 // FINAL
 internal abstract class ResizableUI (initializer: Map<String, *>): WidgetUI(initializer) {
+    @Implicit protected var stretchX = true
+    @Implicit protected var stretchY = true
+
     final override var dimens = super.dimens
         public set
 
@@ -12,12 +15,11 @@ internal abstract class ResizableUI (initializer: Map<String, *>): WidgetUI(init
     }
 
 
+    // Triggered when dimens AND / OR parentMetrics changed.
     override fun translate (parentCoords: Vector, parentMetrics: Vector) {
         val newMetrics = parentMetrics * dimens
-        if (newMetrics != metrics) resize(newMetrics)
+        dirty = (stretchX && (newMetrics.x != metrics.x)) || (stretchY && (newMetrics != metrics))
         metrics = newMetrics
         super.translate(parentCoords, parentMetrics)
     }
-
-    open fun resize (newMetrics: Vector) = updateVertices()
 }

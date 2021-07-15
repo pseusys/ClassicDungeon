@@ -11,17 +11,12 @@ internal class ClipUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
 
 
 
-    @Implicit
-    private var finished = false
-    @Implicit
-    private var cut = 0
-    @Implicit
-    private var timer = 0
-    @Implicit
-    private var current: Animation? = null
+    @Implicit private var finished = false
+    @Implicit private var cut = 0
+    @Implicit private var timer = 0
+    @Implicit private var current: Animation? = null
 
-    @Implicit
-    var finishedListener: Listener? = null
+    @Implicit var finishedListener: Listener? = null
 
     var paused = false
 

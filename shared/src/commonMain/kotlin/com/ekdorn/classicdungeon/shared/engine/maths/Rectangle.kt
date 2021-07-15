@@ -24,9 +24,25 @@ internal open class Rectangle (var left: Float, var top: Float, var right: Float
         set (v) { width = v.x; height = v.y }
 
 
+    inline var horizontal: Vector
+        get () = Vector(left, right)
+        set (v) { left = v.x; right = v.y }
+
+    inline var vertical: Vector
+        get () = Vector(top, bottom)
+        set (v) { top = v.x; bottom = v.y }
+
+
     inline val ratio: Float
         get () = width / height
 
+
+    fun translate (x: Float = 0F, y: Float = 0F) = apply {
+        left += x
+        right += x
+        top += y
+        bottom += y
+    }
 
     fun toPointsArray () = floatArrayOf(left, top, right, top, right, bottom, left, bottom)
 

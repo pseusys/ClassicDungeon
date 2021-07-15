@@ -1,10 +1,9 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 
-// FINAL
+// TODO: inner border
 internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
-    @Implicit
-    private val children = mutableListOf<WidgetUI>()
+    @Implicit private val children = mutableListOf<WidgetUI>()
 
 
     fun add (element: WidgetUI) {

@@ -72,8 +72,16 @@ internal object Game {
         frame.border = Vector(0.31818181818F, 0.31818181818F)
         container.add(frame)
 
+        val hello = TextUI()
+        hello.anchor = Vector(0.5F, 0.1F)
+        hello.verticalAlignment = WidgetUI.ALIGNMENT.START
+        hello.dimens.x = 0.8F
+        hello.text = "Please, enjoy this fine animation:\n"
+        hello.material = Color(1F, 1F, 0F, 1F)
+        container.add(hello)
+
         val bee = ClipUI()
-        bee.anchor = Vector(0.5F, 0.5F)
+        bee.anchor = Vector(0.5F, 0.6F)
         bee.texture = TextureCache.getAtlas<Int>("bee")
         bee.pixelation = 8F
         bee.play(20, true, 7, 8, 9, 10)
@@ -82,10 +90,6 @@ internal object Game {
         root.add(container)
 
         /*
-        val hello = TextUI(Vector(0.1F, 0.1F), "Please, enjoy this fine animation:", "font", 0.8F, 0.075F)
-        hello.multiplyColor(Color(1F, 1F, 0F, 1F))
-        frame.add(hello)
-
         val bee1 = ClipUI("bee", Vector(0.55F, 0.4F), 0.3F, 0.5F)
         bee1.play(20, true, 7, 8, 9, 10)
         frame.add(bee1)

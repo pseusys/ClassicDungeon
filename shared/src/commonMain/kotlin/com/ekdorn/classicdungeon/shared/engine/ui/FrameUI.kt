@@ -2,6 +2,7 @@ package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.engine.glextensions.Script
+import com.ekdorn.classicdungeon.shared.engine.lib.toFloatArray
 import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
@@ -55,8 +56,24 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
 
 
     override fun updateVertices() {
+        super.updateVertices()
+        val pixelBorder = texture.image.metrics * frame.metrics * border * pixelation / metrics
+        val vertices = listOf(
+            Rectangle(0F, 0F, pixelBorder.x, -pixelBorder.y),
+            Rectangle(pixelBorder.x, 0F, 1 - pixelBorder.x, -pixelBorder.y),
+            Rectangle(1 - pixelBorder.x, 0F, 1F, -pixelBorder.y),
+
+            Rectangle(0F, -pixelBorder.y, pixelBorder.x, pixelBorder.y - 1),
+            Rectangle(pixelBorder.x, -pixelBorder.y, 1 - pixelBorder.x, pixelBorder.y - 1),
+            Rectangle(1 - pixelBorder.x, -pixelBorder.y, 1F, pixelBorder.y - 1),
+
+            Rectangle(0F, pixelBorder.y - 1, pixelBorder.x, -1F),
+            Rectangle(pixelBorder.x, pixelBorder.y - 1, 1 - pixelBorder.x, -1F),
+            Rectangle(1 - pixelBorder.x, pixelBorder.y - 1, 1F, -1F),
+        )
+
         val bord = Vector(border.x * frame.width, border.y * frame.height)
-        val edges = arrayOf(
+        val textures = listOf(
             Rectangle(frame.left, frame.top, frame.left + bord.x, frame.top - bord.y),
             Rectangle(frame.left + bord.x, frame.top, frame.right - bord.x, frame.top - bord.y),
             Rectangle(frame.right - bord.x, frame.top, frame.right, frame.top - bord.y),
@@ -70,20 +87,6 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
             Rectangle(frame.right - bord.x, frame.bottom + bord.y, frame.right, frame.bottom)
         )
 
-        val pxlbrd = texture.image.metrics * frame.metrics * border * pixelation / metrics
-        val coords = arrayOf(
-            Rectangle(0F, 0F, pxlbrd.x, -pxlbrd.y),
-            Rectangle(pxlbrd.x, 0F, 1 - pxlbrd.x, -pxlbrd.y),
-            Rectangle(1 - pxlbrd.x, 0F, 1F, -pxlbrd.y),
-
-            Rectangle(0F, -pxlbrd.y, pxlbrd.x, pxlbrd.y - 1),
-            Rectangle(pxlbrd.x, -pxlbrd.y, 1 - pxlbrd.x, pxlbrd.y - 1),
-            Rectangle(1 - pxlbrd.x, -pxlbrd.y, 1F, pxlbrd.y - 1),
-
-            Rectangle(0F, pxlbrd.y - 1, pxlbrd.x, -1F),
-            Rectangle(pxlbrd.x, pxlbrd.y - 1, 1 - pxlbrd.x, -1F),
-            Rectangle(1 - pxlbrd.x, pxlbrd.y - 1, 1F, -1F),
-        )
-        updateBuffer(2, coords.flatMap { it.toPointsArray().asIterable() }.toFloatArray(), edges.flatMap { it.toPointsArray().asIterable() }.toFloatArray())
+        updateBuffer(2, vertices.toFloatArray(), textures.toFloatArray())
     }
 }

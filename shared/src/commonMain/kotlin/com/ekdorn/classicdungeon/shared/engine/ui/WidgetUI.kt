@@ -18,7 +18,7 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
     @Target(AnnotationTarget.PROPERTY)
     @Retention(AnnotationRetention.SOURCE)
     @MustBeDocumented
-    annotation class Implicit()
+    annotation class Implicit
 
 
 
@@ -28,22 +28,16 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
     var active: Boolean = true
         get() = field && if (parent != null) (parent!!.active) else true
     */
-    @Implicit
-    var parent: LayoutUI? = null
-    @Implicit
-    protected var coords = Vector()
-    @Implicit
-    protected var metrics = Vector()
+    @Implicit var parent: LayoutUI? = null
+    @Implicit protected var coords = Vector()
+    @Implicit protected var metrics = Vector()
 
-    @Implicit
-    protected var dirty = false
+    @Implicit protected var dirty = false
 
-    @Implicit
-    private val buffer = GLBuffer(GLBuffer.TYPE.COMMON)
+    @Implicit private val buffer = GLBuffer(GLBuffer.TYPE.COMMON)
 
 
-    @Implicit
-    open var dimens = Vector()
+    @Implicit open var dimens = Vector()
         protected set
 
     var anchor = Vector()
