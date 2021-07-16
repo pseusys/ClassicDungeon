@@ -18,6 +18,4 @@ fun Float.str(ints: Int, floats: Int): String {
     return "${integerDigits.toString().padStart(ints)}.${floatDigits.toString().padEnd(floats, '0')}"
 }
 
-fun Char.isEmpty () = (this == ' ') || (this == '\n') || (this == '\t')
-
 internal fun Collection<Rectangle>.toFloatArray () = flatMap { it.toPointsArray().asIterable() }.toFloatArray()

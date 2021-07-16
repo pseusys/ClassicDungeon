@@ -3,7 +3,6 @@ package com.ekdorn.classicdungeon.shared.engine.ui
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
 
-// TODO: inner border
 internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
     @Implicit private val children = mutableListOf<WidgetUI>()
 
@@ -30,21 +29,23 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
 
     override fun update (elapsed: Int) {
         super.update(elapsed)
-        background?.let {
-            it.translate(coords, metrics)
-            it.update(elapsed)
-        }
-        val innerBorder = if (background != null) background!!.pixelBorder() else Vector()
-        children.forEach { if (it.visible) {
-            it.translate(coords + innerBorder, metrics - innerBorder * 2F)
-            it.update(elapsed)
-        } }
+        background?.update(elapsed)
+        children.forEach { if (it.visible) { it.update(elapsed) } }
     }
 
     override fun draw () {
         super.draw()
         background?.draw()
         children.forEach { if (it.visible) it.draw() }
+    }
+
+
+
+    override fun translate(parentCoords: Vector, parentMetrics: Vector) {
+        super.translate(parentCoords, parentMetrics)
+        background?.translate(coords, metrics)
+        val innerBorder = if (background != null) background!!.pixelBorder() else Vector()
+        children.forEach { if (it.visible) it.translate(coords + innerBorder, metrics - innerBorder * 2F) }
     }
 
 

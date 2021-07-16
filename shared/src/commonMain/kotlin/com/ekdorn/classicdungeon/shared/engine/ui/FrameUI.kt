@@ -6,7 +6,21 @@ import com.ekdorn.classicdungeon.shared.engine.lib.toFloatArray
 import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
+
 internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
+    public override var stretchW = super.stretchW
+        set (v) {
+            dirty = true
+            field = v
+        }
+
+    public override var stretchH = super.stretchH
+        set (v) {
+            dirty = true
+            field = v
+        }
+
+
     var frame = initializer.getOrElse("frame") { Rectangle(0F, 1F, 1F, 0F) } as Rectangle
         set (v) {
             dirty = true
@@ -14,18 +28,6 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
         }
 
     var texture = TextureCache.get(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
-
-    var horizontal = initializer.getOrElse("horizontal") { true } as Boolean
-        set (v) {
-            dirty = true
-            field = v
-        }
-
-    var vertical = initializer.getOrElse("vertical") { true } as Boolean
-        set (v) {
-            dirty = true
-            field = v
-        }
 
     var border = initializer.getOrElse("border") { Vector() } as Vector
         set (v) {

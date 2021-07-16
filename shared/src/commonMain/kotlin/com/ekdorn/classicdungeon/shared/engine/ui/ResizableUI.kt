@@ -4,8 +4,8 @@ import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
 // FINAL
 internal abstract class ResizableUI (initializer: Map<String, *>): WidgetUI(initializer) {
-    @Implicit protected var stretchW = true
-    @Implicit protected var stretchH = true
+    @Implicit protected open var stretchW = true
+    @Implicit protected open var stretchH = true
 
     final override var dimens = initializer.getOrElse("dimens") { super.dimens } as Vector
         public set

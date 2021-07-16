@@ -6,7 +6,6 @@ import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
 
-// FINAL
 internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any>()): WidgetUI(initializer) {
     private companion object { val delay = Rectangle(0F, 0F, 1F, -1F).toPointsArray() }
 

@@ -5,7 +5,6 @@ import com.ekdorn.classicdungeon.shared.engine.glextensions.Atlas
 import com.ekdorn.classicdungeon.shared.engine.lib.Listener
 
 
-// FINAL
 internal class ClipUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ImageUI(initializer) {
     private class Animation (fps: Int, val looped: Boolean, val order: IntArray) { val delay = 1000 / fps }
 

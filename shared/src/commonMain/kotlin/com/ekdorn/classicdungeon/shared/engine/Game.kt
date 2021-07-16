@@ -1,7 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine
 
 import com.ekdorn.classicdungeon.shared.Input
-import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
 import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.engine.maths.Color
 import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
@@ -30,16 +29,14 @@ internal object Game {
     fun resume () {}
     fun update () {
         val current = Clock.System.now().toEpochMilliseconds().toInt()
-        root.update(current - elapsed)
-        GLFunctions.clear()
-        root.draw()
+        root.enter(current - elapsed)
         elapsed = current
     }
     fun pause () {}
 
 
     fun splash (width: Int, height: Int) {
-        root = RootUI(Rectangle(0F, 0F, 1F, 1F), width, height)
+        root = RootUI(width, height)
         splash = ImageUI()
         splash.anchor = Vector(0.5F, 0.5F)
         splash.pixelation = 8F

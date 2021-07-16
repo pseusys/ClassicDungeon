@@ -17,9 +17,7 @@ object Mapper: Assigned {
     fun requestFor (textures: Int) {
         val currentTextures = POINTER.size / INDICES.size
         if (currentTextures >= textures) return
-        for (tex in currentTextures until textures) {
-            POINTER.addAll(INDICES.map { (it + tex * 4).toShort() })
-        }
+        for (tex in currentTextures until textures) POINTER.addAll(INDICES.map { (it + tex * 4).toShort() })
         buffer.fillStatic(POINTER.toShortArray())
     }
 

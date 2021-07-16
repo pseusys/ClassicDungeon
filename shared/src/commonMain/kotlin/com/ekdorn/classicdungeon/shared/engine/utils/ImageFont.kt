@@ -19,18 +19,19 @@ internal enum class ImageFont (resource: String): MutableMap<Char, Rectangle> by
 
     init {
         var gap: Boolean
-        var pastW = 0F
+        var past = 0F
+        val half = 0.5F / width
         var charCounter = 0
         for (column in 0 until width.toInt()) {
             gap = false
             for (row in 0 until height.toInt()) gap = gap || (texture.image.getPixel(column, row) != FontUtils.SPLIT)
             if ((FontUtils.ALPHABET[charCounter] == ' ') && gap) {
-                put(FontUtils.ALPHABET[charCounter], Rectangle(pastW / width, 1F, (column - 1) / width, 0F))
-                pastW = column - 1F
+                put(FontUtils.ALPHABET[charCounter], Rectangle(past / width + half, 1F, (column - 1) / width + half, 0F))
+                past = column - 1F
                 charCounter++
             } else if ((FontUtils.ALPHABET[charCounter] != ' ') && !gap) {
-                put(FontUtils.ALPHABET[charCounter], Rectangle(pastW / width, 1F, column / width, 0F))
-                pastW = column.toFloat()
+                put(FontUtils.ALPHABET[charCounter], Rectangle(past / width + half, 1F, column / width + half, 0F))
+                past = column.toFloat()
                 charCounter++
             }
             if (charCounter == FontUtils.ALPHABET.length) break

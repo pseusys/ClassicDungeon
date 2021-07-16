@@ -2,7 +2,7 @@ package com.ekdorn.classicdungeon.shared.engine.maths
 
 import kotlin.math.abs
 
-// TODO: revise width + height
+// TODO: revise width + height = right + bottom
 internal open class Rectangle (var left: Float, var top: Float, var right: Float, var bottom: Float) {
     constructor (left: Int, top: Int, right: Int, bottom: Int): this(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 

@@ -32,7 +32,7 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
     var text = initializer.getOrElse("text") { "" } as String
         set (v) {
             dirty = true
-            field = v.replace("\t", "    ")
+            field = v
         }
 
     var textAlignment = ALIGNMENT.valueOf(initializer.getOrElse("textAlignment") { ALIGNMENT.CENTER.name } as String)
@@ -85,7 +85,8 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
         val vertices = mutableListOf<Rectangle>()
         val textures = mutableListOf<Rectangle>()
 
-        if (!multiline) text.replace('\n', ' ')
+        text = text.replace("\t", "    ")
+        if (!multiline) text = text.replace('\n', ' ')
 
         // Object, representing correct text metrics, even if width was not set explicitly.
         val pseudoMetrics = Vector(if (dimens.x == 0F) parentMetrics()!!.x else metrics.x, parentMetrics()!!.y)
