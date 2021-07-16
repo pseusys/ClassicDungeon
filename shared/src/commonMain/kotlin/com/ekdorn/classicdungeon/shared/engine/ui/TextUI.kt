@@ -125,15 +125,14 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
                     lines.add(index + 1, words.subList(word.index, words.size).joinToString(" "))
                     break
                 } else {
-                    // Translating word to the line ebd.
-                    wordVertices.forEach { it.translate(x = (past + font[' ']!!.width)) }
-
+                    // Translating word to the line end.
                     // Adding space before the word if it is not the first word of the line.
                     if (word.index != 0) {
+                        wordVertices.forEach { it.translate(x = (past + font[' ']!!.width)) }
                         wordTextures.add(0, font[' ']!!)
                         wordVertices.add(0, Rectangle(past, 0F, past + space.x, -1F))
                         wordPast += space.x
-                    }
+                    } else wordVertices.forEach { it.translate(x = past) }
 
                     past += wordPast
                 }
