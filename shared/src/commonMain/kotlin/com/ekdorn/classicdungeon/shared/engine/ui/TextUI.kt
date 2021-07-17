@@ -88,11 +88,6 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
         text = text.replace("\t", "    ")
         if (!multiline) text = text.replace('\n', ' ')
 
-        // Object, representing correct text metrics, even if width was not set explicitly.
-        val pseudoMetrics = Vector(if (dimens.x == 0F) parentMetrics()!!.x else metrics.x, parentMetrics()!!.y)
-        // Space char (' ') metrics.
-        val space = font.texture.image.metrics * font[' ']!!.metrics * pixelation / pseudoMetrics
-
         // Lines, with no empty.
         val lines = text.split('\n').filter { it.isNotEmpty() }.toMutableList()
         val maxPast = lines.iterateLines { index ->
@@ -115,7 +110,7 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
                     val ch = font[char]!!
                     wordTextures.add(ch)
 
-                    val charWidth = font.width * ch.width * pixelation / pseudoMetrics.x
+                    val charWidth = font.width * ch.width * pixelation / metrics.x
                     wordVertices.add(Rectangle(wordPast, 0F, wordPast + charWidth, -1F))
                     wordPast += charWidth
                 }
@@ -128,10 +123,13 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
                     // Translating word to the line end.
                     // Adding space before the word if it is not the first word of the line.
                     if (word.index != 0) {
-                        wordVertices.forEach { it.translate(x = (past + font[' ']!!.width)) }
-                        wordTextures.add(0, font[' ']!!)
-                        wordVertices.add(0, Rectangle(past, 0F, past + space.x, -1F))
-                        wordPast += space.x
+                        val ch = font[' ']!!
+                        wordTextures.add(0, ch)
+
+                        val charWidth = font.width * ch.width * pixelation / metrics.x
+                        wordVertices.forEach { it.translate(x = past + charWidth) }
+                        wordVertices.add(0, Rectangle(past, 0F, past + charWidth, -1F))
+                        wordPast += charWidth
                     } else wordVertices.forEach { it.translate(x = past) }
 
                     past += wordPast
@@ -168,9 +166,13 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
         }
 
         textLength = vertices.size
+
+        // Because this view is vertical-resizeable only, setting new metrics.
+        metrics.y = font.height * lines.size * pixelation
+
         // Dividing all y coords by lines number, to fit in new dimens.y.
         vertices.forEach { it.vertical /= lines.size.toFloat() }
-        dimens = Vector(if (dimens.x == 0F) maxPast else dimens.x, lines.size * space.y)
+        dimens = Vector(if (dimens.x == 0F) maxPast else dimens.x, metrics.y / parentMetrics()!!.y)
 
         updateBuffer(2, vertices.toFloatArray(), textures.toFloatArray())
     }
