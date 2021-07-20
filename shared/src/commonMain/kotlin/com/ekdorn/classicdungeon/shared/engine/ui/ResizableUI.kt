@@ -15,7 +15,7 @@ internal abstract class ResizableUI (initializer: Map<String, *>): WidgetUI(init
     // Triggered when dimens AND / OR parentMetrics changed.
     override fun translate (parentCoords: Vector, parentMetrics: Vector) {
         val newMetrics = parentMetrics * dimens
-        dirty = (stretchW && (newMetrics.x != metrics.x)) || (stretchH && (newMetrics != metrics))
+        dirty = (stretchW && (newMetrics.x != metrics.x)) || (stretchH && (newMetrics.y != metrics.y))
         metrics = newMetrics
         super.translate(parentCoords, parentMetrics)
     }

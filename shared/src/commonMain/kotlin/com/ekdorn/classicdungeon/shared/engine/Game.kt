@@ -72,7 +72,7 @@ internal object Game {
         val hello = TextUI()
         hello.anchor = Vector(0.5F, 0F)
         hello.verticalAlignment = WidgetUI.ALIGNMENT.START
-        hello.textAlignment = TextUI.ALIGNMENT.FILL
+        hello.textAlignment = TextUI.ALIGNMENT.CENTER
         hello.dimens.x = 1F
         hello.pixelation = 2F
         hello.text = "Please, enjoy this fine animation:\n"
