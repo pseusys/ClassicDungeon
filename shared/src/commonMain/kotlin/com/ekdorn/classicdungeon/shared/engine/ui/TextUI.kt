@@ -152,16 +152,16 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
                 ALIGNMENT.END -> lineVertices.map { it.apply { horizontal += rem } }
                 ALIGNMENT.FILL -> {
                     // Finding all space symbol indexes.
-                    val spaces = lineTextures.indices.filter { lineTextures[it] == font[' ']!! }
+                    val spaces = lineTextures.indices.count { lineTextures[it] == font[' ']!! }
                     // Const to add to char x.
                     var sp = 0F
-                    lineVertices.mapIndexed { ind, rect -> spaces.indexOfFirst { it == ind }.let {
+                    lineVertices.mapIndexed { ind, rect ->
                         // For regular chars, moving along x by sp.
-                        if (it == -1) rect.apply { horizontal += sp }
+                        if (lineTextures[ind] != font[' ']!!) rect.apply { horizontal += sp }
                         // For spaces, moving left coordinate along x by sp and right - by sp + rem / count of spaces.
                         // From now on sp = sp + rem / count of spaces.
-                        else rect.apply { left += sp; sp += rem / spaces.size; right += sp }
-                    } }
+                        else rect.apply { left += sp; sp += rem / spaces; right += sp }
+                    }
                 }
             })
             textures.addAll(lineTextures)
