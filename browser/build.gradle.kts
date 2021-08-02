@@ -28,7 +28,8 @@ kotlin {
 
 
 
-// Workaround for gradle not building correctly.
+// Workaround for gradle not serving transitive resource dependencies correctly.
+// https://youtrack.jetbrains.com/issue/KTIJ-18536
 
 tasks.create("copyResources") {
     copy {
