@@ -18,7 +18,7 @@ external interface PNG {
 @JsNonModule
 private external fun readPixels (data: Data): Promise<PNG>
 
-suspend fun getPixels (resource: String) = readPixels(object: Data {
+suspend fun getPixels (resource: String) = readPixels(object : Data {
     override var data: Promise<Response> = window.fetch(resource)
     override var debug: Boolean = false
 }).await()

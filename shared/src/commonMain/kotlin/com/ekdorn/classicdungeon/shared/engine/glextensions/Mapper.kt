@@ -8,9 +8,7 @@ object Mapper: Assigned {
     private val POINTER = INDICES.copyOf().toMutableList()
     val buffer = GLBuffer(GLBuffer.TYPE.ELEMENT)
 
-    init {
-        buffer.fillStatic(POINTER.toShortArray())
-    }
+    init { buffer.fillStatic(POINTER.toShortArray()) }
 
     fun elementsForTextures (textures: Int) = INDICES.size * textures
 

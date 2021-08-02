@@ -1,9 +1,10 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
-import context
+import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions.context
 import org.khronos.webgl.Uint8Array
 import org.khronos.webgl.WebGLRenderingContext
 import org.khronos.webgl.WebGLTexture
+
 
 actual open class GLTexture {
     actual enum class FILTERING (val mode: Int) {

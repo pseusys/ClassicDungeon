@@ -1,10 +1,11 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
-import context
-import org.khronos.webgl.Int8Array
 import org.khronos.webgl.WebGLRenderingContext
 
+
 actual object GLFunctions {
+    lateinit var context: WebGLRenderingContext
+
     actual fun setup () {
         context.clearColor(0.0F, 0.0F, 0.0F, 1.0F)
         context.pixelStorei(WebGLRenderingContext.UNPACK_FLIP_Y_WEBGL, 1)

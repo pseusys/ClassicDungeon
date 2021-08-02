@@ -1,7 +1,8 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
-import context
+import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions.context
 import org.khronos.webgl.*
+
 
 actual class GLBuffer actual constructor (actual val type: TYPE) {
     actual enum class TYPE (val id: Int) {

@@ -1,6 +1,7 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
-import context
+import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions.context
+
 
 actual class GLUniform actual constructor (program: GLProgram, name: String) {
     private val self = context.getUniformLocation(program.self, name)

@@ -1,5 +1,6 @@
 import com.ekdorn.classicdungeon.shared.Input
 import com.ekdorn.classicdungeon.shared.Lifecycle
+import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions.context
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
@@ -10,10 +11,9 @@ import org.w3c.dom.get
 
 
 val surface = document.getElementById("surface") as HTMLCanvasElement
-lateinit var context: WebGLRenderingContext
-
 
 var timerEnabled = false
+
 
 fun main () {
     window.onload = {

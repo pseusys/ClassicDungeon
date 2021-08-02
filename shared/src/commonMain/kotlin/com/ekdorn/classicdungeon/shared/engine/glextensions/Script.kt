@@ -80,7 +80,7 @@ internal object Script: Assigned {
 
     private fun prepareShader (shader: GLShader, code: String) {
         shader.prepare(code)?.apply {
-            throw Exception("${if (shader == vertexShader) "VERTEX" else "FRAGMENT"} shader compile error: $this")
+            throw Exception("${if (shader == vertexShader) "VERTEX" else "FRAGMENT"} shader compile error:\n$this")
         }
         program.attach(shader)
     }

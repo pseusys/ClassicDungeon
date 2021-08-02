@@ -17,6 +17,9 @@ gradlew.bat
 # Native kotlin lib build folder
 /shared/build/
 
+# Browser kotlin build folder
+/browser/build/
+
 
 
 # QT project build folder

@@ -1,7 +1,8 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
-import context
+import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions.context
 import org.khronos.webgl.WebGLRenderingContext
+
 
 actual class GLProgram {
     val self = context.createProgram()

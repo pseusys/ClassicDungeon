@@ -1,7 +1,8 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
-import context
+import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions.context
 import org.khronos.webgl.WebGLRenderingContext
+
 
 actual class GLShader actual constructor (type: TYPE) {
     actual enum class TYPE (val type: Int) {

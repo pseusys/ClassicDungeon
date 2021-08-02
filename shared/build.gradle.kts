@@ -21,13 +21,7 @@ kotlin {
         }
     }
     js(IR) {
-        binaries.executable()
-        browser {
-            commonWebpackConfig {
-                outputFileName = "ClassicDungeon.js"
-                cssSupport.enabled = true
-            }
-        }
+        browser()
     }
 
 

@@ -10,6 +10,6 @@ pluginManagement {
 rootProject.name = "ClassicDungeon"
 
 include(":android")
-include(":shared")
+include(":browser")
 include(":desktop")
-
+include(":shared")
