@@ -23,6 +23,9 @@ gradlew.bat
 # Native kotlin lib build folder
 /desktop/build/
 
+# Native GLFW lib folder
+/desktop/glfw/
+
 
 
 # QT project build folder
