@@ -1,5 +1,5 @@
 plugins {
-    kotlin("js")
+    kotlin("multiplatform")
 }
 
 group = "com.ekdorn.classicdungeon"
@@ -10,17 +10,17 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation(project(":shared"))
-}
-
 kotlin {
-    js(IR) {
-        binaries.executable()
-        browser {
-            commonWebpackConfig {
-                outputFileName = "ClassicDungeon.js"
-                cssSupport.enabled = true
+    mingwX64("desktop") {
+        binaries {
+            executable()
+        }
+    }
+
+    sourceSets {
+        val desktopMain by getting {
+            dependencies {
+                implementation(project(":shared"))
             }
         }
     }
@@ -37,9 +37,8 @@ tasks.create("copyResources") {
         into("build/processedResources/js/main")
     }
 }
+/*
 tasks["browserDistribution"].doLast {
     tasks["copyResources"]
 }
-tasks["browserDevelopmentRun"].doLast {
-    tasks["copyResources"]
-}
+*/
