@@ -37,7 +37,7 @@ tasks["browserDistribution"].doLast {
         into("build/distributions")
     }
 }
-tasks["browserDevelopmentRun"].doFirst {
+tasks["browserDevelopmentRun"].doLast {
     copy {
         from("../shared/build/processedResources/js/main")
         into("build/processedResources/js/main")
