@@ -26,23 +26,26 @@ kotlin {
     }
 }
 
+val glfw = "3.3.4"
+
+// TODO: register before native build.
 tasks.create("downloadGLFW") {
     outputs.files("./glfw/glfw.h", "./glfw/glfw.a")
 
     val bits = System.getProperty("sun.arch.data.model")
-    val file = "glfw-3.3.4.bin.WIN$bits"
+    val file = "glfw-$glfw.bin.WIN$bits"
 
     val archive = File("./glfw.zip")
-    val url = "https://github.com/glfw/glfw/releases/download/3.3.4/$file.zip"
+    val url = "https://github.com/glfw/glfw/releases/download/$glfw/$file.zip"
     ant.invokeMethod("get", mapOf("src" to url, "dest" to archive))
 
     copy {
         from(zipTree("./glfw.zip")) {
             val dir = "lib-mingw-w$bits"
-            include("$file/include/GLFW/glfw3.h", "$file/$dir/libglfw3.a")
+            include("$file/include/GLFW/glfw${glfw[0]}.h", "$file/$dir/libglfw${glfw[0]}.a")
             eachFile {
-                val fileName = if (relativePath.segments.last() == "glfw3.h") "glfw.h" else "glfw.a"
-                relativePath = RelativePath(true, fileName)
+                val ext = relativePath.segments.last().substringAfterLast('.')
+                relativePath = RelativePath(true, "glfw.$ext")
             }
             includeEmptyDirs = false
         }
@@ -55,7 +58,7 @@ tasks.create("downloadGLFW") {
 
 // Workaround for gradle not serving transitive resource dependencies correctly.
 // https://youtrack.jetbrains.com/issue/KTIJ-18536
-
+// TODO: manage with native resources.
 tasks.create("copyResources") {
     copy {
         from("../shared/build/processedResources/js/main")
