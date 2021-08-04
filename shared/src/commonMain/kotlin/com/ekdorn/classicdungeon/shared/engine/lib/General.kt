@@ -7,7 +7,7 @@ import kotlin.math.roundToInt
 
 
 /**
- *
+ * Function for clean output of Floats. It takes in account desired number of places before and after dot.
  * @param ints minimal length of integer part of the receiver (prepended with whitespaces)
  * @param floats number of decimal places to show (receiver is rounded to that number)
  * @return the String representation of the receiver up to numOfDec decimal places
@@ -18,4 +18,8 @@ fun Float.str(ints: Int, floats: Int): String {
     return "${integerDigits.toString().padStart(ints)}.${floatDigits.toString().padEnd(floats, '0')}"
 }
 
+/**
+ * Function, converting any collection of rectangles to FloatArray.
+ * @return array of floats, representing rectangle edges.
+ */
 internal fun Collection<Rectangle>.toFloatArray () = flatMap { it.toPointsArray().asIterable() }.toFloatArray()

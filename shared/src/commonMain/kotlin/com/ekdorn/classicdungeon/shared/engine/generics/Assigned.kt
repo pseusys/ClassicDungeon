@@ -3,6 +3,7 @@ package com.ekdorn.classicdungeon.shared.engine.generics
 import com.ekdorn.classicdungeon.shared.engine.glextensions.Camera
 import com.ekdorn.classicdungeon.shared.engine.glextensions.Script
 
+
 /**
  * This interface represents **object**, assigned to app lifecycle, to _start_ and _end_ events in particular.
  */

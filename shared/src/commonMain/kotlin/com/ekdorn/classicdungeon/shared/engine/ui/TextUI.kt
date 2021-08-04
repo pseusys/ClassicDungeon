@@ -174,6 +174,6 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
         vertices.forEach { it.vertical /= lines.size.toFloat() }
         dimens = Vector(if (dimens.x == 0F) maxPast else dimens.x, metrics.y / parentMetrics()!!.y)
 
-        updateBuffer(2, vertices.toFloatArray(), textures.toFloatArray())
+        updateBuffer(vertices.toFloatArray(), textures.toFloatArray())
     }
 }

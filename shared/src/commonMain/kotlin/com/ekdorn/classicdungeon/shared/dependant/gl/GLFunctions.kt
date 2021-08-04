@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
+
 /**
  * GLFunctions object is a collection of GL functions.
  */

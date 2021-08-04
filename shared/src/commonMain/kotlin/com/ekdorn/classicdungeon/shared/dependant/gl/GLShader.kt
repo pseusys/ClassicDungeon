@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
+
 /**
  * GLShader class represents a GL shader of any type.
  *

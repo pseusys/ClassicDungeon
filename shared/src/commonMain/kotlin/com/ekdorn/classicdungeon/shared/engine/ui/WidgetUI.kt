@@ -139,11 +139,11 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
 
     protected open fun updateVertices () { dirty = false }
 
-    protected fun updateBuffer (fromEach: Int, vararg dataSeq: FloatArray) {
+    protected fun updateBuffer (vararg dataSeq: FloatArray) {
         val size = dataSeq.size * dataSeq[0].size
-        // println(FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] })
-        val arr = FloatArray(size) { dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size] }
-        buffer.fillDynamic(arr)
+        buffer.fillDynamic(FloatArray(size) {
+            dataSeq[(it / 2) % dataSeq.size][(it / 2) + (it % 2) - (it / 2) % dataSeq.size]
+        })
     }
 
 

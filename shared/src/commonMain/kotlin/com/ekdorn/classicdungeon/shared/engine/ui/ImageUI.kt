@@ -68,6 +68,6 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
         else Pair(frame.top, frame.bottom)
 
         val textureVertices = Rectangle(x.first, y.first, x.second, y.second)
-        updateBuffer(2, delay, textureVertices.toPointsArray())
+        updateBuffer(delay, textureVertices.toPointsArray())
     }
 }

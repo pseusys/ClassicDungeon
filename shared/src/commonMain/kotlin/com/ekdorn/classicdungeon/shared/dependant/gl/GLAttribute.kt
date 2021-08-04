@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
+
 /**
  * GLAttribute class represents a GL attribute, a vertex array object in particular.
  * It needs a GL program with vertex shader attached and a string name, used in shader, to be initialized.

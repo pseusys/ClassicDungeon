@@ -1,12 +1,13 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
+
 /**
  * GLBuffer class represents a GL buffer, a vertex buffer object in particular.
  * A buffer is associated with each UI element. Should be created along with each element.
  *
  * [OpenGL wiki entry](https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Buffer_Object)
  * @param type buffer type
- * @see com.ekdorn.classicdungeon.shared.ui.ElementUI UI element
+ * @see com.ekdorn.classicdungeon.shared.engine.ui.WidgetUI UI element
  */
 expect class GLBuffer (type: TYPE) {
     val type: TYPE

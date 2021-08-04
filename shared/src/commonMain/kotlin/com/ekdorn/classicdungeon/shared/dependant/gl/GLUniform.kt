@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
+
 /**
  * GLUniform class represents a GL uniform.
  * It needs a GL program with shaders attached and a string name, used in shaders, to be initialized.

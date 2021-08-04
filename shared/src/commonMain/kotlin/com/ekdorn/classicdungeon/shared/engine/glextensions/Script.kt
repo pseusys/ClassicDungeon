@@ -5,7 +5,19 @@ import com.ekdorn.classicdungeon.shared.engine.generics.Assigned
 import com.ekdorn.classicdungeon.shared.engine.maths.Color
 import com.ekdorn.classicdungeon.shared.engine.maths.Matrix
 
+
+/**
+ * Object, designed for accessing GL.
+ * It supports initialization, drawing calls and resource freeing.
+ */
 internal object Script: Assigned {
+    /**
+     * GL vertex shader, limited to 100 version because of WebGL.
+     * - camera - camera matrix.
+     * - model - model matrix.
+     * - position - position of fragment in 2D space.
+     * - coordinates - coordinates of texture edge, associated with vertex.
+     */
     private const val VERTEX_SHADER =
         """
             #version 100
@@ -24,7 +36,14 @@ internal object Script: Assigned {
             }
         """
 
-    // TODO: revise colors
+    /**
+     * GL fragment shader, limited to 100 version because of WebGL.
+     * TODO: revise colors.
+     * - ambient - color that will be added to texture color.
+     * - material - color that texture color will be multiplied by.
+     * - texture - texture sampler.
+     * - fragment - coordinates of this fragment on texture.
+     */
     private const val FRAGMENT_SHADER =
         """
             #version 100
@@ -78,6 +97,12 @@ internal object Script: Assigned {
         coordinates.enable()
     }
 
+    /**
+     * Function, preparing shader: compiling it and attaching to program.
+     * It also throws an exception if shader wasn't compiled correctly.
+     * @param shader shader to compile and attach
+     * @param code shader code
+     */
     private fun prepareShader (shader: GLShader, code: String) {
         shader.prepare(code)?.apply {
             throw Exception("${if (shader == vertexShader) "VERTEX" else "FRAGMENT"} shader compile error:\n$this")
@@ -86,17 +111,20 @@ internal object Script: Assigned {
     }
 
 
+    /**
+     * Setting methods for shader variables.
+     */
     fun setCamera (matrix: Matrix) = camera.value4m(matrix.values)
-
     fun setModel (matrix: Matrix) = model.value4m(matrix.values)
-
     fun setAmbient (color: Color) = ambient.value4f(color.r, color.g, color.b, color.a)
-
     fun setMaterial (color: Color) = material.value4f(color.r, color.g, color.b, color.a)
-
     fun setTexture (sampler: GLTexture) = texture.value1i(sampler.id)
 
 
+    /**
+     * Method for drawing multiple textures at once.
+     * @param textures number of textures to draw
+     */
     fun drawMultiple (textures: Int) {
         position.set(2, 0, 4)
         coordinates.set(2, 2, 4)
@@ -105,9 +133,15 @@ internal object Script: Assigned {
         GLFunctions.drawElements(Mapper.elementsForTextures(textures))
     }
 
+    /**
+     * Method for drawing single texture.
+     */
     fun drawSingle () = drawMultiple(1)
 
 
+    /**
+     * Function, freeing resources of GL, triggered on game ended.
+     */
     override fun gameEnded () {
         position.disable()
         coordinates.disable()

@@ -86,6 +86,6 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
             Rectangle(frame.right - bord.x, frame.bottom + bord.y, frame.right, frame.bottom)
         )
 
-        updateBuffer(2, vertices.toFloatArray(), textures.toFloatArray())
+        updateBuffer(vertices.toFloatArray(), textures.toFloatArray())
     }
 }

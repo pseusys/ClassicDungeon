@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
+
 /**
  * GLTexture class represents a GL texture.
  *

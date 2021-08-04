@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared.dependant.gl
 
+
 /**
  * GLProgram class represents a GL program.
  * There is a single program for the game.
