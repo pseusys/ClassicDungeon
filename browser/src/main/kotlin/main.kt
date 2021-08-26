@@ -24,7 +24,7 @@ fun main () {
         println("onstart")
         MainScope().promise {
             Lifecycle.start(surface.width, surface.height)
-        }.then { resume() }
+        }.catch { /* TODO: cd to error page */ }.then { resume() }
     }
 
     window.onresize = {

@@ -7,34 +7,64 @@ import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 import com.ekdorn.classicdungeon.shared.engine.utils.ImageFont
 
 
+/**
+ * TextUI - number of images, each representing a letter, together forming text.
+ * May be stretched in different ways, single- or multiline.
+ */
 internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(hashMapOf<String, Any>()) {
+    /**
+     * Types of internal text stretching:
+     * - START - letters aligned to left
+     * - CENTER - letters aligned to center
+     * - END - letters aligned to right
+     * - FILL - letters stretched to fill whole width
+     */
     enum class ALIGNMENT {
         START, CENTER, END, FILL
     }
 
 
 
+    /**
+     * Number of letters actually drawn (with unnecessary whitespaces omitted).
+     */
     @Implicit private var textLength = 0
 
 
+    /**
+     * Property font - font to take letters from.
+     * ImageFont.MEDIUM by default.
+     */
     var font = ImageFont.valueOf(initializer.getOrElse("font") { ImageFont.MEDIUM.name } as String)
         set (v) {
             dirty = true
             field = v
         }
 
+    /**
+     * Property multiline - whether text should be single- or multiline.
+     * True by default.
+     */
     var multiline = initializer.getOrElse("multiline") { true } as Boolean
         set (v) {
             dirty = true
             field = v
         }
 
+    /**
+     * Property text - the text to draw.
+     * "" by default.
+     */
     var text = initializer.getOrElse("text") { "" } as String
         set (v) {
             dirty = true
             field = v
         }
 
+    /**
+     * Property textAlignment - type of internal text stretching to use.
+     * ALIGNMENT.CENTER by default.
+     */
     var textAlignment = ALIGNMENT.valueOf(initializer.getOrElse("textAlignment") { ALIGNMENT.CENTER.name } as String)
         set (v) {
             dirty = true
@@ -49,6 +79,11 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
 
 
 
+    /**
+     * General line-iterating function for updateVertices.
+     * Iterates lines, allowing extra line insertion from processing function if line exceeds nax length.
+     * @param iterating function processing each new line.
+     */
     private fun MutableList<String>.iterateLines (iterating: (Int) -> Float): Float {
         var maxPast = 0F
         var iterator = 0
@@ -97,7 +132,7 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
             val lineVertices = mutableListOf<Rectangle>()
             val lineTextures = mutableListOf<Rectangle>()
 
-            // Words of the line
+            // Words of the line.
             val words = lines[index].split(' ')
             for (word in words.withIndex()) {
                 // Offset from the beginning of the line in width percent.

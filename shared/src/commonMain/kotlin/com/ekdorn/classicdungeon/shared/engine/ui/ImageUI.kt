@@ -6,20 +6,34 @@ import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
 
+/**
+ * ImageUI - image, that can not be resized for it pixel sizes not to be disturbed.
+ */
 internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any>()): WidgetUI(initializer) {
     private companion object { val delay = Rectangle(0F, 0F, 1F, -1F).toPointsArray() }
 
 
 
+    /**
+     * Part of parent widget this widget takes.
+     */
     @Implicit override var dimens = super.dimens
         get () = if (parent != null) metrics / parentMetrics()!! else field
 
+    /**
+     * Property texture - image source.
+     * Fallback image by default.
+     */
     var texture = TextureCache.get(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
         set (v) {
             metrics = v.image.metrics * frame.metrics * pixelation
             field = v
         }
 
+    /**
+     * Property frame - which part of image source is displayed.
+     * Whole image by default.
+     */
     var frame = initializer.getOrElse("frame") { Rectangle(0F, 1F, 1F, 0F) } as Rectangle
         set (v) {
             metrics = texture.image.metrics * v.metrics * pixelation
@@ -27,12 +41,20 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
             field = v
         }
 
+    /**
+     * Property mirroredH - whether this image should be mirrored horizontally.
+     * False by default.
+     */
     var mirroredH = initializer.getOrElse("mirroredH") { false } as Boolean
         set (v) {
             dirty = true
             field = v
         }
 
+    /**
+     * Property mirroredV - whether this image should be mirrored vertically.
+     * False by default.
+     */
     var mirroredV = initializer.getOrElse("mirroredV") { false } as Boolean
         set (v) {
             dirty = true

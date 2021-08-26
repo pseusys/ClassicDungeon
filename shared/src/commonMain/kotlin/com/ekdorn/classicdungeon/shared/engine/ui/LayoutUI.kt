@@ -3,9 +3,19 @@ package com.ekdorn.classicdungeon.shared.engine.ui
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
 
+/**
+ * LayoutUI - container for widgets.
+ */
 internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
+    /**
+     * Children list.
+     */
     @Implicit private val children = mutableListOf<WidgetUI>()
 
+    /**
+     * Property background - special FrameUI child, representing this layout background.
+     * Null by default.
+     */
     var background: FrameUI? = null
         set (v) {
             if (v != null) v.parent = this
@@ -15,11 +25,19 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
 
 
 
+    /**
+     * Method to add child to the layout.
+     * @param element widget to add
+     */
     fun add (element: WidgetUI) {
         element.parent = this
         children.add(element)
     }
 
+    /**
+     * Method to remove child to the layout.
+     * @param element widget to remove
+     */
     fun remove (element: WidgetUI) {
         element.parent = null
         children.remove(element)

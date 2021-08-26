@@ -3,6 +3,10 @@ package com.ekdorn.classicdungeon.shared.engine.maths
 
 /**
  * Class, representing RGBA color.
+ * - r - red component.
+ * - g - green component.
+ * - b - blue component.
+ * - a - transparency component.
  * TODO: replace color with array
  */
 internal data class Color (var r: Float, var g: Float, var b: Float, var a: Float) {

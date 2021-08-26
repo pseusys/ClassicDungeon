@@ -7,13 +7,45 @@ import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
 
+/**
+ * FrameUI - resizable background for UI elements.
+ * It has four image corners, four one-dimension stretching borders and one two-dimension stretching filler.
+ * ┌──────────────────────┐
+ * │ corner border corner │
+ * │ border filler border │
+ * │ corner border corner │
+ * └──────────────────────┘
+ * All parts but upper left corner are optional. Following configurations are possible:
+ * TODO: make them possible.
+ * ┌──────────────────────┐
+ * │ corner border corner │
+ * └──────────────────────┘
+ * ┌────────┐
+ * │ corner │
+ * │ border │
+ * │ corner │
+ * └────────┘
+ * ┌────────┐
+ * │ corner │
+ * └────────┘
+ */
 internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
+    /**
+     * Property stretchW - whether widget can be stretched horizontally.
+     * Enables horizontal border(s) and right corner(s).
+     * True be default.
+     */
     public override var stretchW = super.stretchW
         set (v) {
             dirty = true
             field = v
         }
 
+    /**
+     * Property stretchW - whether widget can be stretched vertically.
+     * Enables vertical border(s) and lower corner(s).
+     * True be default.
+     */
     public override var stretchH = super.stretchH
         set (v) {
             dirty = true
@@ -21,14 +53,26 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
         }
 
 
+    /**
+     * Property frame - which part of image source is mapped.
+     * Whole image by default.
+     */
     var frame = initializer.getOrElse("frame") { Rectangle(0F, 1F, 1F, 0F) } as Rectangle
         set (v) {
             dirty = true
             field = v
         }
 
+    /**
+     * Property texture - image source to map.
+     * Fallback image by default.
+     */
     var texture = TextureCache.get(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
 
+    /**
+     * Property border - part of image to map as border, vertical and horizontal.
+     * Both zero by default.
+     */
     var border = initializer.getOrElse("border") { Vector() } as Vector
         set (v) {
             dirty = true
@@ -40,6 +84,9 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
 
 
 
+    /**
+     * Function to determine width and height of border in pixels.
+     */
     fun pixelBorder () = texture.image.metrics * frame.metrics * border * pixelation
 
 

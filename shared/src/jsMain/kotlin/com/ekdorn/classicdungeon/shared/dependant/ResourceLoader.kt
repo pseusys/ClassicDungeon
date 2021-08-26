@@ -3,6 +3,7 @@ package com.ekdorn.classicdungeon.shared.dependant
 import com.ekdorn.classicdungeon.shared.engine.utils.Image
 import getPixels
 
+
 internal actual object ResourceLoader {
     actual suspend fun loadImage(name: String): Image {
         val png = getPixels("./$name")
