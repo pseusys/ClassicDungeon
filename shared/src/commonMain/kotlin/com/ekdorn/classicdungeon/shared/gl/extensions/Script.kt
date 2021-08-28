@@ -116,8 +116,8 @@ internal object Script: Assigned {
      */
     fun setCamera (matrix: Matrix) = camera.value4m(matrix.values)
     fun setModel (matrix: Matrix) = model.value4m(matrix.values)
-    fun setAmbient (color: Color) = ambient.value4f(color.r, color.g, color.b, color.a)
-    fun setMaterial (color: Color) = material.value4f(color.r, color.g, color.b, color.a)
+    fun setAmbient (color: Color) = ambient.value4fv(color.value)
+    fun setMaterial (color: Color) = material.value4fv(color.value)
     fun setTexture (sampler: GLTexture) = texture.value1i(sampler.id)
 
 

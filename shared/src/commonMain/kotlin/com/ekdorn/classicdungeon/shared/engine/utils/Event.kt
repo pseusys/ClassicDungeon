@@ -9,7 +9,7 @@ import com.ekdorn.classicdungeon.shared.engine.lib.TCListener
  */
 internal class Event <Target> (private val mode: TriggerMode = TriggerMode.STACK) {
     /**
-     * TODO: remove if not needded
+     * TODO: remove if not needed
      */
     enum class TriggerMode { STACK, QUEUE }
 

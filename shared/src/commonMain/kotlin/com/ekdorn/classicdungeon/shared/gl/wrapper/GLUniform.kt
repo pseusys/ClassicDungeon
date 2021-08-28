@@ -19,15 +19,11 @@ expect class GLUniform (program: GLProgram, name: String) {
      */
     fun value1i (value: Int)
 
-    // TODO: replace color with array
     /**
      * Function, setting 4 float values to the uniform (a vec4).
-     * @param value1 vec4 first element
-     * @param value2 vec4 second element
-     * @param value3 vec4 third element
-     * @param value4 vec4 fourth element
+     * @param array vec4 array
      */
-    fun value4f (value1: Float, value2: Float, value3: Float, value4: Float)
+    fun value4fv (array: FloatArray)
 
     /**
      * Function, setting 4x4 matrix to the uniform (a mat4).
