@@ -7,10 +7,11 @@ package com.ekdorn.classicdungeon.shared.engine.maths
  * - g - green component.
  * - b - blue component.
  * - a - transparency component.
+ * TODO: migrate to UByteArray once its not experimental anymore.
  */
 internal data class Color (var value: FloatArray) {
     constructor (r: Float, g: Float, b: Float, a: Float): this(floatArrayOf(r, g, b, a))
-    constructor (r: Byte, g: Byte, b: Byte, a: Byte): this(r.toFloat() / 255, g.toFloat() / 255, b.toFloat() / 255, a.toFloat() / 255)
+    constructor (r: Byte, g: Byte, b: Byte, a: Byte): this(r.toUByte().toFloat() / 255, g.toUByte().toFloat() / 255, b.toUByte().toFloat() / 255, a.toUByte().toFloat() / 255)
     constructor (int: UInt): this((int shr 24 and 0xFFU).toByte(), (int shr 16 and 0xFFU).toByte(), (int shr 8 and 0xFFU).toByte(), (int and 0xFFU).toByte())
     constructor (): this(0F, 0F, 0F, 0F)
 
@@ -26,7 +27,7 @@ internal data class Color (var value: FloatArray) {
      */
     inline var bytes: ByteArray
         get () = value.map { (it * 255).toInt().toByte() }.toByteArray()
-        set (v) = value.indices.forEach { value[it] = v[it].toFloat() / 255 }
+        set (v) = value.indices.forEach { value[it] = v[it].toUByte().toFloat() / 255 }
 
 
 
