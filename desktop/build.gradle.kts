@@ -54,6 +54,10 @@ tasks.create("downloadGLFW") {
     delete(archive)
 }
 
+tasks["clean"].doLast {
+    delete("./glfw")
+}
+
 
 
 // Workaround for gradle not serving transitive resource dependencies correctly.

@@ -31,15 +31,13 @@ kotlin {
 // Workaround for gradle not serving transitive resource dependencies correctly.
 // https://youtrack.jetbrains.com/issue/KTIJ-18536
 
-tasks["browserDistribution"].doLast {
-    copy {
-        from("../shared/build/processedResources/js/main")
-        into("build/distributions")
-    }
-}
-tasks["browserDevelopmentRun"].doLast {
+tasks["compileKotlinJs"].doLast {
     copy {
         from("../shared/build/processedResources/js/main")
         into("build/processedResources/js/main")
+    }
+    copy {
+        from("../shared/build/processedResources/js/main")
+        into("build/distributions")
     }
 }
