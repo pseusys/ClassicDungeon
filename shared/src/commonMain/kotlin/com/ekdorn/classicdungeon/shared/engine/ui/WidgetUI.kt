@@ -137,7 +137,7 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
      * Property material - color that widgets texture color will be multiplied by.
      * White by default.
      */
-    var material = initializer.getOrElse("material") { Color(1F, 1F, 1F, 1F) } as Color
+    var material = initializer.getOrElse("material") { Color(0xFFFFFFFFU) } as Color
 
 
 

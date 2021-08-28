@@ -62,7 +62,7 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
     override fun translate(parentCoords: Vector, parentMetrics: Vector) {
         super.translate(parentCoords, parentMetrics)
         background?.translate(coords, metrics)
-        val innerBorder = if (background != null) background!!.pixelBorder() else Vector()
+        val innerBorder = if (background != null) background!!.pixelBorder * background!!.pixelation else Vector()
         children.forEach { if (it.visible) it.translate(coords + innerBorder, metrics - innerBorder * 2F) }
     }
 

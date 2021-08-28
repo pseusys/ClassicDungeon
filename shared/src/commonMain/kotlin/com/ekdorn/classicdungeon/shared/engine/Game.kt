@@ -54,7 +54,7 @@ internal object Game {
         splash.delete()
 
         val container = LayoutUI()
-        container.addColor(Color(0, 1, 0, 1))
+        container.addColor(Color(0x00FF00FFU))
         container.anchor = Vector(0.5F, 0.5F)
         container.dimens = Vector(0.6F, 0.8F)
 
@@ -65,8 +65,8 @@ internal object Game {
         frame.dimens = Vector(1F, 1F)
         frame.texture = TextureCache.get("chrome")
         frame.pixelation = 8F
-        frame.frame = Rectangle(0F, 1F, 0.171875F, 0.65625F)
-        frame.border = Vector(0.31818181818F, 0.31818181818F)
+        frame.pixelFrame = Rectangle(1F, 63F, 21F, 43F)
+        frame.pixelBorder = Vector(6F, 6F)
         container.background = frame
 
         val hello = TextUI()
@@ -76,7 +76,7 @@ internal object Game {
         hello.dimens.x = 1F
         hello.pixelation = 2F
         hello.text = "Please, enjoy this fine animation:\n"
-        hello.material = Color(1F, 1F, 0F, 1F)
+        hello.material = Color(0xFFFF00FFU)
         container.add(hello)
 
         val bee = ClipUI()

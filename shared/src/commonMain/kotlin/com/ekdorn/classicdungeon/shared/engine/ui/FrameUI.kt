@@ -54,12 +54,22 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
 
     /**
      * Property frame - which part of image source is mapped.
+     * Measured from lower left corner.
      * Whole image by default.
      */
     var frame = initializer.getOrElse("frame") { Rectangle(0F, 1F, 1F, 0F) } as Rectangle
         set (v) {
             dirty = true
             field = v
+        }
+
+    /**
+     * Inline property for setting frame in pixels.
+     */
+    inline var pixelFrame: Rectangle
+        get () = frame * texture.image.metrics
+        set (v) {
+            frame = v / texture.image.metrics
         }
 
     /**
@@ -78,15 +88,17 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
             field = v
         }
 
+    /**
+     * Inline property for setting border in pixels.
+     */
+    inline var pixelBorder: Vector
+        get () = border * pixelFrame.metrics
+        set (v) {
+            border = v / pixelFrame.metrics
+        }
+
 
     init { updateVertices() }
-
-
-
-    /**
-     * Function to determine width and height of border in pixels.
-     */
-    fun pixelBorder () = texture.image.metrics * frame.metrics * border * pixelation
 
 
 
@@ -102,19 +114,19 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
 
     override fun updateVertices () {
         super.updateVertices()
-        val pixelBorder = pixelBorder() / metrics
+        val pxlBorder = pixelBorder * pixelation / metrics
         val vertices = listOf(
-            Rectangle(0F, 0F, pixelBorder.x, -pixelBorder.y),
-            Rectangle(pixelBorder.x, 0F, 1 - pixelBorder.x, -pixelBorder.y),
-            Rectangle(1 - pixelBorder.x, 0F, 1F, -pixelBorder.y),
+            Rectangle(0F, 0F, pxlBorder.x, -pxlBorder.y),
+            Rectangle(pxlBorder.x, 0F, 1 - pxlBorder.x, -pxlBorder.y),
+            Rectangle(1 - pxlBorder.x, 0F, 1F, -pxlBorder.y),
 
-            Rectangle(0F, -pixelBorder.y, pixelBorder.x, pixelBorder.y - 1),
-            Rectangle(pixelBorder.x, -pixelBorder.y, 1 - pixelBorder.x, pixelBorder.y - 1),
-            Rectangle(1 - pixelBorder.x, -pixelBorder.y, 1F, pixelBorder.y - 1),
+            Rectangle(0F, -pxlBorder.y, pxlBorder.x, pxlBorder.y - 1),
+            Rectangle(pxlBorder.x, -pxlBorder.y, 1 - pxlBorder.x, pxlBorder.y - 1),
+            Rectangle(1 - pxlBorder.x, -pxlBorder.y, 1F, pxlBorder.y - 1),
 
-            Rectangle(0F, pixelBorder.y - 1, pixelBorder.x, -1F),
-            Rectangle(pixelBorder.x, pixelBorder.y - 1, 1 - pixelBorder.x, -1F),
-            Rectangle(1 - pixelBorder.x, pixelBorder.y - 1, 1F, -1F),
+            Rectangle(0F, pxlBorder.y - 1, pxlBorder.x, -1F),
+            Rectangle(pxlBorder.x, pxlBorder.y - 1, 1 - pxlBorder.x, -1F),
+            Rectangle(1 - pxlBorder.x, pxlBorder.y - 1, 1F, -1F),
         )
 
         val bord = border * frame.metrics

@@ -7,20 +7,19 @@ package com.ekdorn.classicdungeon.shared.engine.maths
  * - g - green component.
  * - b - blue component.
  * - a - transparency component.
- * TODO: replace color with array
  */
 internal data class Color (var value: FloatArray) {
     constructor (r: Float, g: Float, b: Float, a: Float): this(floatArrayOf(r, g, b, a))
     constructor (r: Byte, g: Byte, b: Byte, a: Byte): this(r.toFloat() / 255, g.toFloat() / 255, b.toFloat() / 255, a.toFloat() / 255)
-    constructor (int: Int): this((int shr 24 and 0xFF).toByte(), (int shr 16 and 0xFF).toByte(), (int shr 8 and 0xFF).toByte(), (int and 0xFF).toByte())
+    constructor (int: UInt): this((int shr 24 and 0xFFU).toByte(), (int shr 16 and 0xFFU).toByte(), (int shr 8 and 0xFFU).toByte(), (int and 0xFFU).toByte())
     constructor (): this(0F, 0F, 0F, 0F)
 
     /**
-     * Inline converter to and from 32bit Int (0xRRGGBBAA).
+     * Inline converter to and from 32bit unsigned int (0xRRGGBBAA).
      */
-    inline var int: Int
-        get () = value.foldIndexed(0) { i, a, v -> a or ((v * 255).toInt() and 0xFF shl ((value.size - 1 - i) * 8)) }
-        set (v) = value.indices.forEach { i -> value[i] = (v shr ((value.size - 1 - i) * 8) and 0xFF).toFloat() / 255 }
+    inline var int: UInt
+        get () = value.foldIndexed(0U) { i, a, v -> a or ((v * 255).toUInt() and 0xFFU shl ((value.size - 1 - i) * 8)) }
+        set (v) = value.indices.forEach { i -> value[i] = (v shr ((value.size - 1 - i) * 8) and 0xFFU).toFloat() / 255 }
 
     /**
      * Inline converter to and from Byte array ([r, g, b, a]).

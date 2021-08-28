@@ -7,6 +7,7 @@ import com.ekdorn.classicdungeon.shared.engine.utils.Image
 /**
  * Class, representing atlas - an image divided in equal parts in obvious way.
  * It cuts this images, associating keys of different types with each of them.
+ * Every image is measured from lower left corner.
  */
 internal class Atlas <Key> (image: Image, keys: List<Key>, width: Int = 1, height: Int = 1): ImageTexture(image), MutableMap<Key, Rectangle> by HashMap(keys.size) {
     init {

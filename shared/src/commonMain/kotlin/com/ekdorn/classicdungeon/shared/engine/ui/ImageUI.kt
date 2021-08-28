@@ -28,6 +28,7 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
 
     /**
      * Property frame - which part of image source is displayed.
+     * Measured from lower left corner.
      * Whole image by default.
      */
     var frame = initializer.getOrElse("frame") { Rectangle(0F, 1F, 1F, 0F) } as Rectangle

@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.maths
 
+import com.ekdorn.classicdungeon.shared.engine.generics.Cloneable
 import kotlin.math.abs
 
 
@@ -8,7 +9,7 @@ import kotlin.math.abs
  * Contains two points - upper left and lower right.
  * TODO: revise width + height = right + bottom.
  */
-internal open class Rectangle (var left: Float, var top: Float, var right: Float, var bottom: Float) {
+internal open class Rectangle (var left: Float, var top: Float, var right: Float, var bottom: Float): Cloneable<Rectangle> {
     constructor (left: Int, top: Int, right: Int, bottom: Int): this(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
 
     /**
@@ -64,6 +65,14 @@ internal open class Rectangle (var left: Float, var top: Float, var right: Float
 
 
     /**
+     * Rectangle + Vector operations.
+     */
+    operator fun times (oper: Vector) = Rectangle(left * oper.x, top * oper.y, right * oper.x, bottom * oper.y)
+    operator fun div (oper: Vector) = Rectangle(left / oper.x, top / oper.y, right / oper.x, bottom / oper.y)
+
+
+
+    /**
      * Function for translating rectangle: moving it by x and y.
      * @param x x translation
      * @param y y translation
@@ -86,4 +95,8 @@ internal open class Rectangle (var left: Float, var top: Float, var right: Float
     fun toPointsArray () = floatArrayOf(left, top, right, top, right, bottom, left, bottom)
 
     override fun toString() =  "Rectangle: (left: $left; top: $top; right: $right; bottom: $bottom)"
+
+
+
+    override fun clone() = Rectangle(left, top, right, bottom)
 }
