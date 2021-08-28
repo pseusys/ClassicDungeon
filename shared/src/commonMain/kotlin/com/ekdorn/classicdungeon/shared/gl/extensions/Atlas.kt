@@ -1,4 +1,4 @@
-package com.ekdorn.classicdungeon.shared.engine.glextensions
+package com.ekdorn.classicdungeon.shared.gl.extensions
 
 import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.utils.Image

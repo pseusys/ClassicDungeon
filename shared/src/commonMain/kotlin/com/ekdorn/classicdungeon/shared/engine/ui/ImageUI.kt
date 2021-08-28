@@ -1,7 +1,7 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
-import com.ekdorn.classicdungeon.shared.engine.glextensions.Script
+import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
@@ -10,10 +10,6 @@ import com.ekdorn.classicdungeon.shared.engine.maths.Vector
  * ImageUI - image, that can not be resized for it pixel sizes not to be disturbed.
  */
 internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any>()): WidgetUI(initializer) {
-    private companion object { val delay = Rectangle(0F, 0F, 1F, -1F).toPointsArray() }
-
-
-
     /**
      * Part of parent widget this widget takes.
      */
@@ -90,6 +86,6 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
         else Pair(frame.top, frame.bottom)
 
         val textureVertices = Rectangle(x.first, y.first, x.second, y.second)
-        updateBuffer(delay, textureVertices.toPointsArray())
+        buffer.fill(Rectangle(0F, 0F, 1F, -1F), textureVertices)
     }
 }

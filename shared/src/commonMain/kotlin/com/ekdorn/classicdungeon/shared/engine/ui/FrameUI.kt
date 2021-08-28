@@ -1,8 +1,7 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
-import com.ekdorn.classicdungeon.shared.engine.glextensions.Script
-import com.ekdorn.classicdungeon.shared.engine.lib.toFloatArray
+import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
@@ -101,7 +100,7 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
 
 
 
-    override fun updateVertices() {
+    override fun updateVertices () {
         super.updateVertices()
         val pixelBorder = pixelBorder() / metrics
         val vertices = listOf(
@@ -133,6 +132,6 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
             Rectangle(frame.right - bord.x, frame.bottom + bord.y, frame.right, frame.bottom)
         )
 
-        updateBuffer(vertices.toFloatArray(), textures.toFloatArray())
+        buffer.fill(vertices, textures)
     }
 }

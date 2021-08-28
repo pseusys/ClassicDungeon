@@ -1,9 +1,9 @@
-package com.ekdorn.classicdungeon.shared.engine.glextensions
+package com.ekdorn.classicdungeon.shared.gl.extensions
 
-import com.ekdorn.classicdungeon.shared.dependant.gl.*
 import com.ekdorn.classicdungeon.shared.engine.generics.Assigned
 import com.ekdorn.classicdungeon.shared.engine.maths.Color
 import com.ekdorn.classicdungeon.shared.engine.maths.Matrix
+import com.ekdorn.classicdungeon.shared.gl.wrapper.*
 
 
 /**

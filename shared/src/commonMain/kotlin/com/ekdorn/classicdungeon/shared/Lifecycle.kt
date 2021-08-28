@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared
 
-import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
+import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
 import com.ekdorn.classicdungeon.shared.engine.Game
 import com.ekdorn.classicdungeon.shared.engine.generics.Assigned
 import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache

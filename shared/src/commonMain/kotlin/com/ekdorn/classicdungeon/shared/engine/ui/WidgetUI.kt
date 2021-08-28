@@ -1,8 +1,8 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.dependant.gl.GLBuffer
-import com.ekdorn.classicdungeon.shared.engine.glextensions.Camera
-import com.ekdorn.classicdungeon.shared.engine.glextensions.Script
+import com.ekdorn.classicdungeon.shared.gl.extensions.Camera
+import com.ekdorn.classicdungeon.shared.gl.extensions.Script
+import com.ekdorn.classicdungeon.shared.gl.extensions.WidgetBuffer
 import com.ekdorn.classicdungeon.shared.engine.maths.Color
 import com.ekdorn.classicdungeon.shared.engine.maths.Matrix
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
@@ -66,7 +66,7 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
     /**
      * GL buffer associated with the widget.
      */
-    @Implicit private val buffer = GLBuffer(GLBuffer.TYPE.COMMON)
+    @Implicit protected val buffer = WidgetBuffer()
 
 
     /**
@@ -261,22 +261,8 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
     /**
      * Function for updating widget vertices on GL view.
      * After vertices are updated, they should be loaded into buffer.
-     * @see updateBuffer updating vertices buffer
      */
     protected open fun updateVertices () { dirty = false }
-
-    /**
-     * Function for loading given vertices and textures array into this widgets buffer.
-     * @param vertices array containing coordinates of this widget
-     * @param textures array containing texture points associated with this widget coordinates
-     */
-    protected fun updateBuffer (vertices: FloatArray, textures: FloatArray) {
-        val size = vertices.size + textures.size
-        buffer.fillDynamic(FloatArray(size) {
-            if ((it / 2) % 2 == 0) vertices[(it / 2) + (it % 2) - (it / 2) % 2]
-            else textures[(it / 2) + (it % 2) - (it / 2) % 2]
-        })
-    }
 
 
 

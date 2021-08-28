@@ -1,6 +1,6 @@
 import com.ekdorn.classicdungeon.shared.Input
 import com.ekdorn.classicdungeon.shared.Lifecycle
-import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions.context
+import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions.context
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
@@ -21,7 +21,7 @@ fun main () {
         surface.width = window.innerWidth
         surface.height = window.innerHeight
 
-        println("onstart")
+        // println("onstart")
         MainScope().promise {
             Lifecycle.start(surface.width, surface.height)
         }.catch { /* TODO: cd to error page */ }.then { resume() }
@@ -38,7 +38,7 @@ fun main () {
     window.onunload = {
         pause()
         Lifecycle.end()
-        println("onend")
+        // println("onend")
     }
 
     document.addEventListener("visibilitychange", {
@@ -51,17 +51,17 @@ fun resume () {
     timerEnabled = true
     Lifecycle.resume()
     update()
-    println("onresume")
+    // println("onresume")
 }
 
 fun update () {
     Lifecycle.update()
-    println("onupdate")
+    // println("onupdate")
     if (timerEnabled) window.requestAnimationFrame { update() }
 }
 
 fun pause () {
     timerEnabled = false
     Lifecycle.pause()
-    println("onpause")
+    // println("onpause")
 }

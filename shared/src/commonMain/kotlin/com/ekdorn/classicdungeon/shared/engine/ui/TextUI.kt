@@ -1,7 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.glextensions.Script
-import com.ekdorn.classicdungeon.shared.engine.lib.toFloatArray
+import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 import com.ekdorn.classicdungeon.shared.engine.utils.ImageFont
@@ -109,7 +108,7 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
 
 
     override fun translate (parentCoords: Vector, parentMetrics: Vector) {
-        if (dirty) updateVertices()
+        dimens.y = metrics.y / parentMetrics.y
         super.translate(parentCoords, parentMetrics)
     }
 
@@ -123,7 +122,7 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
         text = text.replace("\t", "    ")
         if (!multiline) text = text.replace('\n', ' ')
 
-        // Lines, with no empty.
+        // Lines except empty.
         val lines = text.split('\n').filter { it.isNotEmpty() }.toMutableList()
         val maxPast = lines.iterateLines { index ->
             // Offset from the beginning of the line in width percent.
@@ -209,6 +208,6 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
         vertices.forEach { it.vertical /= lines.size.toFloat() }
         dimens = Vector(if (dimens.x == 0F) maxPast else dimens.x, metrics.y / parentMetrics()!!.y)
 
-        updateBuffer(vertices.toFloatArray(), textures.toFloatArray())
+        buffer.fill(vertices, textures)
     }
 }

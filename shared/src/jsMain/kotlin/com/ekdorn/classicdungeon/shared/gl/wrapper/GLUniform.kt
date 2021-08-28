@@ -1,6 +1,6 @@
-package com.ekdorn.classicdungeon.shared.dependant.gl
+package com.ekdorn.classicdungeon.shared.gl.wrapper
 
-import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions.context
+import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions.context
 
 
 actual class GLUniform actual constructor (program: GLProgram, name: String) {

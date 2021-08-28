@@ -1,8 +1,8 @@
 package com.ekdorn.classicdungeon.shared.engine.generics
 
-import com.ekdorn.classicdungeon.shared.dependant.ResourceLoader
-import com.ekdorn.classicdungeon.shared.engine.glextensions.ImageTexture
-import com.ekdorn.classicdungeon.shared.engine.glextensions.Atlas
+import com.ekdorn.classicdungeon.shared.engine.ResourceLoader
+import com.ekdorn.classicdungeon.shared.gl.extensions.ImageTexture
+import com.ekdorn.classicdungeon.shared.gl.extensions.Atlas
 
 
 /**

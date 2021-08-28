@@ -1,7 +1,7 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
-import com.ekdorn.classicdungeon.shared.engine.glextensions.Atlas
+import com.ekdorn.classicdungeon.shared.gl.extensions.Atlas
 import com.ekdorn.classicdungeon.shared.engine.lib.Listener
 
 

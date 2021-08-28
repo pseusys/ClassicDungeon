@@ -1,7 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions
-import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
+import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
 import com.ekdorn.classicdungeon.shared.engine.maths.Vector
 
 

@@ -1,6 +1,6 @@
-package com.ekdorn.classicdungeon.shared.engine.glextensions
+package com.ekdorn.classicdungeon.shared.gl.extensions
 
-import com.ekdorn.classicdungeon.shared.dependant.gl.GLBuffer
+import com.ekdorn.classicdungeon.shared.gl.wrapper.GLBuffer
 import com.ekdorn.classicdungeon.shared.engine.generics.Assigned
 
 

@@ -1,7 +1,7 @@
 package com.ekdorn.classicdungeon.shared.engine.generics
 
-import com.ekdorn.classicdungeon.shared.engine.glextensions.Camera
-import com.ekdorn.classicdungeon.shared.engine.glextensions.Script
+import com.ekdorn.classicdungeon.shared.gl.extensions.Camera
+import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 
 
 /**

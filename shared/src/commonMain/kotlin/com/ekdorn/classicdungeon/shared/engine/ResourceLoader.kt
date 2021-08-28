@@ -1,4 +1,4 @@
-package com.ekdorn.classicdungeon.shared.dependant
+package com.ekdorn.classicdungeon.shared.engine
 
 import com.ekdorn.classicdungeon.shared.engine.utils.Image
 

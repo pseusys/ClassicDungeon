@@ -1,4 +1,4 @@
-package com.ekdorn.classicdungeon.shared.dependant.gl
+package com.ekdorn.classicdungeon.shared.gl.wrapper
 
 
 /**
@@ -9,7 +9,7 @@ package com.ekdorn.classicdungeon.shared.dependant.gl
  * @param type buffer type
  * @see com.ekdorn.classicdungeon.shared.engine.ui.WidgetUI UI element
  */
-expect class GLBuffer (type: TYPE) {
+expect open class GLBuffer (type: TYPE) {
     val type: TYPE
 
     /**

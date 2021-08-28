@@ -17,9 +17,3 @@ fun Float.str(ints: Int, floats: Int): String {
     val floatDigits = ((this - integerDigits) * 10F.pow(floats)).roundToInt().absoluteValue
     return "${integerDigits.toString().padStart(ints)}.${floatDigits.toString().padEnd(floats, '0')}"
 }
-
-/**
- * Function, converting any collection of rectangles to FloatArray.
- * @return array of floats, representing rectangle edges.
- */
-internal fun Collection<Rectangle>.toFloatArray () = flatMap { it.toPointsArray().asIterable() }.toFloatArray()

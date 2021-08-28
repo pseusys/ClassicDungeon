@@ -1,4 +1,4 @@
-package com.ekdorn.classicdungeon.shared.dependant.gl
+package com.ekdorn.classicdungeon.shared.gl.wrapper
 
 import org.khronos.webgl.WebGLRenderingContext
 

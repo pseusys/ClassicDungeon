@@ -1,10 +1,10 @@
-package com.ekdorn.classicdungeon.shared.dependant.gl
+package com.ekdorn.classicdungeon.shared.gl.wrapper
 
-import com.ekdorn.classicdungeon.shared.dependant.gl.GLFunctions.context
+import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions.context
 import org.khronos.webgl.*
 
 
-actual class GLBuffer actual constructor (actual val type: TYPE) {
+actual open class GLBuffer actual constructor (actual val type: TYPE) {
     actual enum class TYPE (val id: Int) {
         COMMON(WebGLRenderingContext.ARRAY_BUFFER), ELEMENT(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER)
     }
