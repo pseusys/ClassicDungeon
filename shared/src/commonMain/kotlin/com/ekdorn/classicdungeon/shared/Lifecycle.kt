@@ -15,7 +15,10 @@ object Lifecycle {
     val scope = CoroutineScope(Dispatchers.Default)
 
     /**
-     * Initializing features (blocking MAIN thread), needed for application to start (e.g. display metrics, GL surface, UI textures, etc.)
+     * Initializing features and loading resources.
+     * Should not block UI thread, but run in parallel after game started.
+     * After this method exits, main game lifecycle should start if no errors occurred.
+     * If method finishes with exception, error method should be displayed.
      * @throws com.ekdorn.classicdungeon.shared.engine.ResourceNotFoundException if any resources are not loaded.
      */
     suspend fun start (width: Int, height: Int) {
@@ -40,7 +43,7 @@ object Lifecycle {
     }
 
     /**
-     * Resuming game process async (e.g. sound, time measuring, etc.)
+     * Resuming game process in UI thread.
      */
     fun resume () {
         Game.resume()
@@ -48,14 +51,14 @@ object Lifecycle {
     }
 
     /**
-     * Screen update, runs each frame in GL thread sync
+     * Screen update, runs each frame in GL main thread.
      */
     fun update () {
         Game.update()
     }
 
     /**
-     * Pausing game processes async (e.g. sound, time measuring, etc.)
+     * Pausing game processes in UI thread.
      */
     fun pause () {
         Game.pause()
@@ -63,8 +66,8 @@ object Lifecycle {
     }
 
     /**
-     * Ceasing game functionality (without ability to resume, in MAIN thread) (e.g. freeing resources, auto-saving, closing server connection, etc.)
-     */
+     * Ceasing game functionality without ability to resume, should be executed in UI thread.
+     * Preparing game to finish, like auto-saving and closing server connection, should be done in this method too.     */
     fun end () {
         Game.end()
         Assigned.assigned.forEach { it.gameEnded() }

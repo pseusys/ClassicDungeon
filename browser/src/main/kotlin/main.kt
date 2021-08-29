@@ -5,7 +5,6 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.promise
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.get
@@ -22,7 +21,6 @@ fun main () {
         surface.width = window.innerWidth
         surface.height = window.innerHeight
 
-        // println("onstart")
         Lifecycle.scope.launch {
             Lifecycle.start(surface.width, surface.height)
         }.invokeOnCompletion {
@@ -42,7 +40,6 @@ fun main () {
     window.onunload = {
         pause()
         Lifecycle.end()
-        // println("onend")
     }
 
     document.addEventListener("visibilitychange", {
@@ -55,17 +52,14 @@ fun resume () {
     timerEnabled = true
     Lifecycle.resume()
     update()
-    // println("onresume")
 }
 
 fun update () {
     Lifecycle.update()
-    // println("onupdate")
     if (timerEnabled) window.requestAnimationFrame { update() }
 }
 
 fun pause () {
     timerEnabled = false
     Lifecycle.pause()
-    // println("onpause")
 }
