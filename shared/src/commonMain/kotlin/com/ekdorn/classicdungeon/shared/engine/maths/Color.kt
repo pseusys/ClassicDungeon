@@ -11,9 +11,12 @@ package com.ekdorn.classicdungeon.shared.engine.maths
  */
 internal data class Color (var value: FloatArray) {
     constructor (r: Float, g: Float, b: Float, a: Float): this(floatArrayOf(r, g, b, a))
-    constructor (r: Byte, g: Byte, b: Byte, a: Byte): this(r.toUByte().toFloat() / 255, g.toUByte().toFloat() / 255, b.toUByte().toFloat() / 255, a.toUByte().toFloat() / 255)
-    constructor (int: UInt): this((int shr 24 and 0xFFU).toByte(), (int shr 16 and 0xFFU).toByte(), (int shr 8 and 0xFFU).toByte(), (int and 0xFFU).toByte())
     constructor (): this(0F, 0F, 0F, 0F)
+
+    constructor (value: ByteArray): this(value.map { it.toUByte().toFloat() / 255 }.toFloatArray())
+    constructor (r: Byte, g: Byte, b: Byte, a: Byte): this(byteArrayOf(r, g, b, a))
+
+    constructor (int: UInt): this((int shr 24).toByte(), (int shr 16).toByte(), (int shr 8).toByte(), int.toByte())
 
     /**
      * Inline converter to and from 32bit unsigned int (0xRRGGBBAA).

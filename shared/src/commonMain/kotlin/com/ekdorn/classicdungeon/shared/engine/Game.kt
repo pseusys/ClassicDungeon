@@ -21,7 +21,6 @@ import kotlin.native.concurrent.ThreadLocal
 @ThreadLocal
 internal object Game {
     private var elapsed = 0
-    val scope = CoroutineScope(Dispatchers.Default)
 
     private lateinit var root: RootUI
     private lateinit var splash: ImageUI

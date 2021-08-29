@@ -5,18 +5,18 @@ import com.ekdorn.classicdungeon.shared.engine.Game
 import com.ekdorn.classicdungeon.shared.engine.generics.Assigned
 import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
 import com.ekdorn.classicdungeon.shared.engine.utils.Event
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 
 
 object Lifecycle {
     internal val onResume = Event<Unit>()
     internal val onPause = Event<Unit>()
 
+    val scope = CoroutineScope(Dispatchers.Default)
+
     /**
      * Initializing features (blocking MAIN thread), needed for application to start (e.g. display metrics, GL surface, UI textures, etc.)
+     * @throws com.ekdorn.classicdungeon.shared.engine.ResourceNotFoundException if any resources are not loaded.
      */
     suspend fun start (width: Int, height: Int) {
         Input.onResized.add {
@@ -32,12 +32,10 @@ object Lifecycle {
         Game.splash(width, height)
         Game.update()
 
-        coroutineScope {
-            awaitAll(async { delay(2000) }, async {
-                TextureCache.load("font", "chrome")
-                TextureCache.loadAtlas("bee", List(16) { it }, 16)
-            })
-        }
+        awaitAll(scope.async { delay(2000) }, scope.async {
+            TextureCache.load("font", "chrome")
+            TextureCache.loadAtlas("bee", List(16) { it }, 16)
+        })
         Game.start()
     }
 

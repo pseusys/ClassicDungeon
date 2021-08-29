@@ -38,11 +38,7 @@ kotlin {
             }
         }
 
-        val jsMain by getting {
-            dependencies {
-                implementation(npm("read-pixels", "0.2.1"))
-            }
-        }
+        val jsMain by getting
     }
 }
 

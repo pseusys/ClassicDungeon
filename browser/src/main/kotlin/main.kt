@@ -3,7 +3,8 @@ import com.ekdorn.classicdungeon.shared.Lifecycle
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions.context
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.promise
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
@@ -22,9 +23,12 @@ fun main () {
         surface.height = window.innerHeight
 
         // println("onstart")
-        MainScope().promise {
+        Lifecycle.scope.launch {
             Lifecycle.start(surface.width, surface.height)
-        }.catch { /* TODO: cd to error page */ }.then { resume() }
+        }.invokeOnCompletion {
+            if ((it == null) || (it is CancellationException)) resume()
+            else window.alert("Game resources incomplete!\nTry reloading page or contact developer.\n${it.message}")
+        }
     }
 
     window.onresize = {

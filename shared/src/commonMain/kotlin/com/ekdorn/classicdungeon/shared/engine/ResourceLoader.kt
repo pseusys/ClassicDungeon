@@ -2,6 +2,10 @@ package com.ekdorn.classicdungeon.shared.engine
 
 import com.ekdorn.classicdungeon.shared.engine.utils.Image
 
+
+// TODO: make internal once possible.
+internal class ResourceNotFoundException (resource: String): Exception("Resource $resource not found!")
+
 /**
  * Expect object for platform-specific resource loading.
  * The loaded resources are already not raw, but processed to simple data classes.
