@@ -16,10 +16,14 @@ expect open class GLTexture () {
         NEAREST, LINEAR
     }
 
-    // TODO: specify WRAPPING
-    // which ones needed?
+    /**
+     * Types of the texture wrapping:
+     * - REPEAT: image is repeated.
+     * - MIRROR: image is repeated and also mirrored.
+     * - CLAMP: coordinates are clamped between 0 and 1, edges are stretched.
+     */
     enum class WRAPPING {
-        CLAMP
+        REPEAT, MIRROR, CLAMP
     }
 
 
@@ -77,5 +81,5 @@ expect open class GLTexture () {
      * @param h texture height
      * @param data pixel data
      */
-    fun image (w: Int, h: Int, data: ByteArray)
+    open fun image (w: Int, h: Int, data: ByteArray)
 }

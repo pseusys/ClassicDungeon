@@ -36,7 +36,7 @@ object Lifecycle {
         Game.update()
 
         awaitAll(scope.async { delay(2000) }, scope.async {
-            TextureCache.load("font", "chrome")
+            TextureCache.load("font", "chrome", "arcs00", "arcs01")
             TextureCache.loadAtlas("bee", List(16) { it }, 16)
         })
         Game.start()

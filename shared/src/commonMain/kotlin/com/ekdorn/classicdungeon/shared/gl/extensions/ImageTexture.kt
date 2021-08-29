@@ -34,17 +34,21 @@ internal open class ImageTexture (img: Image, filtering: FILTERING, wrapping: WR
         }
 
     init {
-        image = img
-
         filteringMin = filtering
         filteringMag = filtering
-        filter(filteringMin, filteringMag)
 
         wrappingS = wrapping
         wrappingT = wrapping
-        wrap(wrappingS, wrappingT)
+
+        image = img
     }
 
+
+    final override fun image (w: Int, h: Int, data: ByteArray) {
+        super.image(w, h, data)
+        filter(filteringMin, filteringMag)
+        wrap(wrappingS, wrappingT)
+    }
 
     /**
      * Filtering function - sets filtering.

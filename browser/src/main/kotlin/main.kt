@@ -12,7 +12,7 @@ import org.w3c.dom.get
 
 val surface = document.getElementById("surface") as HTMLCanvasElement
 
-var timerEnabled = false
+var timer = 0
 
 
 fun main () {
@@ -45,21 +45,21 @@ fun main () {
     document.addEventListener("visibilitychange", {
         if (document["hidden"] as Boolean) pause()
         else resume()
+        print("Visibility changed!")
     })
 }
 
 fun resume () {
-    timerEnabled = true
     Lifecycle.resume()
     update()
 }
 
 fun update () {
     Lifecycle.update()
-    if (timerEnabled) window.requestAnimationFrame { update() }
+    timer = window.requestAnimationFrame { update() }
 }
 
 fun pause () {
-    timerEnabled = false
+    window.cancelAnimationFrame(timer)
     Lifecycle.pause()
 }

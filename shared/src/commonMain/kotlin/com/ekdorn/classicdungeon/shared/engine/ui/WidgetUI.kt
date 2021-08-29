@@ -195,15 +195,21 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
     open fun update (elapsed: Int) {
         if (dirty) updateVertices()
 
-        val halfDeltaX = (move(speed.x, acceleration.x, elapsed) - speed.x) / 2
-        speed.x += halfDeltaX
-        anchor.x += speed.x * elapsed
-        speed.x += halfDeltaX
+        var halfDelta = (move(speed.x, acceleration.x, elapsed) - speed.x) / 2
+        speed.x += halfDelta
+        var delta = speed.x * elapsed
+        speed.x += halfDelta
 
-        val halfDeltaY = (move(speed.y, acceleration.y, elapsed) - speed.y) / 2
-        speed.y += halfDeltaY
-        anchor.y += speed.y * elapsed
-        speed.y += halfDeltaY
+        coords.x += delta
+        if (parent != null) anchor.x += delta / parentMetrics()!!.x
+
+        halfDelta = (move(speed.y, acceleration.y, elapsed) - speed.y) / 2
+        speed.y += halfDelta
+        delta = speed.y * elapsed
+        speed.y += halfDelta
+
+        coords.y += delta
+        if (parent != null) anchor.y += delta / parentMetrics()!!.y
 
         angle += angleSpeed * elapsed % 360
 

@@ -52,8 +52,23 @@ internal object Game {
         root.remove(splash)
         splash.delete()
 
+        val darkground = BackgroundUI()
+        darkground.verticalAlignment = WidgetUI.ALIGNMENT.START
+        darkground.horizontalAlignment = WidgetUI.ALIGNMENT.START
+        darkground.dimens = Vector(1.0F, 1.0F)
+        darkground.texture = TextureCache.get("arcs00")
+        darkground.scrollSpeed.y = 1F
+        root.add(darkground)
+
+        val background = BackgroundUI()
+        background.verticalAlignment = WidgetUI.ALIGNMENT.START
+        background.horizontalAlignment = WidgetUI.ALIGNMENT.START
+        background.dimens = Vector(1.0F, 1.0F)
+        background.texture = TextureCache.get("arcs01")
+        background.scrollSpeed.y = 2F
+        root.add(background)
+
         val container = LayoutUI()
-        container.addColor(Color(0x00FF00FFU))
         container.anchor = Vector(0.5F, 0.5F)
         container.dimens = Vector(0.6F, 0.8F)
 
@@ -92,6 +107,8 @@ internal object Game {
         bee1.play(20, true, 7, 8, 9, 10)
         frame.add(bee1)
         */
+
+        elapsed = Clock.System.now().toEpochMilliseconds().toInt()
     }
 
     fun end () {

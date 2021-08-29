@@ -12,6 +12,8 @@ actual open class GLTexture {
     }
 
     actual enum class WRAPPING (val mode: Int) {
+        REPEAT(WebGLRenderingContext.REPEAT),
+        MIRROR(WebGLRenderingContext.MIRRORED_REPEAT),
         CLAMP(WebGLRenderingContext.CLAMP_TO_EDGE)
     }
 
@@ -47,6 +49,6 @@ actual open class GLTexture {
         context.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_T, t.mode)
     }
 
-    actual fun image (w: Int, h: Int, data: ByteArray) =
+    actual open fun image (w: Int, h: Int, data: ByteArray) =
         context.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, WebGLRenderingContext.RGBA, w, h, 0, WebGLRenderingContext.RGBA, WebGLRenderingContext.UNSIGNED_BYTE, Uint8Array(data.toTypedArray()))
 }

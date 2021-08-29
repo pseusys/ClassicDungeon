@@ -67,6 +67,8 @@ internal open class Rectangle (var left: Float, var top: Float, var right: Float
     /**
      * Rectangle + Vector operations.
      */
+    operator fun plus (oper: Vector) = Rectangle(left + oper.x, top + oper.y, right + oper.x, bottom + oper.y)
+    operator fun minus (oper: Vector) = Rectangle(left - oper.x, top - oper.y, right - oper.x, bottom - oper.y)
     operator fun times (oper: Vector) = Rectangle(left * oper.x, top * oper.y, right * oper.x, bottom * oper.y)
     operator fun div (oper: Vector) = Rectangle(left / oper.x, top / oper.y, right / oper.x, bottom / oper.y)
 
