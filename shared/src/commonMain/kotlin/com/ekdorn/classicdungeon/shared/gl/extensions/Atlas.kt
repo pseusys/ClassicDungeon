@@ -1,7 +1,7 @@
 package com.ekdorn.classicdungeon.shared.gl.extensions
 
-import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
-import com.ekdorn.classicdungeon.shared.engine.utils.Image
+import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
+import com.ekdorn.classicdungeon.shared.gl.primitives.Image
 
 
 /**

@@ -1,6 +1,5 @@
-package com.ekdorn.classicdungeon.shared.engine.generics
+package com.ekdorn.classicdungeon.shared.engine.general
 
-import com.ekdorn.classicdungeon.shared.engine.ResourceLoader
 import com.ekdorn.classicdungeon.shared.gl.extensions.ImageTexture
 import com.ekdorn.classicdungeon.shared.gl.extensions.Atlas
 

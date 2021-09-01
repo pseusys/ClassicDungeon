@@ -1,12 +1,20 @@
-package com.ekdorn.classicdungeon.shared.engine.maths
+package com.ekdorn.classicdungeon.shared.engine.atomic
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import kotlin.math.sqrt
 
 
 /**
  * Class, representing vector - a pair of floats, 2D coords.
  */
+@Serializable
 internal data class Vector (var x: Float, var y: Float) {
+    companion object {
+        fun create (json: String?, default: Vector) = if (json != null) Json.decodeFromString(json) else default
+    }
+
     constructor (): this(0F, 0F)
     constructor (x: Int, y: Int): this(x.toFloat(), y.toFloat())
 

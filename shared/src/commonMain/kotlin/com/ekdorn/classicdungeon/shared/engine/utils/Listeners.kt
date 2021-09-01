@@ -1,4 +1,4 @@
-package com.ekdorn.classicdungeon.shared.engine.lib
+package com.ekdorn.classicdungeon.shared.engine.utils
 
 
 /**

@@ -1,6 +1,6 @@
-package com.ekdorn.classicdungeon.shared.engine
+package com.ekdorn.classicdungeon.shared.engine.general
 
-import com.ekdorn.classicdungeon.shared.engine.utils.Image
+import com.ekdorn.classicdungeon.shared.gl.primitives.Image
 
 
 // TODO: make internal once possible.
@@ -17,4 +17,6 @@ internal expect object ResourceLoader {
      * @param name string name of resource
      */
     suspend fun loadImage (name: String): Image
+
+    suspend fun loadDataString (name: String): String
 }

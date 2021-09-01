@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.maths.Vector
+import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 
 /**
  * ResizableUI - widget that can be in some way resized.
@@ -12,7 +12,7 @@ internal abstract class ResizableUI (initializer: Map<String, *>): WidgetUI(init
     /**
      * Dimens property set made public.
      */
-    final override var dimens = initializer.getOrElse("dimens") { super.dimens } as Vector
+    final override var dimens = Vector.create(initializer["dimens"] as String?, Vector())
         public set
 
 

@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared
 
-import com.ekdorn.classicdungeon.shared.engine.maths.Vector
+import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import com.ekdorn.classicdungeon.shared.engine.utils.Event
 
 

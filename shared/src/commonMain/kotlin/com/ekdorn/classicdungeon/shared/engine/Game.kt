@@ -1,29 +1,20 @@
 package com.ekdorn.classicdungeon.shared.engine
 
 import com.ekdorn.classicdungeon.shared.Input
-import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
-import com.ekdorn.classicdungeon.shared.engine.maths.Color
-import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
-import com.ekdorn.classicdungeon.shared.engine.maths.Vector
-import com.ekdorn.classicdungeon.shared.engine.ui.*
+import com.ekdorn.classicdungeon.shared.engine.general.Transcender
+import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import com.ekdorn.classicdungeon.shared.engine.ui.ClipUI
-import com.ekdorn.classicdungeon.shared.engine.ui.FrameUI
 import com.ekdorn.classicdungeon.shared.engine.ui.ImageUI
-import com.ekdorn.classicdungeon.shared.engine.ui.LayoutUI
 import com.ekdorn.classicdungeon.shared.engine.ui.RootUI
-import com.ekdorn.classicdungeon.shared.engine.ui.WidgetUI
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.Clock
-import kotlin.native.concurrent.ThreadLocal
 
 
-@ThreadLocal
+// TODO: solve threadlocal
 internal object Game {
     private var elapsed = 0
 
     private lateinit var root: RootUI
-    private lateinit var splash: ImageUI
+    private const val splash = "splash"
 
     fun resume () {}
     fun update () {
@@ -36,10 +27,7 @@ internal object Game {
 
     fun splash (width: Int, height: Int) {
         root = RootUI(width, height)
-        splash = ImageUI()
-        splash.anchor = Vector(0.5F, 0.5F)
-        splash.pixelation = 8F
-        root.add(splash)
+        root.add(splash, ImageUI().apply { anchor = Vector(0.5F, 0.5F); pixelation = 8F })
 
         Input.onResized.add {
             root.resize(it.w, it.h)
@@ -49,64 +37,11 @@ internal object Game {
 
     fun start () {
         println("Game started!")
+        root.get<ImageUI>(splash)!!.delete()
         root.remove(splash)
-        splash.delete()
 
-        val darkground = BackgroundUI()
-        darkground.verticalAlignment = WidgetUI.ALIGNMENT.START
-        darkground.horizontalAlignment = WidgetUI.ALIGNMENT.START
-        darkground.dimens = Vector(1.0F, 1.0F)
-        darkground.texture = TextureCache.get("arcs00")
-        darkground.scrollSpeed.y = 1F
-        root.add(darkground)
-
-        val background = BackgroundUI()
-        background.verticalAlignment = WidgetUI.ALIGNMENT.START
-        background.horizontalAlignment = WidgetUI.ALIGNMENT.START
-        background.dimens = Vector(1.0F, 1.0F)
-        background.texture = TextureCache.get("arcs01")
-        background.scrollSpeed.y = 2F
-        root.add(background)
-
-        val container = LayoutUI()
-        container.anchor = Vector(0.5F, 0.5F)
-        container.dimens = Vector(0.6F, 0.8F)
-
-        val frame = FrameUI()
-        frame.anchor = Vector(0F, 0F)
-        frame.verticalAlignment = WidgetUI.ALIGNMENT.START
-        frame.horizontalAlignment = WidgetUI.ALIGNMENT.START
-        frame.dimens = Vector(1F, 1F)
-        frame.texture = TextureCache.get("chrome")
-        frame.pixelation = 8F
-        frame.pixelFrame = Rectangle(1F, 63F, 21F, 43F)
-        frame.pixelBorder = Vector(6F, 6F)
-        container.background = frame
-
-        val hello = TextUI()
-        hello.anchor = Vector(0.5F, 0F)
-        hello.verticalAlignment = WidgetUI.ALIGNMENT.START
-        hello.textAlignment = TextUI.ALIGNMENT.CENTER
-        hello.dimens.x = 1F
-        hello.pixelation = 2F
-        hello.text = "Please, enjoy this fine animation:\n"
-        hello.material = Color(0xFFFF00FFU)
-        container.add(hello)
-
-        val bee = ClipUI()
-        bee.anchor = Vector(0.5F, 0.5F)
-        bee.texture = TextureCache.getAtlas<Int>("bee")
-        bee.pixelation = 8F
-        bee.play(20, true, 7, 8, 9, 10)
-        container.add(bee)
-
-        root.add(container)
-
-        /*
-        val bee1 = ClipUI("bee", Vector(0.55F, 0.4F), 0.3F, 0.5F)
-        bee1.play(20, true, 7, 8, 9, 10)
-        frame.add(bee1)
-        */
+        root.add("menu", Transcender.summon("main_menu"))
+        root.get<ClipUI>("bee")?.play(20, true, 7, 8, 9, 10)
 
         elapsed = Clock.System.now().toEpochMilliseconds().toInt()
     }

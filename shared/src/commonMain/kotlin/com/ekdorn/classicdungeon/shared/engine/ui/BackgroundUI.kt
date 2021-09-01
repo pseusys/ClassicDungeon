@@ -1,8 +1,8 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
-import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
-import com.ekdorn.classicdungeon.shared.engine.maths.Vector
+import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
+import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLTexture
 
@@ -10,13 +10,13 @@ import com.ekdorn.classicdungeon.shared.gl.wrapper.GLTexture
 internal class BackgroundUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
     @Implicit var scroll = Vector()
 
-    var scrollSpeed = initializer.getOrElse("scrollSpeed") { Vector() } as Vector
+    var scrollSpeed = Vector.create(initializer["scrollSpeed"] as String?, Vector())
 
     /**
      * Property texture - image source.
      * Fallback image by default.
      */
-    var texture = TextureCache.get(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
+    var texture = TextureCache.get(initializer.getOrElse("texture") { TextureCache.NO_TEXTURE } as String)
         set (v) {
             field = v
             field.wrap(GLTexture.WRAPPING.REPEAT, GLTexture.WRAPPING.REPEAT)
@@ -40,7 +40,12 @@ internal class BackgroundUI (initializer: Map<String, *> = hashMapOf<String, Any
     }
 
     override fun update (elapsed: Int) {
+        dirty = true
         super.update(elapsed)
+    }
+
+    override fun updateVertices() {
+        super.updateVertices()
 
         scroll += scrollSpeed * Vector(1 / texture.image.metrics.x, 1 / texture.image.metrics.y)
         if (scroll.x > texture.image.metrics.x) scroll.x -= texture.image.metrics.x

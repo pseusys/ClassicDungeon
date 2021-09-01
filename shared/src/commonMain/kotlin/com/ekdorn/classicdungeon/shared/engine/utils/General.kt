@@ -1,6 +1,5 @@
-package com.ekdorn.classicdungeon.shared.engine.lib
+package com.ekdorn.classicdungeon.shared.engine.utils
 
-import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
 import kotlin.math.absoluteValue
 import kotlin.math.pow
 import kotlin.math.roundToInt

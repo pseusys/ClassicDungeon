@@ -1,8 +1,8 @@
 package com.ekdorn.classicdungeon.shared.gl.extensions
 
 import com.ekdorn.classicdungeon.shared.Input
-import com.ekdorn.classicdungeon.shared.engine.generics.Assigned
-import com.ekdorn.classicdungeon.shared.engine.maths.Matrix
+import com.ekdorn.classicdungeon.shared.engine.general.Assigned
+import com.ekdorn.classicdungeon.shared.gl.primitives.Matrix
 
 /**
  * Object, representing camera.

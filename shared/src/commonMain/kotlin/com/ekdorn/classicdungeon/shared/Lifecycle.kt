@@ -2,8 +2,9 @@ package com.ekdorn.classicdungeon.shared
 
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
 import com.ekdorn.classicdungeon.shared.engine.Game
-import com.ekdorn.classicdungeon.shared.engine.generics.Assigned
-import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.general.Assigned
+import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.general.Transcender
 import com.ekdorn.classicdungeon.shared.engine.utils.Event
 import kotlinx.coroutines.*
 
@@ -38,7 +39,9 @@ object Lifecycle {
         awaitAll(scope.async { delay(2000) }, scope.async {
             TextureCache.load("font", "chrome", "arcs00", "arcs01")
             TextureCache.loadAtlas("bee", List(16) { it }, 16)
+            Transcender.load("main_menu")
         })
+
         Game.start()
     }
 

@@ -1,16 +1,16 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
-import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
-import com.ekdorn.classicdungeon.shared.engine.maths.Vector
-import com.ekdorn.classicdungeon.shared.engine.utils.ImageFont
+import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
+import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import com.ekdorn.classicdungeon.shared.gl.extensions.ImageFont
 
 
 /**
  * TextUI - number of images, each representing a letter, together forming text.
  * May be stretched in different ways, single- or multiline.
  */
-internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(hashMapOf<String, Any>()) {
+internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
     /**
      * Types of internal text stretching:
      * - START - letters aligned to left

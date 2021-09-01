@@ -1,9 +1,9 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
-import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
-import com.ekdorn.classicdungeon.shared.engine.maths.Vector
+import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
+import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 
 
 /**
@@ -57,7 +57,7 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
      * Measured from lower left corner.
      * Whole image by default.
      */
-    var frame = initializer.getOrElse("frame") { Rectangle(0F, 1F, 1F, 0F) } as Rectangle
+    var frame = Rectangle.create(initializer["frame"] as String?, Rectangle())
         set (v) {
             dirty = true
             field = v
@@ -76,13 +76,13 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
      * Property texture - image source to map.
      * Fallback image by default.
      */
-    var texture = TextureCache.get(initializer.getOrElse("resource") { TextureCache.NO_TEXTURE } as String)
+    var texture = TextureCache.get(initializer.getOrElse("texture") { TextureCache.NO_TEXTURE } as String)
 
     /**
      * Property border - part of image to map as border, vertical and horizontal.
      * Both zero by default.
      */
-    var border = initializer.getOrElse("border") { Vector() } as Vector
+    var border = Vector.create(initializer["border"] as String?, Vector())
         set (v) {
             dirty = true
             field = v
@@ -98,7 +98,11 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
         }
 
 
-    init { updateVertices() }
+    init {
+        if ("pixelFrame" in initializer) pixelFrame = Rectangle.create(initializer["pixelFrame"] as String?, Rectangle())
+        if ("pixelBorder" in initializer) pixelBorder = Vector.create(initializer["pixelBorder"] as String?, Vector())
+        updateVertices()
+    }
 
 
 

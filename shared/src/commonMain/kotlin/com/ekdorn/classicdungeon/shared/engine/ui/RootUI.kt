@@ -1,7 +1,7 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
-import com.ekdorn.classicdungeon.shared.engine.maths.Vector
+import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 
 
 /**

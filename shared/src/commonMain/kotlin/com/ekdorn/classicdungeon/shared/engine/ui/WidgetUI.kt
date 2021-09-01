@@ -3,9 +3,9 @@ package com.ekdorn.classicdungeon.shared.engine.ui
 import com.ekdorn.classicdungeon.shared.gl.extensions.Camera
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.gl.extensions.WidgetBuffer
-import com.ekdorn.classicdungeon.shared.engine.maths.Color
-import com.ekdorn.classicdungeon.shared.engine.maths.Matrix
-import com.ekdorn.classicdungeon.shared.engine.maths.Vector
+import com.ekdorn.classicdungeon.shared.engine.atomic.Color
+import com.ekdorn.classicdungeon.shared.gl.primitives.Matrix
+import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 
 
 /**
@@ -80,7 +80,7 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
      * Property anchor - point of widgets parent widget is bound to.
      * Zero, zero by default.
      */
-    var anchor = initializer.getOrElse("anchor") { Vector() } as Vector
+    var anchor = Vector.create(initializer["anchor"] as String?, Vector())
     /**
      * Property pixelation - scale of widget.
      * 1 texture pixel will be size of pixelation * pixelation real pixels.
@@ -110,12 +110,12 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
      * Property speed - speed of the widget movement.
      * Zero by default.
      */
-    var speed = initializer.getOrElse("speed") { Vector() } as Vector
+    var speed = Vector.create(initializer["speed"] as String?, Vector())
     /**
      * Property acceleration - acceleration of the widget movement.
      * Zero by default.
      */
-    var acceleration = initializer.getOrElse("acceleration") { Vector() } as Vector
+    var acceleration = Vector.create(initializer["acceleration"] as String?, Vector())
     /**
      * Property angle - angle of the widget, in degrees.
      * Zero by default.
@@ -129,15 +129,15 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
     // var origin = Vector()
 
     /**
-     * Property material - color that will be added to that widgets texture color.
+     * Property ambient - color that will be added to that widgets texture color.
      * Transparent black by default.
      */
-    var ambient = initializer.getOrElse("ambient") { Color() } as Color
+    var ambient = Color.create(initializer["ambient"] as String?, Color())
     /**
      * Property material - color that widgets texture color will be multiplied by.
      * White by default.
      */
-    var material = initializer.getOrElse("material") { Color(0xFFFFFFFFU) } as Color
+    var material = Color.create(initializer["material"] as String?, Color(0xFFFFFFFFU))
 
 
 

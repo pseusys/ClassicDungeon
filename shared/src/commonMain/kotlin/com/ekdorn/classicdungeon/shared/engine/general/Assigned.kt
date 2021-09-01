@@ -1,4 +1,4 @@
-package com.ekdorn.classicdungeon.shared.engine.generics
+package com.ekdorn.classicdungeon.shared.engine.general
 
 import com.ekdorn.classicdungeon.shared.gl.extensions.Camera
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script

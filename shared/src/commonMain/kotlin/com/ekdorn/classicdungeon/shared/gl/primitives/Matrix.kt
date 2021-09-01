@@ -1,14 +1,15 @@
-package com.ekdorn.classicdungeon.shared.engine.maths
+package com.ekdorn.classicdungeon.shared.gl.primitives
 
-import com.ekdorn.classicdungeon.shared.engine.lib.str
+import com.ekdorn.classicdungeon.shared.engine.utils.str
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.tan
 
+
 /**
  * Class, representing 4x4 float matrix.
- * By default constructed in identity form.
+ * By default, constructed in identity form.
  */
 internal data class Matrix (val values: FloatArray) {
     constructor (

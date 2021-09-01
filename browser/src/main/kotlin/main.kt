@@ -30,11 +30,9 @@ fun main () {
     }
 
     window.onresize = {
-        pause()
         surface.width = window.innerWidth
         surface.height = window.innerHeight
         Input.onResized(surface.width, surface.height)
-        resume()
     }
 
     window.onunload = {
@@ -43,9 +41,9 @@ fun main () {
     }
 
     document.addEventListener("visibilitychange", {
+        if (timer == 0) return@addEventListener
         if (document["hidden"] as Boolean) pause()
         else resume()
-        print("Visibility changed!")
     })
 }
 

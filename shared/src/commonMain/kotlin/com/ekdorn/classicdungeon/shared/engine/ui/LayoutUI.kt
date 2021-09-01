@@ -1,22 +1,26 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.maths.Vector
+import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 
 
 /**
  * LayoutUI - container for widgets.
+ * TODO: extend hashmap?
  */
 internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
     /**
      * Children list.
      */
-    @Implicit private val children = mutableListOf<WidgetUI>()
+    @Implicit private val children = mutableMapOf<String, WidgetUI>()
+
+    @Suppress("UNCHECKED_CAST")
+    @Implicit private val parents = children.filterValues { it is LayoutUI }.toMutableMap() as MutableMap<String, LayoutUI>
 
     /**
      * Property background - special FrameUI child, representing this layout background.
      * Null by default.
      */
-    var background: FrameUI? = null
+    @Implicit var background: FrameUI? = null
         set (v) {
             if (v != null) v.parent = this
             else field?.parent = null
@@ -27,34 +31,56 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
 
     /**
      * Method to add child to the layout.
+     * @param id id of new element
      * @param element widget to add
      */
-    fun add (element: WidgetUI) {
+    fun add (id: String, element: WidgetUI) {
         element.parent = this
-        children.add(element)
+        children[id] = element
+        if (element is LayoutUI) parents[id] = element
     }
 
     /**
-     * Method to remove child to the layout.
-     * @param element widget to remove
+     * Method to get child from the layout.
+     * @param id id of the widget to get
      */
-    fun remove (element: WidgetUI) {
-        element.parent = null
-        children.remove(element)
+    @Suppress("UNCHECKED_CAST")
+    operator fun <Type: WidgetUI> get (id: String): Type? {
+        if (id in children) return children[id] as Type
+        for (parent in parents.values) {
+            val child = parent.get<Type>(id)
+            if (child != null) return child
+        }
+        return null
     }
+
+    /**
+     * Method to remove child from the layout.
+     * @param id id of the widget to remove
+     */
+    fun remove (id: String) {
+        children[id]?.parent = null
+        parents.remove(id)
+        children.remove(id)
+    }
+
+    /**
+     * Method to remove all children from the layout.
+     */
+    fun clear () = children.clear()
 
 
 
     override fun update (elapsed: Int) {
         super.update(elapsed)
         background?.update(elapsed)
-        children.forEach { if (it.visible) { it.update(elapsed) } }
+        children.values.forEach { if (it.visible) { it.update(elapsed) } }
     }
 
     override fun draw () {
         super.draw()
         background?.draw()
-        children.forEach { if (it.visible) it.draw() }
+        children.values.forEach { if (it.visible) it.draw() }
     }
 
 
@@ -63,7 +89,7 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
         super.translate(parentCoords, parentMetrics)
         background?.translate(coords, metrics)
         val innerBorder = if (background != null) background!!.pixelBorder * background!!.pixelation else Vector()
-        children.forEach { if (it.visible) it.translate(coords + innerBorder, metrics - innerBorder * 2F) }
+        children.values.forEach { if (it.visible) it.translate(coords + innerBorder, metrics - innerBorder * 2F) }
     }
 
 
@@ -71,6 +97,6 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
     override fun delete() {
         super.delete()
         background?.delete()
-        children.forEach { it.delete() }
+        children.values.forEach { it.delete() }
     }
 }

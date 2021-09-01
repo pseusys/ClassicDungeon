@@ -1,8 +1,8 @@
-package com.ekdorn.classicdungeon.shared.engine.utils
+package com.ekdorn.classicdungeon.shared.gl.extensions
 
-import com.ekdorn.classicdungeon.shared.engine.generics.TextureCache
-import com.ekdorn.classicdungeon.shared.engine.maths.Color
-import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
+import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.atomic.Color
+import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 
 
 private object FontUtils {
@@ -14,8 +14,8 @@ internal enum class ImageFont (resource: String): MutableMap<Char, Rectangle> by
     SMALL("font"), MEDIUM("font");
 
     val texture = TextureCache.get(resource)
-    val width = texture.image.width
-    val height = texture.image.height
+    val width = texture.image.metrics.x
+    val height = texture.image.metrics.y
 
     init {
         var gap: Boolean

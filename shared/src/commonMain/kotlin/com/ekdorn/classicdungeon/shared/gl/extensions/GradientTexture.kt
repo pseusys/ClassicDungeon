@@ -1,7 +1,7 @@
 package com.ekdorn.classicdungeon.shared.gl.extensions
 
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLTexture
-import com.ekdorn.classicdungeon.shared.engine.maths.Color
+import com.ekdorn.classicdungeon.shared.engine.atomic.Color
 
 
 internal class GradientTexture: GLTexture() {

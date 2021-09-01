@@ -1,8 +1,8 @@
 package com.ekdorn.classicdungeon.shared.gl.extensions
 
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLTexture
-import com.ekdorn.classicdungeon.shared.engine.maths.Rectangle
-import com.ekdorn.classicdungeon.shared.engine.utils.Image
+import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
+import com.ekdorn.classicdungeon.shared.gl.primitives.Image
 
 
 /**
@@ -29,7 +29,7 @@ internal open class ImageTexture (img: Image, filtering: FILTERING, wrapping: WR
      */
     var image = img
         set (v) {
-            image(v.width.toInt(), v.height.toInt(), v.pixels)
+            image(v.metrics.w, v.metrics.h, v.pixels)
             field = v
         }
 
@@ -88,5 +88,5 @@ internal open class ImageTexture (img: Image, filtering: FILTERING, wrapping: WR
      * TODO: check if needed?
      */
     fun framePercent (left: Float, top: Float, right: Float, bottom: Float) =
-        Rectangle(left / image.width, top / image.height, right / image.width, bottom / image.height)
+        Rectangle(left / image.metrics.x, top / image.metrics.y, right / image.metrics.x, bottom / image.metrics.y)
 }

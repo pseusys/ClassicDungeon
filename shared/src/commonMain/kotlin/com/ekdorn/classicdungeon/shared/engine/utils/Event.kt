@@ -1,7 +1,5 @@
 package com.ekdorn.classicdungeon.shared.engine.utils
 
-import com.ekdorn.classicdungeon.shared.engine.lib.TCListener
-
 
 /**
  * Event is a broadcasting entity, anyone can subscribe on.
