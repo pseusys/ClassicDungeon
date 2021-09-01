@@ -1,6 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/pseusys/ClassicDungeon/blob/master/ui.schema.json",
+  "title": "Schema defining user interface layouts consisting of ui widgets",
+  "description": "A widget holder, widget inside of the layout (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/general/Transcender.kt)",
 
   "type": "object",
   "properties": {
@@ -15,6 +17,7 @@
 
   "$defs": {
     "widget": {
+      "description": "A ui widget (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/ui/*.kt)",
       "type": "object",
       "patternProperties": {
         "^[A-Za-z][A-Za-z]*$": {
@@ -29,6 +32,7 @@
     },
 
     "color": {
+      "description": "A color in RGBA scheme (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/atomic/Color.kt)",
       "type": "object",
       "properties": {
         "value": { "type": "array", "items": "number" }
@@ -38,6 +42,7 @@
     },
 
     "rectangle": {
+      "description": "A rectangle (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/atomic/Rectangle.kt)",
       "type": "object",
       "properties": {
         "left": { "type": "number" },
@@ -50,6 +55,7 @@
     },
 
     "vector": {
+      "description": "A vector (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/atomic/Vector.kt)",
       "type": "object",
       "properties": {
         "x": { "type": "number" },
