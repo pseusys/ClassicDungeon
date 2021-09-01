@@ -15,20 +15,19 @@ import kotlinx.serialization.json.*
 // Layout file management
 // UI pixelization in camera depending on screen ratio
 internal object Transcender {
+    private object UI {
+        val UIs = mapOf(
+            "BackgroundUI" to ::BackgroundUI,
+            "ClipUI" to ::ClipUI,
+            "FrameUI" to ::FrameUI,
+            "ImageUI" to ::ImageUI,
+            "LayoutUI" to ::LayoutUI,
+            "TextUI" to ::TextUI
+        )
+    }
+
     @Serializable
     private data class WidgetHolder (private val cls: String, val id: String, private val value: @Contextual JsonObject) {
-        private companion object {
-            val UIs = mapOf(
-                "BackgroundUI" to ::BackgroundUI,
-                "ClipUI" to ::ClipUI,
-                "FrameUI" to ::FrameUI,
-                "ImageUI" to ::ImageUI,
-                "LayoutUI" to ::LayoutUI,
-                "TextUI" to ::TextUI
-            )
-        }
-
-
         private val children: List<WidgetHolder>? = null
 
         private val background: @Contextual JsonObject? = null
@@ -47,10 +46,10 @@ internal object Transcender {
 
 
 
-        fun buildWidget (): WidgetUI = UIs.getValue(cls).invoke(widget).also { w ->
+        fun buildWidget (): WidgetUI = UI.UIs.getValue(cls).invoke(widget).also { w ->
             if (w is LayoutUI) {
                 children?.forEach { w.add(it.id, it.buildWidget()) }
-                w.background = UIs.getValue("FrameUI").invoke(back ?: mapOf<String, Any>()) as FrameUI?
+                w.background = UI.UIs.getValue("FrameUI").invoke(back ?: mapOf<String, Any>()) as FrameUI?
             }
         }
     }
@@ -60,7 +59,7 @@ internal object Transcender {
     private val data = mutableMapOf<String, WidgetHolder>()
 
     suspend fun load (vararg layouts: String) = layouts.forEach {
-        data[it] = Json.decodeFromString(ResourceLoader.loadDataString("$it.ui.json"))
+        data[it] = Json.decodeFromString(ResourceLoader.loadDataString("layouts/$it.ui.json"))
     }
 
     fun summon (layout: String) = data[layout]!!.buildWidget() as LayoutUI

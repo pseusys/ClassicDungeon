@@ -10,7 +10,7 @@ import kotlin.js.Promise
 
 internal actual object ResourceLoader {
     actual suspend fun loadImage(name: String) = Promise<Image> { resolve, reject ->
-        val path = "./images/$name"
+        val path = "./$name"
         val img = org.w3c.dom.Image()
         img.crossOrigin = "Anonymous"
         img.onload = {
@@ -28,5 +28,5 @@ internal actual object ResourceLoader {
         img.src = path
     }.await()
 
-    actual suspend fun loadDataString (name: String) = window.fetch("./layouts/$name").await().text().await()
+    actual suspend fun loadDataString (name: String) = window.fetch("./$name").await().text().await()
 }

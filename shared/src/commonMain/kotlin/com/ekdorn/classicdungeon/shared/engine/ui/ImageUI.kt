@@ -20,7 +20,7 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
      * Property texture - image source.
      * Fallback image by default.
      */
-    var texture = TextureCache.get(initializer.getOrElse("texture") { TextureCache.NO_TEXTURE } as String)
+    open var texture = TextureCache.get(initializer.getOrElse("texture") { TextureCache.NO_TEXTURE } as String)
         set (v) {
             metrics = v.image.metrics * frame.metrics * pixelation
             field = v

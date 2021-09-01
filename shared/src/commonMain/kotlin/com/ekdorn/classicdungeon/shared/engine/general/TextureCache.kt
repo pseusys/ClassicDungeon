@@ -16,13 +16,9 @@ internal object TextureCache: Assigned {
     const val NO_TEXTURE = "notex"
 
     /**
-     * Single resources dictionary, contains images and atlases with obscure frame order (e.g. chrome).
+     * Single resources' dictionary, contains images and atlases with obscure frame order (e.g. chrome).
      */
     private val resources = mutableMapOf<String, ImageTexture>()
-    /**
-     * Atlases dictionary, contains atlases with obvious frame order like animations or items atlases.
-     */
-    private val atlases = mutableMapOf<String, Atlas<*>>()
 
 
     /**
@@ -38,7 +34,7 @@ internal object TextureCache: Assigned {
      * @return Atlas resource
      */
     @Suppress("UNCHECKED_CAST")
-    fun <Key> getAtlas (resource: String) = atlases[resource]!! as Atlas<Key>
+    fun <Key> getAtlas (resource: String) = resources[resource]!! as Atlas<Key>
 
 
     /**
@@ -48,9 +44,7 @@ internal object TextureCache: Assigned {
      * @param splash name of splash screen resource
      */
     suspend fun init (splash: String) {
-        val noTexture = ResourceLoader.loadImage("$NO_TEXTURE.png")
-        resources[NO_TEXTURE] = ImageTexture(noTexture)
-        atlases[NO_TEXTURE] = Atlas(noTexture, listOf(0), 1, 1)
+        loadAtlas(NO_TEXTURE, listOf(0), 1, 1)
         load(splash)
     }
 
@@ -59,7 +53,7 @@ internal object TextureCache: Assigned {
      * @param textures names of textures to load
      */
     suspend fun load (vararg textures: String) = textures.forEach {
-        resources[it] = ImageTexture(ResourceLoader.loadImage("$it.png"))
+        resources[it] = ImageTexture(ResourceLoader.loadImage("images/$it.png"))
     }
 
     /**
@@ -70,15 +64,12 @@ internal object TextureCache: Assigned {
      * @param height vertical size of atlas
      */
     suspend fun <Key> loadAtlas (texture: String, frames: List<Key>, width: Int = 1, height: Int = 1) {
-        atlases[texture] = Atlas(ResourceLoader.loadImage("$texture.png"), frames, width, height)
+        resources[texture] = Atlas(ResourceLoader.loadImage("images/$texture.png"), frames, width, height)
     }
 
 
     /**
      * Method triggered on game ended, freeing resources and atlases.
      */
-    override fun gameEnded () {
-        resources.forEach { it.value.delete() }
-        atlases.forEach { it.value.delete() }
-    }
+    override fun gameEnded () = resources.forEach { it.value.delete() }
 }

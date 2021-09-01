@@ -63,7 +63,7 @@
           "id": "bee",
           "value": {
             "anchor": { "x": 0.5, "y": 0.5 },
-            "atlas": "bee",
+            "texture": "bee",
             "pixelation": 8.0
           }
         }
