@@ -2,6 +2,10 @@
 /.gradle/
 /gradle/
 
+# Gradle scripts
+gradlew
+gradlew.bat
+
 # IntelliJ IDEA settings
 /.idea/
 
@@ -10,8 +14,17 @@
 
 
 
-# Native kotlin lib build folder
+# General kotlin lib build folder
 /shared/build/
+
+# Browser kotlin build folder
+/browser/build/
+
+# Native kotlin lib build folder
+/desktop/build/
+
+# Native GLFW lib folder
+/desktop/glfw/
 
 
 

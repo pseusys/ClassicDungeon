@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/pseusys/ClassicDungeon/blob/master/ui.schema.json",
+  "title": "Schema defining user interface layouts consisting of ui widgets",
+  "description": "A widget holder, widget inside of the layout (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/general/Transcender.kt)",
+
+  "type": "object",
+  "properties": {
+    "cls": { "enum": [ "BackgroundUI", "ClipUI", "FrameUI", "ImageUI", "LayoutUI", "TextUI", "WidgetUI" ] },
+    "id": { "type": "string" },
+    "value": { "$ref": "#/$defs/widget" },
+    "children": { "type": "array", "items": { "$ref": "#" } },
+    "background": { "$ref": "#/$defs/widget" }
+  },
+  "required": [ "cls", "id", "value" ],
+  "additionalProperties": false,
+
+  "$defs": {
+    "widget": {
+      "description": "A ui widget (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/ui/*.kt)",
+      "type": "object",
+      "patternProperties": {
+        "^[A-Za-z][A-Za-z]*$": {
+          "anyOf": [
+            { "not": { "type": "object" } },
+            { "$ref": "#/$defs/color" },
+            { "$ref": "#/$defs/rectangle" },
+            { "$ref": "#/$defs/vector" }
+          ]
+        }
+      }
+    },
+
+    "color": {
+      "description": "A color in RGBA scheme (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/atomic/Color.kt)",
+      "type": "object",
+      "properties": {
+        "value": { "type": "array", "items": "number" }
+      },
+      "required": [ "value" ],
+      "additionalProperties": false
+    },
+
+    "rectangle": {
+      "description": "A rectangle (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/atomic/Rectangle.kt)",
+      "type": "object",
+      "properties": {
+        "left": { "type": "number" },
+        "top": { "type": "number" },
+        "right": { "type": "number" },
+        "bottom": { "type": "number" }
+      },
+      "required": [ "left", "top", "right", "bottom" ],
+      "additionalProperties": false
+    },
+
+    "vector": {
+      "description": "A vector (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/atomic/Vector.kt)",
+      "type": "object",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "required": [ "x", "y" ],
+      "additionalProperties": false
+    }
+  }
+}

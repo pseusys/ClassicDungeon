@@ -1,44 +1,78 @@
 package com.ekdorn.classicdungeon.shared
 
-import com.ekdorn.classicdungeon.shared.generics.Assigned
-import com.ekdorn.classicdungeon.shared.utils.Event
-import kotlinx.coroutines.launch
+import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
+import com.ekdorn.classicdungeon.shared.engine.Game
+import com.ekdorn.classicdungeon.shared.engine.general.Assigned
+import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.general.Transcender
+import com.ekdorn.classicdungeon.shared.engine.utils.Event
+import kotlinx.coroutines.*
 
 
 object Lifecycle {
     internal val onResume = Event<Unit>()
     internal val onPause = Event<Unit>()
 
-    /**
-     * Initializing features (in MAIN thread), needed for application to start (e.g. display metrics, GL surface, UI textures, etc.)
-     */
-    fun start (): Unit = Assigned.assigned.forEach { it.gameStarted() }
+    val scope = CoroutineScope(Dispatchers.Default)
 
     /**
-     * Resuming game process async (e.g. sound, time measuring, etc.)
+     * Initializing features and loading resources.
+     * Should not block UI thread, but run in parallel after game started.
+     * After this method exits, main game lifecycle should start if no errors occurred.
+     * If method finishes with exception, error method should be displayed.
+     * @throws com.ekdorn.classicdungeon.shared.engine.ResourceNotFoundException if any resources are not loaded.
      */
-    fun resume () {
-        Game.resume()
-        Game.scope.launch { onResume.fire(Unit) }.start()
+    suspend fun start (width: Int, height: Int) {
+        Input.onResized.add {
+            GLFunctions.portal(it.w, it.h)
+            false
+        }
+
+        GLFunctions.setup()
+        Assigned.assigned.forEach { it.gameStarted() }
+        Input.onResized(width, height)
+
+        TextureCache.init("notex")
+        Game.splash(width, height)
+        Game.update()
+
+        awaitAll(scope.async { delay(2000) }, scope.async {
+            TextureCache.load("font", "chrome", "arcs00", "arcs01")
+            TextureCache.loadAtlas("bee", List(16) { it }, 16)
+            Transcender.load("main_menu")
+        })
+
+        Game.start()
     }
 
     /**
-     * Screen update, runs each frame in GL thread sync
+     * Resuming game process in UI thread.
+     */
+    fun resume () {
+        Game.resume()
+        onResume.fire(Unit)
+    }
+
+    /**
+     * Screen update, runs each frame in GL main thread.
      */
     fun update () {
         Game.update()
     }
 
     /**
-     * Pausing game processes async (e.g. sound, time measuring, etc.)
+     * Pausing game processes in UI thread.
      */
     fun pause () {
         Game.pause()
-        Game.scope.launch { onPause.fire(Unit) }.start()
+        onPause.fire(Unit)
     }
 
     /**
-     * Ceasing game functionality (without ability to resume, in MAIN thread) (e.g. freeing resources, auto-saving, closing server connection, etc.)
-     */
-    fun end (): Unit = Assigned.assigned.forEach { it.gameEnded() }
+     * Ceasing game functionality without ability to resume, should be executed in UI thread.
+     * Preparing game to finish, like auto-saving and closing server connection, should be done in this method too.     */
+    fun end () {
+        Game.end()
+        Assigned.assigned.forEach { it.gameEnded() }
+    }
 }

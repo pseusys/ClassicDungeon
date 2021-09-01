@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform")
+    id("org.jetbrains.kotlin.plugin.serialization") version("1.5.30")
     id("com.android.library")
 }
 
@@ -8,7 +9,6 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     google()
-    jcenter()
     mavenCentral()
 }
 
@@ -22,22 +22,16 @@ kotlin {
         }
     }
     js(IR) {
-        binaries.executable()
-        moduleName = "ClassicDungeon"
-        browser {
-            commonWebpackConfig {
-                cssSupport.enabled = true
-                cssSupport.mode = "import"
-            }
-        }
+        browser()
     }
 
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
             }
         }
         val commonTest by getting {
@@ -45,6 +39,8 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
+
+        val jsMain by getting
     }
 }
 
@@ -56,9 +52,3 @@ android {
         targetSdkVersion(30)
     }
 }
-
-tasks.withType<Wrapper> {
-    gradleVersion = "7.0.2"
-    distributionType = Wrapper.DistributionType.ALL
-}
-
