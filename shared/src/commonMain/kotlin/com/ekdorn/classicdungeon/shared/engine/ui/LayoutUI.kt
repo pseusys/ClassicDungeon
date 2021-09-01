@@ -5,7 +5,6 @@ import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 
 /**
  * LayoutUI - container for widgets.
- * TODO: extend hashmap?
  */
 internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
     /**
