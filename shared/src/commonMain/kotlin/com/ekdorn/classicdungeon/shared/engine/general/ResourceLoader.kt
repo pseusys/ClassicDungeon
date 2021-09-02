@@ -1,5 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.general
 
+import com.ekdorn.classicdungeon.shared.audio.Sounds
 import com.ekdorn.classicdungeon.shared.gl.primitives.Image
 
 
@@ -19,4 +20,6 @@ internal expect object ResourceLoader {
     suspend fun loadImage (name: String): Image
 
     suspend fun loadDataString (name: String): String
+
+    suspend fun loadSound (name: String): Any
 }

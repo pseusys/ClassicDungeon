@@ -1,10 +1,11 @@
 package com.ekdorn.classicdungeon.shared
 
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
-import com.ekdorn.classicdungeon.shared.engine.Game
+import com.ekdorn.classicdungeon.shared.engine.general.Game
 import com.ekdorn.classicdungeon.shared.engine.general.Assigned
-import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
-import com.ekdorn.classicdungeon.shared.engine.general.Transcender
+import com.ekdorn.classicdungeon.shared.engine.cache.Minstrel
+import com.ekdorn.classicdungeon.shared.engine.cache.Gallery
+import com.ekdorn.classicdungeon.shared.engine.cache.Transcender
 import com.ekdorn.classicdungeon.shared.engine.utils.Event
 import kotlinx.coroutines.*
 
@@ -32,13 +33,13 @@ object Lifecycle {
         Assigned.assigned.forEach { it.gameStarted() }
         Input.onResized(width, height)
 
-        TextureCache.init("notex")
+        Gallery.init("notex")
         Game.splash(width, height)
         Game.update()
 
         awaitAll(scope.async { delay(2000) }, scope.async {
-            TextureCache.load("font", "chrome", "arcs00", "arcs01")
-            TextureCache.loadAtlas("bee", List(16) { it }, 16)
+            Gallery.load("font", "chrome", "arcs00", "arcs01")
+            Gallery.loadAtlas("bee", List(16) { it }, 16)
             Transcender.load("main_menu")
         })
 

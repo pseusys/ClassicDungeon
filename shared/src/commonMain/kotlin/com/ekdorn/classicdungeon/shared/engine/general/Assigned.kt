@@ -1,5 +1,7 @@
 package com.ekdorn.classicdungeon.shared.engine.general
 
+import com.ekdorn.classicdungeon.shared.engine.cache.Gallery
+import com.ekdorn.classicdungeon.shared.engine.cache.Minstrel
 import com.ekdorn.classicdungeon.shared.gl.extensions.Camera
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 
@@ -25,6 +27,6 @@ internal interface Assigned {
      * Set of all Assigned implementations, used for function propagation.
      */
     companion object AllSet {
-        val assigned = listOf(Script, TextureCache, Camera)
+        val assigned = listOf(Script, Gallery, Minstrel, Camera)
     }
 }

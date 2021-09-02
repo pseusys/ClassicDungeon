@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.cache.Gallery
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
@@ -76,7 +76,7 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
      * Property texture - image source to map.
      * Fallback image by default.
      */
-    var texture = TextureCache.get(initializer.getOrElse("texture") { TextureCache.NO_TEXTURE } as String)
+    var texture = Gallery.get(initializer.getOrElse("texture") { Gallery.DEFAULT } as String)
 
     /**
      * Property border - part of image to map as border, vertical and horizontal.

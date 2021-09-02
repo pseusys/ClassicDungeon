@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.cache.Gallery
 import com.ekdorn.classicdungeon.shared.gl.extensions.Atlas
 import com.ekdorn.classicdungeon.shared.engine.utils.Listener
 import com.ekdorn.classicdungeon.shared.gl.extensions.ImageTexture
@@ -47,7 +47,7 @@ internal class ClipUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
      */
     var paused = initializer.getOrElse("paused") { false } as Boolean
 
-    override var texture = TextureCache.getAtlas<Int>(initializer.getOrElse("texture") { TextureCache.NO_TEXTURE } as String) as ImageTexture
+    override var texture = Gallery.getAtlas<Int>(initializer.getOrElse("texture") { Gallery.DEFAULT } as String) as ImageTexture
 
 
 

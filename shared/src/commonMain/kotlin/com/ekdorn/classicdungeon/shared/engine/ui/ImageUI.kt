@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.cache.Gallery
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
@@ -20,7 +20,7 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
      * Property texture - image source.
      * Fallback image by default.
      */
-    open var texture = TextureCache.get(initializer.getOrElse("texture") { TextureCache.NO_TEXTURE } as String)
+    open var texture = Gallery.get(initializer.getOrElse("texture") { Gallery.DEFAULT } as String)
         set (v) {
             metrics = v.image.metrics * frame.metrics * pixelation
             field = v

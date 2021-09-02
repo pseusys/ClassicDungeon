@@ -1,5 +1,6 @@
-package com.ekdorn.classicdungeon.shared.engine.general
+package com.ekdorn.classicdungeon.shared.engine.cache
 
+import com.ekdorn.classicdungeon.shared.engine.general.ResourceLoader
 import com.ekdorn.classicdungeon.shared.engine.ui.*
 import com.ekdorn.classicdungeon.shared.engine.ui.BackgroundUI
 import com.ekdorn.classicdungeon.shared.engine.ui.FrameUI
@@ -14,6 +15,7 @@ import kotlinx.serialization.json.*
 
 // Layout file management
 // UI pixelization in camera depending on screen ratio
+// TODO: deal with NO_LAYOUT
 internal object Transcender {
     private object UI {
         val UIs = mapOf(
@@ -56,11 +58,11 @@ internal object Transcender {
 
 
 
-    private val data = mutableMapOf<String, WidgetHolder>()
+    private val layouts = mutableMapOf<String, WidgetHolder>()
 
-    suspend fun load (vararg layouts: String) = layouts.forEach {
-        data[it] = Json.decodeFromString(ResourceLoader.loadDataString("layouts/$it.ui.json"))
+    suspend fun load (vararg values: String) = values.forEach {
+        layouts[it] = Json.decodeFromString(ResourceLoader.loadDataString("layouts/$it.ui.json"))
     }
 
-    fun summon (layout: String) = data[layout]!!.buildWidget() as LayoutUI
+    fun summon (layout: String) = layouts[layout]!!.buildWidget() as LayoutUI
 }

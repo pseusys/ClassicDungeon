@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.cache.Gallery
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
@@ -16,7 +16,7 @@ internal class BackgroundUI (initializer: Map<String, *> = hashMapOf<String, Any
      * Property texture - image source.
      * Fallback image by default.
      */
-    var texture = TextureCache.get(initializer.getOrElse("texture") { TextureCache.NO_TEXTURE } as String)
+    var texture = Gallery.get(initializer.getOrElse("texture") { Gallery.DEFAULT } as String)
         set (v) {
             field = v
             field.wrap(GLTexture.WRAPPING.REPEAT, GLTexture.WRAPPING.REPEAT)
