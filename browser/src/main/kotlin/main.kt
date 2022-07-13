@@ -1,5 +1,6 @@
 import com.ekdorn.classicdungeon.shared.Input
 import com.ekdorn.classicdungeon.shared.Lifecycle
+import com.ekdorn.classicdungeon.shared.engine.general.ResourceNotFoundException
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions.context
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -22,10 +23,11 @@ fun main () {
         surface.height = window.innerHeight
 
         Lifecycle.scope.launch {
-            Lifecycle.start(surface.width, surface.height)
+            Lifecycle.start(surface.width, surface.height, ::resume)
         }.invokeOnCompletion {
-            if ((it == null) || (it is CancellationException)) resume()
-            else window.alert("Game resources incomplete!\nTry reloading page or contact developer.\n${it.message}")
+            if ((it == null) || (it is CancellationException)) return@invokeOnCompletion
+            else if (it is ResourceNotFoundException) window.alert("Game resources incomplete!\nTry reloading page or contact developer.\n${it.message}")
+            else window.alert("Game could not start for reason unknown!\nContact developer for further information.\n${it.message}")
         }
     }
 

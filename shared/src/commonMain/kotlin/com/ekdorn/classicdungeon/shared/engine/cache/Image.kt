@@ -43,11 +43,11 @@ internal object Image: Assigned {
      * Method for asynchronous texture cache initialization.
      * It initializes both dictionaries with fallback images that should be GUARANTEED to exist.
      * It also loads splash screen image.
-     * @param splash name of splash screen resource
+     * @param splash name of splash screen resources
      */
-    suspend fun init (splash: String) {
+    suspend fun init (splash: Array<String>) {
         loadAtlas(DEFAULT, listOf(0), 1, 1)
-        load(splash)
+        load(*splash)
     }
 
     /**

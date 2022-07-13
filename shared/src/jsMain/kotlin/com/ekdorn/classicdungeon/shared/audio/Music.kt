@@ -17,14 +17,14 @@ actual class Music actual constructor (private val tracks: Map<String, String>) 
 
     actual fun play (track: String, looped: Boolean) {
         player.apply {
-            if (track == current) play()
-            else if (paused || ended) {
+            if (track != current) {
                 src = tracks[track]!!
                 load()
-                current = track
                 loop = looped
             }
+            play()
         }
+        current = track
     }
 
     actual fun pause () = player.pause()

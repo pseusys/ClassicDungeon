@@ -33,7 +33,7 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
      * @param id id of new element
      * @param element widget to add
      */
-    fun add (id: String, element: WidgetUI) {
+    open fun add (id: String, element: WidgetUI) {
         element.parent = this
         children[id] = element
         if (element is LayoutUI) parents[id] = element

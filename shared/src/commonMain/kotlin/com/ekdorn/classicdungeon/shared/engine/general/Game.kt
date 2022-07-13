@@ -26,7 +26,8 @@ internal object Game {
     fun pause () {}
 
 
-    fun splash (width: Int, height: Int) {
+    fun start (width: Int, height: Int) {
+        println("Game started!")
         root = RootUI(width, height)
         root.add(splash, ImageUI().apply { anchor = Vector(0.5F, 0.5F); pixelation = 8F })
 
@@ -36,9 +37,8 @@ internal object Game {
         }
     }
 
-    // TODO: create starting page, like "click to start game" in JS
-    fun start () {
-        println("Game started!")
+    fun launch () {
+        println("Game launched!")
         root.get<ImageUI>(splash)!!.delete()
         root.remove(splash)
 

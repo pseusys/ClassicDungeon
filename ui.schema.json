@@ -20,7 +20,7 @@
       "description": "A ui widget (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/ui/*.kt)",
       "type": "object",
       "patternProperties": {
-        "^[A-Za-z][A-Za-z]*$": {
+        "^[A-Za-z]+$": {
           "anyOf": [
             { "not": { "type": "object" } },
             { "$ref": "#/$defs/color" },
