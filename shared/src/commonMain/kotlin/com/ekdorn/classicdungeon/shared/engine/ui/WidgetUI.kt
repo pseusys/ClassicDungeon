@@ -6,6 +6,8 @@ import com.ekdorn.classicdungeon.shared.gl.extensions.WidgetBuffer
 import com.ekdorn.classicdungeon.shared.engine.atomic.Color
 import com.ekdorn.classicdungeon.shared.gl.primitives.Matrix
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import com.ekdorn.classicdungeon.shared.engine.utils.decodeDefault
+import kotlinx.serialization.json.Json
 
 
 /**
@@ -80,7 +82,7 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
      * Property anchor - point of widgets parent widget is bound to.
      * Zero, zero by default.
      */
-    var anchor = Vector.create(initializer["anchor"] as String?, Vector())
+    var anchor = Json.decodeDefault(initializer["anchor"] as String?, Vector())
     /**
      * Property pixelation - scale of widget.
      * 1 texture pixel will be size of pixelation * pixelation real pixels.
@@ -110,12 +112,12 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
      * Property speed - speed of the widget movement.
      * Zero by default.
      */
-    var speed = Vector.create(initializer["speed"] as String?, Vector())
+    var speed = Json.decodeDefault(initializer["speed"] as String?, Vector())
     /**
      * Property acceleration - acceleration of the widget movement.
      * Zero by default.
      */
-    var acceleration = Vector.create(initializer["acceleration"] as String?, Vector())
+    var acceleration = Json.decodeDefault(initializer["acceleration"] as String?, Vector())
     /**
      * Property angle - angle of the widget, in degrees.
      * Zero by default.
@@ -132,12 +134,12 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
      * Property ambient - color that will be added to that widgets texture color.
      * Transparent black by default.
      */
-    var ambient = Color.create(initializer["ambient"] as String?, Color())
+    var ambient = Json.decodeDefault(initializer["ambient"], Color())
     /**
      * Property material - color that widgets texture color will be multiplied by.
      * White by default.
      */
-    var material = Color.create(initializer["material"] as String?, Color(0xFFFFFFFFU))
+    var material = Json.decodeDefault(initializer["material"], Color(0xFFFFFFFFU))
 
 
 

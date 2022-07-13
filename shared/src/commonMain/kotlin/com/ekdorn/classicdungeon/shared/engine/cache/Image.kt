@@ -9,7 +9,7 @@ import com.ekdorn.classicdungeon.shared.gl.extensions.Atlas
 /**
  * This object contains single loaded textures and texture atlases.
  */
-internal object Gallery: Assigned {
+internal object Image: Assigned {
     /**
      * This fallback string represents unknown name of texture.
      * It is used in case no texture is loaded or texture loaded incorrectly.
@@ -60,7 +60,7 @@ internal object Gallery: Assigned {
 
     /**
      * Method for loading resource atlas asynchronously.
-     * @param texture name of atlas to load
+     * @param value name of atlas to load
      * @param frames list of keys to atlas frames
      * @param width horizontal size of atlas
      * @param height vertical size of atlas

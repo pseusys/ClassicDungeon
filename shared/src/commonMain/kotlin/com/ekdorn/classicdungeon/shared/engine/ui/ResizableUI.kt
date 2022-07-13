@@ -1,6 +1,8 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import com.ekdorn.classicdungeon.shared.engine.utils.decodeDefault
+import kotlinx.serialization.json.Json
 
 /**
  * ResizableUI - widget that can be in some way resized.
@@ -12,7 +14,7 @@ internal abstract class ResizableUI (initializer: Map<String, *>): WidgetUI(init
     /**
      * Dimens property set made public.
      */
-    final override var dimens = Vector.create(initializer["dimens"] as String?, Vector())
+    final override var dimens = Json.decodeDefault(initializer["dimens"] as String?, Vector())
         public set
 
 

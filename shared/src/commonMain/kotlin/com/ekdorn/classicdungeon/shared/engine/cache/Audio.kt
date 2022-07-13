@@ -6,7 +6,7 @@ import com.ekdorn.classicdungeon.shared.audio.Music
 import com.ekdorn.classicdungeon.shared.audio.Sounds
 
 
-internal object Minstrel: Assigned {
+internal object Audio: Assigned {
     const val DEFAULT = "noson"
 
     private val background = Music(listOf("theme").distinct().associateWith { "./sounds/$it.mp3" })

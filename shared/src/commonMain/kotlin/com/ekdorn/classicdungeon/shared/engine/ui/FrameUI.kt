@@ -1,9 +1,11 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.cache.Gallery
+import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import com.ekdorn.classicdungeon.shared.engine.utils.decodeDefault
+import kotlinx.serialization.json.Json
 
 
 /**
@@ -57,7 +59,7 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
      * Measured from lower left corner.
      * Whole image by default.
      */
-    var frame = Rectangle.create(initializer["frame"] as String?, Rectangle())
+    var frame = Json.decodeDefault(initializer["frame"], Rectangle())
         set (v) {
             dirty = true
             field = v
@@ -76,13 +78,13 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
      * Property texture - image source to map.
      * Fallback image by default.
      */
-    var texture = Gallery.get(initializer.getOrElse("texture") { Gallery.DEFAULT } as String)
+    var texture = Image.get(initializer.getOrElse("texture") { Image.DEFAULT } as String)
 
     /**
      * Property border - part of image to map as border, vertical and horizontal.
      * Both zero by default.
      */
-    var border = Vector.create(initializer["border"] as String?, Vector())
+    var border = Json.decodeDefault(initializer["border"], Vector())
         set (v) {
             dirty = true
             field = v
@@ -99,8 +101,8 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
 
 
     init {
-        if ("pixelFrame" in initializer) pixelFrame = Rectangle.create(initializer["pixelFrame"] as String?, Rectangle())
-        if ("pixelBorder" in initializer) pixelBorder = Vector.create(initializer["pixelBorder"] as String?, Vector())
+        if ("pixelFrame" in initializer) pixelFrame = Json.decodeDefault(initializer["pixelFrame"], Rectangle())
+        if ("pixelBorder" in initializer) pixelBorder = Json.decodeDefault(initializer["pixelBorder"], Vector())
         updateVertices()
     }
 

@@ -1,9 +1,11 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.cache.Gallery
+import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import com.ekdorn.classicdungeon.shared.engine.utils.decodeDefault
+import kotlinx.serialization.json.Json
 
 
 /**
@@ -20,7 +22,7 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
      * Property texture - image source.
      * Fallback image by default.
      */
-    open var texture = Gallery.get(initializer.getOrElse("texture") { Gallery.DEFAULT } as String)
+    open var texture = Image.get(initializer.getOrElse("texture") { Image.DEFAULT } as String)
         set (v) {
             metrics = v.image.metrics * frame.metrics * pixelation
             field = v
@@ -31,7 +33,7 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
      * Measured from lower left corner.
      * Whole image by default.
      */
-    var frame = Rectangle.create(initializer["frame"] as String?, Rectangle())
+    var frame = Json.decodeDefault(initializer["frame"], Rectangle())
         set (v) {
             metrics = texture.image.metrics * v.metrics * pixelation
             dirty = true

@@ -1,9 +1,9 @@
 package com.ekdorn.classicdungeon.shared.engine.general
 
 import com.ekdorn.classicdungeon.shared.Input
-import com.ekdorn.classicdungeon.shared.engine.cache.Transcender
+import com.ekdorn.classicdungeon.shared.engine.cache.Layout
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
-import com.ekdorn.classicdungeon.shared.engine.cache.Minstrel
+import com.ekdorn.classicdungeon.shared.engine.cache.Audio
 import com.ekdorn.classicdungeon.shared.engine.ui.ClipUI
 import com.ekdorn.classicdungeon.shared.engine.ui.ImageUI
 import com.ekdorn.classicdungeon.shared.engine.ui.RootUI
@@ -42,9 +42,9 @@ internal object Game {
         root.get<ImageUI>(splash)!!.delete()
         root.remove(splash)
 
-        Minstrel.playBackground("theme", true)
+        Audio.playBackground("theme", true)
 
-        root.add("menu", Transcender.summon("main_menu"))
+        root.add("menu", Layout.summon("main_menu"))
         root.get<ClipUI>("bee")?.play(20, true, 7, 8, 9, 10)
 
         elapsed = Clock.System.now().toEpochMilliseconds().toInt()

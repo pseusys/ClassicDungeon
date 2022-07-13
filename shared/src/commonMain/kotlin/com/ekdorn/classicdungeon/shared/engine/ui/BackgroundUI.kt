@@ -1,22 +1,24 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.cache.Gallery
+import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import com.ekdorn.classicdungeon.shared.engine.utils.decodeDefault
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLTexture
+import kotlinx.serialization.json.Json
 
 
 internal class BackgroundUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
     @Implicit var scroll = Vector()
 
-    var scrollSpeed = Vector.create(initializer["scrollSpeed"] as String?, Vector())
+    var scrollSpeed = Json.decodeDefault(initializer["scrollSpeed"], Vector())
 
     /**
      * Property texture - image source.
      * Fallback image by default.
      */
-    var texture = Gallery.get(initializer.getOrElse("texture") { Gallery.DEFAULT } as String)
+    var texture = Image.get(initializer.getOrElse("texture") { Image.DEFAULT } as String)
         set (v) {
             field = v
             field.wrap(GLTexture.WRAPPING.REPEAT, GLTexture.WRAPPING.REPEAT)

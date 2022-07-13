@@ -16,7 +16,7 @@ import kotlinx.serialization.json.*
 // Layout file management
 // UI pixelization in camera depending on screen ratio
 // TODO: deal with NO_LAYOUT
-internal object Transcender {
+internal object Layout {
     private object UI {
         val UIs = mapOf(
             "BackgroundUI" to ::BackgroundUI,

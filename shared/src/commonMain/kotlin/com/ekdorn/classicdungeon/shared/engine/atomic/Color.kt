@@ -1,8 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.atomic
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 
 
 /**
@@ -15,10 +13,6 @@ import kotlinx.serialization.json.Json
  */
 @Serializable
 internal data class Color (var value: FloatArray) {
-    companion object {
-        fun create (json: String?, default: Color) = if (json != null) Json.decodeFromString(json) else default
-    }
-
     constructor (r: Float, g: Float, b: Float, a: Float): this(floatArrayOf(r, g, b, a))
     constructor (): this(0F, 0F, 0F, 0F)
 
