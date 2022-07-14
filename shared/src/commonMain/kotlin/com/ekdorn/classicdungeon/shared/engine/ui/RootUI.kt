@@ -8,7 +8,7 @@ import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
  * RootUI - root layout of the game.
  * Has some extra functions compared to LayoutUI, for example, clears screen on update.
  */
-internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI(hashMapOf<String, Any>()) {
+internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI() {
     init {
         coords = Vector(0F, 0F)
         metrics = Vector(screenWidth, screenHeight)

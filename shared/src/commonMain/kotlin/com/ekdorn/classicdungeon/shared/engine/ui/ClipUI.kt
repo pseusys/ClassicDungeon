@@ -4,12 +4,15 @@ import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.gl.extensions.Atlas
 import com.ekdorn.classicdungeon.shared.engine.utils.Listener
 import com.ekdorn.classicdungeon.shared.gl.extensions.ImageTexture
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 /**
  * ClipUI - Image, changing with updates, animation.
  */
-internal class ClipUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ImageUI(initializer) {
+@Serializable
+internal class ClipUI: ImageUI() {
     /**
      * Animation, sequence of frames to display in ClipUI.
      * - looped - whether animation is looped or fired once.
@@ -30,25 +33,24 @@ internal class ClipUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
     }
 
 
-
-    /**
-     * Current running animation.
-     */
-    @Implicit private var current: Animation? = null
-
-    /**
-     * Listener fired when the animation finishes.
-     */
-    @Implicit var finishedListener: Listener? = null
-
     /**
      * Property paused - whether the animation is running or paused.
      * False by default.
      */
-    var paused = initializer.getOrElse("paused") { false } as Boolean
+    var paused = false
 
-    override var texture = Image.getAtlas<Int>(initializer.getOrElse("texture") { Image.DEFAULT } as String) as ImageTexture
 
+    /**
+     * Current running animation.
+     */
+    @Transient private var current: Animation? = null
+
+    /**
+     * Listener fired when the animation finishes.
+     */
+    @Transient var finishedListener: Listener? = null
+
+    @Transient override var texture = Image.getAtlas<Int>(source) as ImageTexture
 
 
     /**
@@ -57,8 +59,6 @@ internal class ClipUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
      * @return rectangle for current cut
      */
     private fun cut (animation: Animation) = (texture as Atlas<*>)[animation.cut]!!
-
-
 
     override fun update (elapsed: Int) {
         super.update(elapsed)
@@ -82,7 +82,6 @@ internal class ClipUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
             if (lastCut != it.cut) frame = cut(current!!)
         } }
     }
-
 
     /**
      * Replace current animation.

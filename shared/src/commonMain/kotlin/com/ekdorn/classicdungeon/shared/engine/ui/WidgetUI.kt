@@ -6,35 +6,25 @@ import com.ekdorn.classicdungeon.shared.gl.extensions.WidgetBuffer
 import com.ekdorn.classicdungeon.shared.engine.atomic.Color
 import com.ekdorn.classicdungeon.shared.gl.primitives.Matrix
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
-import com.ekdorn.classicdungeon.shared.engine.utils.decodeDefault
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 /**
  * WidgetUI - base widget for all.
  */
-internal abstract class WidgetUI (initializer: Map<String, *>) {
+@Serializable
+internal abstract class WidgetUI {
     /**
      * Types of widgets anchor alignment:
      * - START - anchor aligned to left or top
      * - CENTER - anchor aligned to center
      * - END - anchor aligned to right or bottom
      */
+    @Serializable
     enum class ALIGNMENT {
         START, CENTER, END
     }
-
-
-
-    /**
-     * Annotation, defining Implicit members of UI widgets.
-     * Implicit members are non-property members that can not be set through layout file.
-     */
-    @Target(AnnotationTarget.PROPERTY)
-    @Retention(AnnotationRetention.SOURCE)
-    @MustBeDocumented
-    annotation class Implicit
-
 
 
     /*
@@ -43,38 +33,41 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
     var active: Boolean = true
         get() = field && if (parent != null) (parent!!.active) else true
     */
+
     /**
      * Parent widget of this widget.
      */
-    @Implicit var parent: LayoutUI? = null
+    @Transient var parent: LayoutUI? = null
+
     /**
      * Coordinates of the widget in pixels.
      */
-    @Implicit protected var coords = Vector()
+    @Transient protected var coords = Vector()
+
     /**
      * Size of widget in pixels.
      */
-    @Implicit protected var metrics = Vector()
+    @Transient protected var metrics = Vector()
+
     /**
      * Model matrix of the widget.
      */
-    @Implicit protected var model = Matrix()
+    @Transient protected var model = Matrix()
 
     /**
      * Whether call of updateVertices() needed on next update.
      */
-    @Implicit protected var dirty = false
+    @Transient protected var dirty = false
 
     /**
      * GL buffer associated with the widget.
      */
-    @Implicit protected val buffer = WidgetBuffer()
-
+    @Transient protected val buffer = WidgetBuffer()
 
     /**
      * Size of widget as percent of its parent.
      */
-    @Implicit open var dimens = Vector()
+    @Transient open var dimens = Vector()
         protected set
 
 
@@ -82,65 +75,71 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
      * Property anchor - point of widgets parent widget is bound to.
      * Zero, zero by default.
      */
-    var anchor = Json.decodeDefault(initializer["anchor"] as String?, Vector())
+    var anchor = Vector()
+
     /**
      * Property pixelation - scale of widget.
      * 1 texture pixel will be size of pixelation * pixelation real pixels.
      * 1 by default.
      */
-    var pixelation = initializer.getOrElse("pixelation") { 1F } as Float
+    var pixelation = 1F
 
     /**
      * Property visible - whether the widget is visible and should be drawn.
      * True by default.
      */
-    var visible = initializer.getOrElse("visible") { true } as Boolean
+    var visible = true
         // get() = field && if (parent != null) (parent!!.visible) else true
 
     /**
      * Property verticalAlignment - vertical alignment of widget anchor.
      * ALIGNMENT.CENTER by default.
      */
-    var verticalAlignment = ALIGNMENT.valueOf(initializer.getOrElse("verticalAlignment") { ALIGNMENT.CENTER.name } as String)
+    var verticalAlignment = ALIGNMENT.CENTER
+
     /**
      * Property horizontalAlignment - horizontal alignment of widget anchor.
      * ALIGNMENT.CENTER by default.
      */
-    var horizontalAlignment = ALIGNMENT.valueOf(initializer.getOrElse("horizontalAlignment") { ALIGNMENT.CENTER.name } as String)
+    var horizontalAlignment = ALIGNMENT.CENTER
 
     /**
      * Property speed - speed of the widget movement.
      * Zero by default.
      */
-    var speed = Json.decodeDefault(initializer["speed"] as String?, Vector())
+    var speed = Vector()
+
     /**
      * Property acceleration - acceleration of the widget movement.
      * Zero by default.
      */
-    var acceleration = Json.decodeDefault(initializer["acceleration"] as String?, Vector())
+    var acceleration = Vector()
+
     /**
      * Property angle - angle of the widget, in degrees.
      * Zero by default.
      */
-    var angle = initializer.getOrElse("angle") { 0F } as Float
+    var angle = 0F
+
     /**
      * Property angleSpeed - angle of the widget rotation, in degrees.
      * Zero by default.
      */
-    var angleSpeed = initializer.getOrElse("angleSpeed") { 0F } as Float
+    var angleSpeed = 0F
+
     // var origin = Vector()
 
     /**
      * Property ambient - color that will be added to that widgets texture color.
      * Transparent black by default.
      */
-    var ambient = Json.decodeDefault(initializer["ambient"], Color())
+    var ambient = Color()
+
     /**
      * Property material - color that widgets texture color will be multiplied by.
      * White by default.
      */
-    var material = Json.decodeDefault(initializer["material"], Color(0xFFFFFFFFU))
-
+    var material = Color(0xFFFFFFFFU)
 
 
     /*
@@ -164,7 +163,6 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
         }
 
 
-
     /**
      * Method for receiving metrics of this widgets parent.
      * Property itself has protected modifier and can not be used in children.
@@ -184,8 +182,6 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
      * @param time time elapsed
      */
     private fun move (speed: Float, acceleration: Float, time: Int) = speed + acceleration * time
-
-
 
     /**
      * Function triggered on each update to update widgets inner properties.
@@ -242,8 +238,6 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
         buffer.bind()
     }
 
-
-
     /**
      * Function triggered each update to define this widget coords (1) and metrics (2).
      * It is triggered first, before update() and draw().
@@ -272,8 +266,6 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
      */
     protected open fun updateVertices () { dirty = false }
 
-
-
     /*
     fun kill () {
         alive = false
@@ -290,8 +282,7 @@ internal abstract class WidgetUI (initializer: Map<String, *>) {
      */
     open fun delete () = buffer.delete()
 
-
-
+    // TODO: revise
     fun resetColor () {
         material.apply { r = 1F; g = 1F; b = 1F; a = 1F }
         ambient.apply { r = 0F; g = 0F; b = 0F; a = 0F }

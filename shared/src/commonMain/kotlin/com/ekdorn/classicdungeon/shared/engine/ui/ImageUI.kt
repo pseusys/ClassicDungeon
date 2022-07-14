@@ -4,28 +4,19 @@ import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
-import com.ekdorn.classicdungeon.shared.engine.utils.decodeDefault
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 /**
  * ImageUI - image, that can not be resized for it pixel sizes not to be disturbed.
  */
-internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any>()): WidgetUI(initializer) {
-    /**
-     * Part of parent widget this widget takes.
-     */
-    @Implicit override var dimens = super.dimens
-        get () = if (parent != null) metrics / parentMetrics()!! else field
-
-    /**
-     * Property texture - image source.
-     * Fallback image by default.
-     */
-    open var texture = Image.get(initializer.getOrElse("texture") { Image.DEFAULT } as String)
+@Serializable
+internal open class ImageUI: WidgetUI() {
+    var source = Image.DEFAULT
         set (v) {
-            metrics = v.image.metrics * frame.metrics * pixelation
             field = v
+            texture = Image.get(field)
         }
 
     /**
@@ -33,7 +24,7 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
      * Measured from lower left corner.
      * Whole image by default.
      */
-    var frame = Json.decodeDefault(initializer["frame"], Rectangle())
+    var frame = Rectangle()
         set (v) {
             metrics = texture.image.metrics * v.metrics * pixelation
             dirty = true
@@ -44,7 +35,7 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
      * Property mirroredH - whether this image should be mirrored horizontally.
      * False by default.
      */
-    var mirroredH = initializer.getOrElse("mirroredH") { false } as Boolean
+    var mirroredH = false
         set (v) {
             dirty = true
             field = v
@@ -54,15 +45,31 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
      * Property mirroredV - whether this image should be mirrored vertically.
      * False by default.
      */
-    var mirroredV = initializer.getOrElse("mirroredV") { false } as Boolean
+    var mirroredV = false
         set (v) {
             dirty = true
             field = v
         }
 
 
-    init { updateVertices() }
+    /**
+     * Part of parent widget this widget takes.
+     */
+    @Transient override var dimens = super.dimens
+        get () = if (parent != null) metrics / parentMetrics()!! else field
 
+    /**
+     * Property texture - image source.
+     * Fallback image by default.
+     */
+    @Transient protected open var texture = Image.get(source)
+        set (v) {
+            metrics = v.image.metrics * frame.metrics * pixelation
+            field = v
+        }
+
+
+    init { updateVertices() }
 
 
     override fun draw () {

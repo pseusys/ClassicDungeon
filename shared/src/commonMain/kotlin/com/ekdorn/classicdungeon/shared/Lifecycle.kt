@@ -1,11 +1,16 @@
 package com.ekdorn.classicdungeon.shared
 
-import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
 import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.engine.cache.Layout
+import com.ekdorn.classicdungeon.shared.engine.general.Assigned
+import com.ekdorn.classicdungeon.shared.engine.general.Game
+import com.ekdorn.classicdungeon.shared.engine.general.ResourceLists
+import com.ekdorn.classicdungeon.shared.engine.general.ResourceNotFoundException
 import com.ekdorn.classicdungeon.shared.engine.utils.Event
-import com.ekdorn.classicdungeon.shared.engine.general.*
-import kotlinx.coroutines.*
+import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 object Lifecycle {
@@ -36,11 +41,11 @@ object Lifecycle {
         updateStarter.invoke()
 
         // TODO: refactor splash screen, replace with loading progress bar that will switch to play button
-        awaitAll(scope.async { delay(2000) }, scope.async {
+        withContext(scope.coroutineContext) {
             Image.load("font", "chrome", "arcs00", "arcs01")
             Image.loadAtlas("bee", List(16) { it }, 16)
             Layout.load("main_menu")
-        })
+        }
 
         Game.launch()
     }
@@ -57,7 +62,6 @@ object Lifecycle {
      * Screen update, runs each frame in GL main thread.
      */
     fun update () {
-        println("updated")
         Game.update()
     }
 

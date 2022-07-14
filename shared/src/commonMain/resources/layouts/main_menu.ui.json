@@ -13,7 +13,7 @@
         "verticalAlignment": "START",
         "horizontalAlignment": "START",
         "dimens": { "x": 1, "y": 1 },
-        "texture": "arcs00",
+        "source": "arcs00",
         "scrollSpeed": { "x": 0, "y": 1 }
       }
     },
@@ -24,7 +24,7 @@
         "verticalAlignment": "START",
         "horizontalAlignment": "START",
         "dimens": { "x": 1, "y": 1 },
-        "texture": "arcs01",
+        "source": "arcs01",
         "scrollSpeed": { "x": 0, "y": 2 }
       }
     },
@@ -33,16 +33,16 @@
       "id": "container",
       "value": {
         "anchor": { "x": 0.5, "y": 0.5 },
-        "dimens": { "x": 0.6, "y": 0.8 }
-      },
-      "background": {
-        "verticalAlignment": "START",
-        "horizontalAlignment": "START",
-        "dimens": { "x": 1, "y": 1 },
-        "texture": "chrome",
-        "pixelation": 8.0,
-        "pixelFrame": { "left": 1, "top": 63, "right": 21, "bottom": 43 },
-        "pixelBorder": { "x": 6, "y": 6 }
+        "dimens": { "x": 0.6, "y": 0.8 },
+        "background": {
+          "verticalAlignment": "START",
+          "horizontalAlignment": "START",
+          "dimens": { "x": 1, "y": 1 },
+          "source": "chrome",
+          "pixelation": 8.0,
+          "pixelFrame": { "left": 1, "top": 63, "right": 21, "bottom": 43 },
+          "pixelBorder": { "x": 6, "y": 6 }
+        }
       },
       "children": [
         {
@@ -63,7 +63,7 @@
           "id": "bee",
           "value": {
             "anchor": { "x": 0.5, "y": 0.5 },
-            "texture": "bee",
+            "source": "bee",
             "pixelation": 8.0
           }
         }

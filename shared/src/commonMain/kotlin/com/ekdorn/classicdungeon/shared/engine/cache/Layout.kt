@@ -6,10 +6,7 @@ import com.ekdorn.classicdungeon.shared.engine.ui.BackgroundUI
 import com.ekdorn.classicdungeon.shared.engine.ui.FrameUI
 import com.ekdorn.classicdungeon.shared.engine.ui.LayoutUI
 import com.ekdorn.classicdungeon.shared.engine.ui.WidgetUI
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
-import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 
 
@@ -18,51 +15,31 @@ import kotlinx.serialization.json.*
 // TODO: deal with NO_LAYOUT
 internal object Layout {
     private object UI {
-        val UIs = mapOf(
-            "BackgroundUI" to ::BackgroundUI,
-            "ClipUI" to ::ClipUI,
-            "FrameUI" to ::FrameUI,
-            "ImageUI" to ::ImageUI,
-            "LayoutUI" to ::LayoutUI,
-            "TextUI" to ::TextUI
+        val UIs: Map<String, KSerializer<out WidgetUI>> = mapOf(
+            "BackgroundUI" to BackgroundUI.serializer(),
+            "ClipUI" to ClipUI.serializer(),
+            "FrameUI" to FrameUI.serializer(),
+            "ImageUI" to ImageUI.serializer(),
+            "LayoutUI" to LayoutUI.serializer(),
+            "TextUI" to TextUI.serializer()
         )
     }
 
     @Serializable
-    private data class WidgetHolder (private val cls: String, val id: String, private val value: @Contextual JsonObject) {
-        private val children: List<WidgetHolder>? = null
-
-        private val background: @Contextual JsonObject? = null
-
-
-        @Transient private var widget = map(value)!!
-
-        @Transient private var back = map(background)
-
-        private fun map (map: JsonObject?) = map?.mapValues {
-            if (it.value is JsonPrimitive) {
-                val atom = it.value.jsonPrimitive
-                atom.booleanOrNull ?: atom.intOrNull ?: atom.floatOrNull ?: atom.content
-            } else it.value.toString()
-        } as Map<String, Any>?
-
-
-
-        fun buildWidget (): WidgetUI = UI.UIs.getValue(cls).invoke(widget).also { w ->
-            if (w is LayoutUI) {
-                children?.forEach { w.add(it.id, it.buildWidget()) }
-                w.background = UI.UIs.getValue("FrameUI").invoke(back ?: mapOf<String, Any>()) as FrameUI?
-            }
+    data class WidgetHolder (val cls: String, val id: String, val value: JsonObject, val children: List<WidgetHolder>? = null) {
+        fun unpack(): WidgetUI {
+            val view = Json.decodeFromJsonElement(UI.UIs[cls]!!, value)
+            return if (view !is LayoutUI) view
+            else view.also { it.populate(children?.associate { child -> child.id to child.unpack() } ?: mapOf()) }
         }
     }
-
 
 
     private val layouts = mutableMapOf<String, WidgetHolder>()
 
     suspend fun load (vararg values: String) = values.forEach {
-        layouts[it] = Json.decodeFromString(ResourceLoader.loadDataString("layouts/$it.ui.json"))
+        layouts[it] = Json.decodeFromString(WidgetHolder.serializer(), ResourceLoader.loadDataString("layouts/$it.ui.json"))
     }
 
-    fun summon (layout: String) = layouts[layout]!!.buildWidget() as LayoutUI
+    fun summon (layout: String) = layouts[layout]!!.unpack() as LayoutUI
 }

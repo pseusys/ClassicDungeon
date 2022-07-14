@@ -4,8 +4,8 @@ import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
-import com.ekdorn.classicdungeon.shared.engine.utils.decodeDefault
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 /**
@@ -30,7 +30,8 @@ import kotlinx.serialization.json.Json
  * │ corner │
  * └────────┘
  */
-internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
+@Serializable
+internal class FrameUI: ResizableUI() {
     /**
      * Property stretchW - whether widget can be stretched horizontally.
      * Enables horizontal border(s) and right corner(s).
@@ -53,38 +54,16 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
             field = v
         }
 
-
-    /**
-     * Property frame - which part of image source is mapped.
-     * Measured from lower left corner.
-     * Whole image by default.
-     */
-    var frame = Json.decodeDefault(initializer["frame"], Rectangle())
+    var source = Image.DEFAULT
         set (v) {
-            dirty = true
             field = v
+            texture = Image.get(field)
         }
 
     /**
      * Inline property for setting frame in pixels.
      */
-    inline var pixelFrame: Rectangle
-        get () = frame * texture.image.metrics
-        set (v) {
-            frame = v / texture.image.metrics
-        }
-
-    /**
-     * Property texture - image source to map.
-     * Fallback image by default.
-     */
-    var texture = Image.get(initializer.getOrElse("texture") { Image.DEFAULT } as String)
-
-    /**
-     * Property border - part of image to map as border, vertical and horizontal.
-     * Both zero by default.
-     */
-    var border = Json.decodeDefault(initializer["border"], Vector())
+    var pixelFrame = Rectangle()
         set (v) {
             dirty = true
             field = v
@@ -93,19 +72,43 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
     /**
      * Inline property for setting border in pixels.
      */
-    inline var pixelBorder: Vector
-        get () = border * pixelFrame.metrics
+    var pixelBorder = Vector()
         set (v) {
-            border = v / pixelFrame.metrics
+            dirty = true
+            field = v
         }
 
 
-    init {
-        if ("pixelFrame" in initializer) pixelFrame = Json.decodeDefault(initializer["pixelFrame"], Rectangle())
-        if ("pixelBorder" in initializer) pixelBorder = Json.decodeDefault(initializer["pixelBorder"], Vector())
-        updateVertices()
-    }
+    /**
+     * Property texture - image source to map.
+     * Fallback image by default.
+     */
+    @Transient private var texture = Image.get(source)
 
+    /**
+     * Property border - part of image to map as border, vertical and horizontal.
+     * Both zero by default.
+     */
+    inline var border
+        get() = pixelBorder / pixelFrame.metrics
+        set (v) {
+            pixelBorder = v * pixelFrame.metrics
+        }
+
+
+    /**
+     * Property frame - which part of image source is mapped.
+     * Measured from lower left corner.
+     * Whole image by default.
+     */
+    inline var frame
+        get() = pixelFrame / texture.image.metrics
+        set (v) {
+            pixelFrame = v * texture.image.metrics
+        }
+
+
+    init { updateVertices() }
 
 
     override fun draw () {
@@ -115,8 +118,6 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
         Script.drawMultiple(9)
         texture.release()
     }
-
-
 
     override fun updateVertices () {
         super.updateVertices()

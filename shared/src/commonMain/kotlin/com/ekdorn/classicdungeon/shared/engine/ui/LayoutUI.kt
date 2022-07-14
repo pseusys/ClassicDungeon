@@ -1,31 +1,34 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 /**
  * LayoutUI - container for widgets.
  */
-internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
+@Serializable
+internal open class LayoutUI: ResizableUI() {
     /**
      * Children list.
      */
-    @Implicit private val children = mutableMapOf<String, WidgetUI>()
+    @Transient private val children = mutableMapOf<String, WidgetUI>()
 
     @Suppress("UNCHECKED_CAST")
-    @Implicit private val parents = children.filterValues { it is LayoutUI }.toMutableMap() as MutableMap<String, LayoutUI>
+    @Transient private val parents = children.filterValues { it is LayoutUI }.toMutableMap() as MutableMap<String, LayoutUI>
+
 
     /**
      * Property background - special FrameUI child, representing this layout background.
      * Null by default.
      */
-    @Implicit var background: FrameUI? = null
+    var background: FrameUI? = null
         set (v) {
             if (v != null) v.parent = this
             else field?.parent = null
             field = v
         }
-
 
 
     /**
@@ -68,7 +71,10 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
      */
     fun clear () = children.clear()
 
-
+    fun populate(descendants: Map<String, WidgetUI>) {
+        children.clear()
+        descendants.forEach { add(it.key, it.value) }
+    }
 
     override fun update (elapsed: Int) {
         super.update(elapsed)
@@ -82,16 +88,12 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
         children.values.forEach { if (it.visible) it.draw() }
     }
 
-
-
     override fun translate(parentCoords: Vector, parentMetrics: Vector) {
         super.translate(parentCoords, parentMetrics)
         background?.translate(coords, metrics)
         val innerBorder = if (background != null) background!!.pixelBorder * background!!.pixelation else Vector()
         children.values.forEach { if (it.visible) it.translate(coords + innerBorder, metrics - innerBorder * 2F) }
     }
-
-
 
     override fun delete() {
         super.delete()

@@ -9,8 +9,7 @@
     "cls": { "enum": [ "BackgroundUI", "ClipUI", "FrameUI", "ImageUI", "LayoutUI", "TextUI", "WidgetUI" ] },
     "id": { "type": "string" },
     "value": { "$ref": "#/$defs/widget" },
-    "children": { "type": "array", "items": { "$ref": "#" } },
-    "background": { "$ref": "#/$defs/widget" }
+    "children": { "type": "array", "items": { "$ref": "#" } }
   },
   "required": [ "cls", "id", "value" ],
   "additionalProperties": false,
@@ -25,7 +24,8 @@
             { "not": { "type": "object" } },
             { "$ref": "#/$defs/color" },
             { "$ref": "#/$defs/rectangle" },
-            { "$ref": "#/$defs/vector" }
+            { "$ref": "#/$defs/vector" },
+            { "$ref": "#/$defs/widget" }
           ]
         }
       }

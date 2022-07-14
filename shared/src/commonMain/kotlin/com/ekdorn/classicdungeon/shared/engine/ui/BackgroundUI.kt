@@ -3,34 +3,41 @@ package com.ekdorn.classicdungeon.shared.engine.ui
 import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
-import com.ekdorn.classicdungeon.shared.engine.utils.decodeDefault
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLTexture
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
-internal class BackgroundUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
-    @Implicit var scroll = Vector()
+@Serializable
+internal class BackgroundUI: ResizableUI() {
+    var scrollSpeed = Vector()
 
-    var scrollSpeed = Json.decodeDefault(initializer["scrollSpeed"], Vector())
+    var source = Image.DEFAULT
+        set (v) {
+            field = v
+            texture = Image.get(field)
+        }
+
+    var horizontalPixelate = false
+
+    var verticalPixelate = false
+
+
+    @Transient var scroll = Vector()
 
     /**
      * Property texture - image source.
      * Fallback image by default.
      */
-    var texture = Image.get(initializer.getOrElse("texture") { Image.DEFAULT } as String)
+    @Transient private var texture = Image.get(source)
         set (v) {
             field = v
             field.wrap(GLTexture.WRAPPING.REPEAT, GLTexture.WRAPPING.REPEAT)
         }
 
-    var horizontalPixelate = initializer.getOrElse("horizontalPixelate") { false } as Boolean
-
-    var verticalPixelate = initializer.getOrElse("verticalPixelate") { false } as Boolean
-
 
     init { texture.wrap(GLTexture.WRAPPING.REPEAT, GLTexture.WRAPPING.REPEAT) }
-
 
 
     override fun draw () {

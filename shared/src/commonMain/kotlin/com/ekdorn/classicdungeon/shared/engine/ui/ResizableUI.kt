@@ -1,20 +1,22 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
-import com.ekdorn.classicdungeon.shared.engine.utils.decodeDefault
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * ResizableUI - widget that can be in some way resized.
  */
-internal abstract class ResizableUI (initializer: Map<String, *>): WidgetUI(initializer) {
-    @Implicit protected open var stretchW = true
-    @Implicit protected open var stretchH = true
+@Serializable
+internal abstract class ResizableUI: WidgetUI() {
+    @Transient protected open var stretchW = true
+    @Transient protected open var stretchH = true
+
 
     /**
      * Dimens property set made public.
      */
-    final override var dimens = Json.decodeDefault(initializer["dimens"] as String?, Vector())
+    final override var dimens = Vector()
         public set
 
 

@@ -25,9 +25,12 @@ fun main () {
         Lifecycle.scope.launch {
             Lifecycle.start(surface.width, surface.height, ::resume)
         }.invokeOnCompletion {
-            if ((it == null) || (it is CancellationException)) return@invokeOnCompletion
-            else if (it is ResourceNotFoundException) window.alert("Game resources incomplete!\nTry reloading page or contact developer.\n${it.message}")
-            else window.alert("Game could not start for reason unknown!\nContact developer for further information.\n${it.message}")
+            when (it) { //TODO: beautiful exception handling (we will need that a lot)
+                null -> return@invokeOnCompletion
+                is CancellationException -> window.alert("${it.message}\n${it.cause}")
+                is ResourceNotFoundException -> window.alert("Game resources incomplete!\nTry reloading page or contact developer.\n${it.message}\n${it.cause}")
+                else -> window.alert("Game could not start for reason unknown!\nContact developer for further information.\n${it.cause}")
+            }
         }
     }
 
