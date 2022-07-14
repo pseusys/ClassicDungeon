@@ -78,13 +78,6 @@ internal class FrameUI: ResizableUI() {
             field = v
         }
 
-
-    /**
-     * Property texture - image source to map.
-     * Fallback image by default.
-     */
-    @Transient private var texture = Image.get(source)
-
     /**
      * Property border - part of image to map as border, vertical and horizontal.
      * Both zero by default.
@@ -94,7 +87,6 @@ internal class FrameUI: ResizableUI() {
         set (v) {
             pixelBorder = v * pixelFrame.metrics
         }
-
 
     /**
      * Property frame - which part of image source is mapped.
@@ -106,6 +98,13 @@ internal class FrameUI: ResizableUI() {
         set (v) {
             pixelFrame = v * texture.image.metrics
         }
+
+
+    /**
+     * Property texture - image source to map.
+     * Fallback image by default.
+     */
+    @Transient private var texture = Image.get(source)
 
 
     init { updateVertices() }
