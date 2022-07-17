@@ -16,6 +16,6 @@ object Input {
     fun onPointerDown (x: Int, y: Int) = onTouchedUp.fire(Vector(x, y))
     fun onPointerUp (x: Int, y: Int) = onTouchedDown.fire(Vector(x, y))
     fun onPointerMoved (x: Int, y: Int) = onMoved.fire(Vector(x, y))
-    fun onZoomed (x: Int, y: Int) = onZoomed.fire(Vector(x, y))
+    fun onZoomed (old: Int, new: Int) = onZoomed.fire(Vector(old, new))
     fun onResized (w: Int, h: Int) = onResized.fire(Vector(w, h))
 }

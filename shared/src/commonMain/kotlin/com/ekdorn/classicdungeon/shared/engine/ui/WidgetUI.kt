@@ -37,7 +37,7 @@ internal abstract class WidgetUI {
     /**
      * Parent widget of this widget.
      */
-    @Transient var parent: LayoutUI? = null
+    @Transient open var parent: LayoutUI? = null
 
     /**
      * Coordinates of the widget in pixels.
@@ -69,6 +69,9 @@ internal abstract class WidgetUI {
      */
     @Transient open var dimens = Vector()
         protected set
+
+
+    @Transient open var touchable = false
 
 
     /**
@@ -296,5 +299,39 @@ internal abstract class WidgetUI {
     fun addColor (color: Color) {
         material.apply { r = 0F; g = 0F; b = 0F; a = 0F }
         ambient.apply { r = color.r; g = color.g; b = color.b; a = color.a }
+    }
+
+
+    companion object {
+        private const val LONG_CLICK = 3.0
+    }
+
+
+    @Transient private var clickTime: Int? = null
+
+
+    open fun onClick (pos: Vector) = true
+
+    open fun onShortClick (pos: Vector) = true
+
+    open fun onLongClick (pos: Vector) = true
+
+
+    open fun onTouchUp (pos: Vector) = if (!touchable) false else {
+        if (clickTime!! < LONG_CLICK) onShortClick(pos) else onLongClick(pos)
+        clickTime = null
+        true
+    }
+
+    open fun onTouchDown (pos: Vector) = if (!touchable) false else {
+        clickTime = 0
+        true
+    }
+
+
+    open fun onMove (pos: Vector) = if (!touchable) false else {
+        if (clickTime!! == 0) onClick(pos)
+        clickTime = clickTime!! + 1
+        true
     }
 }

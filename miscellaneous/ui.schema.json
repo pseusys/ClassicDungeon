@@ -6,7 +6,7 @@
 
   "type": "object",
   "properties": {
-    "cls": { "enum": [ "BackgroundUI", "ClipUI", "FrameUI", "ImageUI", "LayoutUI", "TextUI", "WidgetUI" ] },
+    "cls": { "enum": [ "BackgroundUI", "ButtonUI", "ClipUI", "FrameUI", "ImageUI", "LayoutUI", "TextUI", "WidgetUI" ] },
     "id": { "type": "string" },
     "value": { "$ref": "#/$defs/widget" },
     "children": { "type": "array", "items": { "$ref": "#" } }

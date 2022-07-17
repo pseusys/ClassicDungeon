@@ -17,6 +17,7 @@ internal object Layout {
     private object UI {
         val UIs: Map<String, KSerializer<out WidgetUI>> = mapOf(
             "BackgroundUI" to BackgroundUI.serializer(),
+            "ButtonUI" to ButtonUI.serializer(),
             "ClipUI" to ClipUI.serializer(),
             "FrameUI" to FrameUI.serializer(),
             "ImageUI" to ImageUI.serializer(),

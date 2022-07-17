@@ -25,8 +25,8 @@ internal open class LayoutUI: ResizableUI() {
      */
     var background: FrameUI? = null
         set (v) {
-            if (v != null) v.parent = this
-            else field?.parent = null
+            field?.parent = null
+            v?.parent = this
             field = v
         }
 
@@ -37,6 +37,7 @@ internal open class LayoutUI: ResizableUI() {
      * @param element widget to add
      */
     open fun add (id: String, element: WidgetUI) {
+        children[id]?.parent = null
         element.parent = this
         children[id] = element
         if (element is LayoutUI) parents[id] = element
@@ -92,7 +93,12 @@ internal open class LayoutUI: ResizableUI() {
         super.translate(parentCoords, parentMetrics)
         background?.translate(coords, metrics)
         val innerBorder = if (background != null) background!!.pixelBorder * background!!.pixelation else Vector()
-        children.values.forEach { if (it.visible) it.translate(coords + innerBorder, metrics - innerBorder * 2F) }
+        translateInnerChildren(coords + innerBorder, metrics - innerBorder * 2F)
+    }
+
+    // TODO: remove when delegate serialization for ancestors is enabled.
+    open fun translateInnerChildren(parentCoords: Vector, parentMetrics: Vector) {
+        children.values.forEach { if (it.visible) it.translate(parentCoords, parentMetrics) }
     }
 
     override fun delete() {
@@ -100,4 +106,19 @@ internal open class LayoutUI: ResizableUI() {
         background?.delete()
         children.values.forEach { it.delete() }
     }
+
+
+    // TODO: enable delegate serialization in ancestors via:
+    // FIXME: https://github.com/Kotlin/kotlinx.serialization/issues/1578
+    // Use https://kotlinlang.org/docs/delegated-properties.html#providing-a-delegate for adding properties to children.
+    /*
+    operator fun <Widget: WidgetUI> getValue(thisRef: LayoutUI, property: KProperty<*>): Widget? {
+        return get(property.name)
+    }
+
+    operator fun <Widget: WidgetUI> setValue(thisRef: LayoutUI, property: KProperty<*>, value: Widget?) {
+        if (value != null) add(property.name, value)
+        else remove(property.name)
+    }
+     */
 }

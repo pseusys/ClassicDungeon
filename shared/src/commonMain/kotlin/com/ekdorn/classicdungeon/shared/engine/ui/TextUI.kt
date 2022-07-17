@@ -27,6 +27,13 @@ internal class TextUI: ResizableUI() {
     }
 
 
+    override var parent: LayoutUI? = null
+        set(v) {
+            field = v
+            dirty = true
+        }
+
+
     /**
      * Property multiline - whether text should be single- or multiline.
      * True by default.
@@ -68,7 +75,6 @@ internal class TextUI: ResizableUI() {
      * Number of letters actually drawn (with unnecessary whitespaces omitted).
      */
     @Transient private var textLength = 0
-
 
     /**
      * Property font - font to take letters from.
@@ -206,7 +212,7 @@ internal class TextUI: ResizableUI() {
 
         textLength = vertices.size
 
-        // Because this view is vertical-resizeable only, setting new metrics.
+        // Because this view is horizontally-resizeable only, setting new metrics.
         metrics.y = font.height * lines.size * pixelation
 
         // Dividing all y coords by lines number, to fit in new dimens.y.
