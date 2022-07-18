@@ -1,99 +1,78 @@
 {
-  "cls": "LayoutUI",
-  "id": "root",
-  "value": {
-    "anchor": { "x": 0.5, "y": 0.5 },
-    "dimens": { "x": 1, "y": 1 }
-  },
-  "children": [
-    {
-      "cls": "BackgroundUI",
-      "id": "darkground",
-      "value": {
+  "#type": "LayoutUI",
+  "anchor": {"x": 0.5, "y": 0.5},
+  "dimens": {"x": 1, "y": 1},
+  "children": {
+    "darkground": {
+      "#type": "BackgroundUI",
+      "verticalAlignment": "START",
+      "horizontalAlignment": "START",
+      "dimens": {"x": 1, "y": 1},
+      "source": "arcs00",
+      "scrollSpeed": {"x": 0, "y": 1}
+    },
+    "background": {
+      "#type": "BackgroundUI",
+      "verticalAlignment": "START",
+      "horizontalAlignment": "START",
+      "dimens": {"x": 1, "y": 1},
+      "source": "arcs01",
+      "scrollSpeed": {"x": 0, "y": 2}
+    },
+    "container": {
+      "#type": "LayoutUI",
+      "anchor": {"x": 0.5, "y": 0.5},
+      "dimens": {"x": 0.6, "y": 0.8},
+      "background": {
         "verticalAlignment": "START",
         "horizontalAlignment": "START",
-        "dimens": { "x": 1, "y": 1 },
-        "source": "arcs00",
-        "scrollSpeed": { "x": 0, "y": 1 }
-      }
-    },
-    {
-      "cls": "BackgroundUI",
-      "id": "background",
-      "value": {
-        "verticalAlignment": "START",
-        "horizontalAlignment": "START",
-        "dimens": { "x": 1, "y": 1 },
-        "source": "arcs01",
-        "scrollSpeed": { "x": 0, "y": 2 }
-      }
-    },
-    {
-      "cls": "LayoutUI",
-      "id": "container",
-      "value": {
-        "anchor": { "x": 0.5, "y": 0.5 },
-        "dimens": { "x": 0.6, "y": 0.8 },
-        "background": {
-          "verticalAlignment": "START",
-          "horizontalAlignment": "START",
-          "dimens": { "x": 1, "y": 1 },
-          "source": "chrome",
-          "pixelation": 8.0,
-          "pixelFrame": { "left": 1, "top": 63, "right": 21, "bottom": 43 },
-          "pixelBorder": { "x": 6, "y": 6 }
-        }
+        "dimens": {"x": 1, "y": 1},
+        "source": "chrome",
+        "pixelation": 8.0,
+        "pixelFrame": {"left": 1, "top": 63, "right": 21, "bottom": 43},
+        "pixelBorder": {"x": 6, "y": 6}
       },
-      "children": [
-        {
-          "cls": "TextUI",
-          "id": "hello",
-          "value": {
-            "anchor": { "x": 0.5, "y": 0.0 },
+      "children": {
+        "hello": {
+          "#type": "TextUI",
+          "anchor": {"x": 0.5, "y": 0.0},
+          "verticalAlignment": "START",
+          "textAlignment": "CENTER",
+          "dimens": {"x": 1, "y": 0},
+          "pixelation": 2.0,
+          "text": "Please, enjoy this fine animation:\n",
+          "material": {"value": [1.0, 1.0, 0.0, 1.0]}
+        },
+        "bee": {
+          "#type": "ClipUI",
+          "anchor": {"x": 0.5, "y": 0.5},
+          "source": "bee",
+          "pixelation": 8.0
+        },
+        "button": {
+          "#type": "ButtonUI",
+          "anchor": {"x": 0.5, "y": 0.9},
+          "dimens": {"x": 0.8, "y": 0.3},
+          "background": {
+            "verticalAlignment": "START",
+            "horizontalAlignment": "START",
+            "dimens": {"x": 1, "y": 1},
+            "source": "chrome",
+            "pixelation": 8.0,
+            "pixelFrame": {"left": 1, "top": 63, "right": 21, "bottom": 43},
+            "pixelBorder": {"x": 6, "y": 6}
+          },
+          "text": {
+            "anchor": {"x": 0.5, "y": 0.0},
             "verticalAlignment": "START",
             "textAlignment": "CENTER",
-            "dimens": { "x": 1, "y": 0 },
+            "dimens": {"x": 1, "y": 0},
             "pixelation": 2.0,
-            "text": "Please, enjoy this fine animation:\n",
-            "material": { "value": [ 1.0, 1.0, 0.0, 1.0 ] }
-          }
-        },
-        {
-          "cls": "ClipUI",
-          "id": "bee",
-          "value": {
-            "anchor": { "x": 0.5, "y": 0.5 },
-            "source": "bee",
-            "pixelation": 8.0
-          }
-        },
-        {
-          "cls": "ButtonUI",
-          "id": "button",
-          "value": {
-            "anchor": { "x": 0.5, "y": 0.9 },
-            "dimens": { "x": 0.8, "y": 0.3 },
-            "background": {
-              "verticalAlignment": "START",
-              "horizontalAlignment": "START",
-              "dimens": { "x": 1, "y": 1 },
-              "source": "chrome",
-              "pixelation": 8.0,
-              "pixelFrame": { "left": 1, "top": 63, "right": 21, "bottom": 43 },
-              "pixelBorder": { "x": 6, "y": 6 }
-            },
-            "text": {
-              "anchor": { "x": 0.5, "y": 0.0 },
-              "verticalAlignment": "START",
-              "textAlignment": "CENTER",
-              "dimens": { "x": 1, "y": 0 },
-              "pixelation": 2.0,
-              "text": "Click for nothing!\n",
-              "material": { "value": [ 1.0, 1.0, 0.0, 1.0 ] }
-            }
+            "text": "Click for nothing!\n",
+            "material": {"value": [1.0, 1.0, 0.0, 1.0]}
           }
         }
-      ]
+      }
     }
-  ]
+  }
 }

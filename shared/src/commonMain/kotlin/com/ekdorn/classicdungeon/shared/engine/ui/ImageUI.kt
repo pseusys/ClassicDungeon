@@ -4,6 +4,7 @@ import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -12,6 +13,7 @@ import kotlinx.serialization.Transient
  * ImageUI - image, that can not be resized for it pixel sizes not to be disturbed.
  */
 @Serializable
+@SerialName("ImageUI")
 internal open class ImageUI: WidgetUI() {
     var source = Image.DEFAULT
         set (v) {

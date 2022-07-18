@@ -4,6 +4,7 @@ import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -31,6 +32,7 @@ import kotlinx.serialization.Transient
  * └────────┘
  */
 @Serializable
+@SerialName("FrameUI")
 internal class FrameUI: ResizableUI() {
     /**
      * Property stretchW - whether widget can be stretched horizontally.

@@ -4,6 +4,7 @@ import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import com.ekdorn.classicdungeon.shared.gl.extensions.ImageFont
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -13,6 +14,7 @@ import kotlinx.serialization.Transient
  * May be stretched in different ways, single- or multiline.
  */
 @Serializable
+@SerialName("TextUI")
 internal class TextUI: ResizableUI() {
     /**
      * Types of internal text stretching:

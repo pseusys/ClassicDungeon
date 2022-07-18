@@ -4,22 +4,23 @@
   "title": "Schema defining user interface layouts consisting of ui widgets",
   "description": "A widget holder, widget inside of the layout (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/general/Transcender.kt)",
 
-  "type": "object",
-  "properties": {
-    "cls": { "enum": [ "BackgroundUI", "ButtonUI", "ClipUI", "FrameUI", "ImageUI", "LayoutUI", "TextUI", "WidgetUI" ] },
-    "id": { "type": "string" },
-    "value": { "$ref": "#/$defs/widget" },
-    "children": { "type": "array", "items": { "$ref": "#" } }
-  },
-  "required": [ "cls", "id", "value" ],
-  "additionalProperties": false,
+  "$ref": "#/$defs/childWidget",
 
   "$defs": {
     "widget": {
       "description": "A ui widget (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/ui/*.kt)",
       "type": "object",
       "patternProperties": {
-        "^[A-Za-z]+$": {
+        "^children$": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z]+$": {
+              "$ref": "#/$defs/childWidget"
+            }
+          },
+          "additionalProperties": false
+        },
+        "^(?!children)[A-Za-z]+$": {
           "anyOf": [
             { "not": { "type": "object" } },
             { "$ref": "#/$defs/color" },
@@ -28,7 +29,17 @@
             { "$ref": "#/$defs/widget" }
           ]
         }
-      }
+      },
+      "additionalProperties": false
+    },
+
+    "childWidget": {
+      "description": "A ui widget with explicitly given type hint",
+      "allOf": [{ "$ref": "#/$defs/widget" }],
+      "properties": {
+        "#type": {"enum": ["BackgroundUI", "ButtonUI", "ClipUI", "FrameUI", "ImageUI", "LayoutUI", "TextUI", "WidgetUI"]}
+      },
+      "required": [ "#type" ]
     },
 
     "color": {

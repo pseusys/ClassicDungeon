@@ -1,6 +1,7 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -9,11 +10,12 @@ import kotlinx.serialization.Transient
  * LayoutUI - container for widgets.
  */
 @Serializable
+@SerialName("LayoutUI")
 internal open class LayoutUI: ResizableUI() {
     /**
      * Children list.
      */
-    @Transient private val children = mutableMapOf<String, WidgetUI>()
+    private val children = mutableMapOf<String, WidgetUI>()
 
     @Suppress("UNCHECKED_CAST")
     @Transient private val parents = children.filterValues { it is LayoutUI }.toMutableMap() as MutableMap<String, LayoutUI>
@@ -29,6 +31,9 @@ internal open class LayoutUI: ResizableUI() {
             v?.parent = this
             field = v
         }
+
+
+    init { children.values.forEach { it.parent = this } }
 
 
     /**

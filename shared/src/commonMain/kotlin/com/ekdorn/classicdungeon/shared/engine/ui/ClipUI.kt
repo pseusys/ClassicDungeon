@@ -4,6 +4,7 @@ import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.gl.extensions.Atlas
 import com.ekdorn.classicdungeon.shared.engine.utils.Listener
 import com.ekdorn.classicdungeon.shared.gl.extensions.ImageTexture
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -12,6 +13,7 @@ import kotlinx.serialization.Transient
  * ClipUI - Image, changing with updates, animation.
  */
 @Serializable
+@SerialName("ClipUI")
 internal class ClipUI: ImageUI() {
     /**
      * Animation, sequence of frames to display in ClipUI.

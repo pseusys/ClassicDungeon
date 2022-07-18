@@ -1,10 +1,13 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
+
 @Serializable
+@SerialName("ButtonUI")
 internal class ButtonUI: LayoutUI() {
     override var touchable = true
 

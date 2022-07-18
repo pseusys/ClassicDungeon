@@ -6,6 +6,7 @@ import com.ekdorn.classicdungeon.shared.gl.extensions.WidgetBuffer
 import com.ekdorn.classicdungeon.shared.engine.atomic.Color
 import com.ekdorn.classicdungeon.shared.gl.primitives.Matrix
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -14,6 +15,7 @@ import kotlinx.serialization.Transient
  * WidgetUI - base widget for all.
  */
 @Serializable
+@SerialName("WidgetUI")
 internal abstract class WidgetUI {
     /**
      * Types of widgets anchor alignment:

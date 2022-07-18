@@ -5,11 +5,13 @@ import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLTexture
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 
 @Serializable
+@SerialName("BackgroundUI")
 internal class BackgroundUI: ResizableUI() {
     var scrollSpeed = Vector()
 
