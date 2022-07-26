@@ -4,6 +4,7 @@ import com.ekdorn.classicdungeon.shared.IO
 import com.ekdorn.classicdungeon.shared.engine.cache.Layout
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import com.ekdorn.classicdungeon.shared.engine.cache.Audio
+import com.ekdorn.classicdungeon.shared.engine.ui.ButtonUI
 import com.ekdorn.classicdungeon.shared.engine.ui.ClipUI
 import com.ekdorn.classicdungeon.shared.engine.ui.ImageUI
 import com.ekdorn.classicdungeon.shared.engine.ui.RootUI

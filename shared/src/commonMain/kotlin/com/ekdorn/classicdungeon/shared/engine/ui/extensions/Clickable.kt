@@ -1,10 +1,10 @@
-package com.ekdorn.classicdungeon.shared.engine.ui.implementable
+package com.ekdorn.classicdungeon.shared.engine.ui.extensions
 
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import kotlinx.serialization.Transient
 
 
-internal interface Interactive {
+internal interface Clickable {
     companion object {
         private const val LONG_CLICK = 3.0
     }

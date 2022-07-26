@@ -162,13 +162,16 @@ internal abstract class WidgetUI {
      * Method for receiving metrics of this widgets parent.
      * Property itself has protected modifier and can not be used in children.
      */
-    protected fun parentMetrics () = parent?.metrics
+    protected open val parentMetrics: Vector?
+        get() = parent?.childMetrics
 
     /**
      * Method for receiving coords of this widgets parent.
      * Property itself has protected modifier and can not be used in children.
      */
-    protected fun parentCoords () = parent?.coords
+    protected open val parentCoords: Vector?
+        get() = parent?.childCoords
+
 
     /**
      * Method for moving widget depending on its speed and acceleration.
@@ -194,7 +197,7 @@ internal abstract class WidgetUI {
         speed.x += halfDelta
 
         coords.x += delta
-        if (parent != null) anchor.x += delta / parentMetrics()!!.x
+        if (parent != null) anchor.x += delta / parentMetrics!!.x
 
         halfDelta = (move(speed.y, acceleration.y, elapsed) - speed.y) / 2
         speed.y += halfDelta
@@ -202,7 +205,7 @@ internal abstract class WidgetUI {
         speed.y += halfDelta
 
         coords.y += delta
-        if (parent != null) anchor.y += delta / parentMetrics()!!.y
+        if (parent != null) anchor.y += delta / parentMetrics!!.y
 
         angle += angleSpeed * elapsed % 360
 
@@ -236,22 +239,20 @@ internal abstract class WidgetUI {
     /**
      * Function triggered each update to define this widget coords (1) and metrics (2).
      * It is triggered first, before update() and draw().
-     * @param parentCoords coordinates of parent widget
-     * @param parentMetrics metrics of parent widget
      * @see coords coordinates of the widget in parent
      * @see metrics metrics of the widget in pixels
      * @see update update function
      * @see draw draw function
      */
-    open fun translate (parentCoords: Vector, parentMetrics: Vector) {
-        coords = parentCoords + Vector(when (horizontalAlignment) {
-            ALIGNMENT.START -> parentMetrics.x * anchor.x
-            ALIGNMENT.CENTER -> parentMetrics.x * anchor.x - metrics.x / 2
-            ALIGNMENT.END -> parentMetrics.x * anchor.x - metrics.x
+    open fun translate () {
+        coords = parentCoords!! + Vector(when (horizontalAlignment) {
+            ALIGNMENT.START -> parentMetrics!!.x * anchor.x
+            ALIGNMENT.CENTER -> parentMetrics!!.x * anchor.x - metrics.x / 2
+            ALIGNMENT.END -> parentMetrics!!.x * anchor.x - metrics.x
         }, when (verticalAlignment) {
-            ALIGNMENT.START -> parentMetrics.y * anchor.y
-            ALIGNMENT.CENTER -> parentMetrics.y * anchor.y - metrics.y / 2
-            ALIGNMENT.END -> parentMetrics.y * anchor.y - metrics.y
+            ALIGNMENT.START -> parentMetrics!!.y * anchor.y
+            ALIGNMENT.CENTER -> parentMetrics!!.y * anchor.y - metrics.y / 2
+            ALIGNMENT.END -> parentMetrics!!.y * anchor.y - metrics.y
         })
     }
 
@@ -276,4 +277,31 @@ internal abstract class WidgetUI {
      * Method for clearing this widget and deleting its buffer.
      */
     open fun delete () = buffer.delete()
+
+
+
+    /**
+     * Inline property alpha - transparency of that widgets texture.
+     * Zero by default.
+     */
+    internal inline var alpha: Float
+        get () = material.a + ambient.a
+        set (v) {
+            material.a = v
+            ambient.a = 0F
+        }
+
+
+    private fun setColor(clear: Color, apply: Color, new: Color) {
+        clear.apply { r = 0F; g = 0F; b = 0F; a = 0F }
+        apply.apply { r = new.r; g = new.g; b = new.b; a = new.a }
+    }
+
+    internal fun resetColor() = setColor(ambient, material, Color(0xFFFFFFFFU))
+
+    internal fun multiplyColor(color: Color) = setColor(ambient, material, color)
+
+    internal fun addColor(color: Color) = setColor(material, ambient, color)
+
+    internal fun setBrightness(v: Float) = material.apply { r = v; g = v; b = v; a = v }
 }

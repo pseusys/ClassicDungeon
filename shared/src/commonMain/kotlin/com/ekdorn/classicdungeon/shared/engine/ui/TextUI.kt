@@ -119,13 +119,12 @@ internal class TextUI: ResizableUI() {
         font.texture.release()
     }
 
-    override fun translate (parentCoords: Vector, parentMetrics: Vector) {
-        dimens.y = metrics.y / parentMetrics.y
-        super.translate(parentCoords, parentMetrics)
+    override fun translate () {
+        dimens.y = metrics.y / parentMetrics!!.y
+        super.translate()
     }
 
     override fun updateVertices () {
-        super.updateVertices()
         if (parent == null) return
 
         val vertices = mutableListOf<Rectangle>()
@@ -133,6 +132,7 @@ internal class TextUI: ResizableUI() {
 
         text = text.replace("\t", "    ")
         if (!multiline) text = text.replace('\n', ' ')
+        super.updateVertices()
 
         // Lines except empty.
         val lines = text.split('\n').filter { it.isNotEmpty() }.toMutableList()
@@ -218,7 +218,8 @@ internal class TextUI: ResizableUI() {
 
         // Dividing all y coords by lines number, to fit in new dimens.y.
         vertices.forEach { it.vertical /= lines.size.toFloat() }
-        dimens = Vector(if (dimens.x == 0F) maxPast else dimens.x, metrics.y / parentMetrics()!!.y)
+        dimens = Vector(if (dimens.x == 0F) maxPast else dimens.x, 0F)
+        parent!!.requestTranslate(this)
 
         buffer.fill(vertices, textures)
     }

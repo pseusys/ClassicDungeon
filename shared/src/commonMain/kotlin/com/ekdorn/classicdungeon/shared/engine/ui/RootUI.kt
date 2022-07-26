@@ -13,6 +13,8 @@ import com.ekdorn.classicdungeon.shared.engine.utils.MoveEvent
  * Has some extra functions compared to LayoutUI, for example, clears screen on update.
  */
 internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI() {
+    private var misplaced = true
+
     init {
         coords = Vector(0F, 0F)
         metrics = Vector(screenWidth, screenHeight)
@@ -32,6 +34,11 @@ internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI() {
         move
     } else super.bubble(event)
 
+    override fun add(id: String, element: WidgetUI) {
+        super.add(id, element)
+        misplaced = true
+    }
+
     /**
      * Single method to update and draw whole widgets tree.
      * Clears screen before update.
@@ -39,7 +46,7 @@ internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI() {
      */
     fun enter (elapsed: Int) {
         GLFunctions.clear()
-        translate(coords, metrics)
+        if (misplaced) translate()
         update(elapsed)
         draw()
     }
@@ -49,5 +56,11 @@ internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI() {
      */
     fun resize (screenWidth: Int, screenHeight: Int) {
         metrics = Vector(screenWidth, screenHeight)
+        misplaced = true
+    }
+
+    override fun translate() {
+        misplaced = false
+        children.values.forEach { if (it.visible) it.translate() }
     }
 }

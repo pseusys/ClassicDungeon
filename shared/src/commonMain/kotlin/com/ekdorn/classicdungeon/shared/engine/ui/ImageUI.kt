@@ -58,7 +58,7 @@ internal open class ImageUI: WidgetUI() {
      * Part of parent widget this widget takes.
      */
     @Transient override var dimens = super.dimens
-        get () = if (parent != null) metrics / parentMetrics()!! else field
+        get () = if (parent != null) metrics / parentMetrics!! else field
 
     /**
      * Property texture - image source.
@@ -83,9 +83,9 @@ internal open class ImageUI: WidgetUI() {
     }
 
 
-    override fun translate(parentCoords: Vector, parentMetrics: Vector) {
+    override fun translate() {
         metrics = texture.image.metrics * frame.metrics * pixelation
-        super.translate(parentCoords, parentMetrics)
+        super.translate()
     }
 
     final override fun updateVertices () {

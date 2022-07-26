@@ -1,14 +1,15 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
-import com.ekdorn.classicdungeon.shared.engine.ui.implementable.Interactive
-import com.ekdorn.classicdungeon.shared.engine.ui.implementable.Movable
-import com.ekdorn.classicdungeon.shared.engine.ui.implementable.Zoomable
+import com.ekdorn.classicdungeon.shared.engine.ui.extensions.Clickable
+import com.ekdorn.classicdungeon.shared.engine.ui.extensions.Movable
+import com.ekdorn.classicdungeon.shared.engine.ui.extensions.Zoomable
 import com.ekdorn.classicdungeon.shared.engine.utils.*
 import com.ekdorn.classicdungeon.shared.engine.utils.Event
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlin.reflect.KClass
 
 
 /**
@@ -20,7 +21,16 @@ internal open class LayoutUI: ResizableUI() {
     /**
      * Children list.
      */
-    private val children = mutableMapOf<String, WidgetUI>()
+    protected val children = mutableMapOf<String, WidgetUI>()
+
+    protected open fun specialChildren(): Map<String, KClass<out WidgetUI>> = mapOf()
+
+
+    inline val childCoords: Vector
+        get() = coords + innerBorder
+
+    inline val childMetrics: Vector
+        get() = metrics - innerBorder * 2F
 
     /**
      * Property background - special FrameUI child, representing this layout background.
@@ -34,13 +44,15 @@ internal open class LayoutUI: ResizableUI() {
         }
 
 
+    @Transient private var innerBorder = Vector()
+
     @Suppress("UNCHECKED_CAST")
     @Transient private val parents = children.filterValues { it is LayoutUI }.toMutableMap() as MutableMap<String, LayoutUI>
 
 
     init {
         background?.parent = this
-        children.values.forEach { it.parent = this }
+        children.forEach { it.value.parent = this }
     }
 
 
@@ -50,6 +62,10 @@ internal open class LayoutUI: ResizableUI() {
      * @param element widget to add
      */
     open fun add (id: String, element: WidgetUI) {
+        val special = specialChildren()
+        assert(special[id]?.isInstance(element) ?: true) {
+            "Child '$id' of '${this::class.simpleName}' should be ${special[id]!!.simpleName}, not ${element::class.simpleName}!"
+        }
         children[id]?.parent = null
         element.parent = this
         children[id] = element
@@ -102,17 +118,15 @@ internal open class LayoutUI: ResizableUI() {
         children.values.forEach { if (it.visible) it.draw() }
     }
 
-    override fun translate(parentCoords: Vector, parentMetrics: Vector) {
-        super.translate(parentCoords, parentMetrics)
-        background?.translate(coords, metrics)
-        val innerBorder = if (background != null) background!!.pixelBorder * background!!.pixelation else Vector()
-        translateInnerChildren(coords + innerBorder, metrics - innerBorder * 2F)
+    override fun translate() {
+        super.translate()
+        innerBorder = Vector()
+        background?.translate()
+        innerBorder = if (background != null) background!!.pixelBorder * background!!.pixelation else Vector()
+        children.values.forEach { if (it.visible) it.translate() }
     }
 
-    // TODO: remove when delegate serialization for ancestors is enabled.
-    open fun translateInnerChildren(parentCoords: Vector, parentMetrics: Vector) {
-        children.values.forEach { if (it.visible) it.translate(parentCoords, parentMetrics) }
-    }
+    fun requestTranslate(widget: WidgetUI) = widget.translate()
 
     override fun delete() {
         super.delete()
@@ -125,7 +139,7 @@ internal open class LayoutUI: ResizableUI() {
         val widget = it.value
         val direct = when (event) {
             is ClickEvent -> {
-                if (widget is Interactive && widget.rect.includes(event.position)) {
+                if (widget is Clickable && widget.rect.includes(event.position)) {
                     if (if (event.type == ClickEvent.ClickType.DOWN) widget.onTouchDown(event.position) else widget.onTouchUp(event.position)) true else null
                 } else null
             }

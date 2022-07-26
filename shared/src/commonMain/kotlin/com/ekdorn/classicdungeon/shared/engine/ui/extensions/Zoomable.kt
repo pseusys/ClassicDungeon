@@ -1,4 +1,4 @@
-package com.ekdorn.classicdungeon.shared.engine.ui.implementable
+package com.ekdorn.classicdungeon.shared.engine.ui.extensions
 
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import kotlinx.serialization.Transient

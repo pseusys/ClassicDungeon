@@ -23,10 +23,10 @@ internal abstract class ResizableUI: WidgetUI() {
     /**
      * Translate method triggered each time dimens AND / OR parentMetrics changed.
      */
-    override fun translate (parentCoords: Vector, parentMetrics: Vector) {
-        val newMetrics = parentMetrics * dimens
+    override fun translate() {
+        val newMetrics = parentMetrics!! * dimens
         dirty = dirty || (stretchW && (newMetrics.x != metrics.x)) || (stretchH && (newMetrics.y != metrics.y))
         metrics = newMetrics
-        super.translate(parentCoords, parentMetrics)
+        super.translate()
     }
 }
