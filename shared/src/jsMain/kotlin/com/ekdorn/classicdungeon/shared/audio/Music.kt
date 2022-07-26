@@ -5,8 +5,8 @@ import org.w3c.dom.Audio
 
 
 actual class Music actual constructor (private val tracks: Map<String, String>) {
+    // FIXME: create new audio for each new track
     private var player = Audio().apply {
-        autoplay = true
         preload = "auto"
         onended = { finished?.invoke() }
     }
@@ -21,8 +21,8 @@ actual class Music actual constructor (private val tracks: Map<String, String>) 
                 src = tracks[track]!!
                 load()
                 loop = looped
-            }
-            play()
+                oncanplaythrough = { play() }
+            } else play()
         }
         current = track
     }

@@ -1,12 +1,13 @@
 package com.ekdorn.classicdungeon.shared
 
+import com.ekdorn.classicdungeon.shared.engine.cache.Audio
 import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.engine.cache.Layout
 import com.ekdorn.classicdungeon.shared.engine.general.Assigned
 import com.ekdorn.classicdungeon.shared.engine.general.Game
 import com.ekdorn.classicdungeon.shared.engine.general.ResourceLists
 import com.ekdorn.classicdungeon.shared.engine.general.ResourceNotFoundException
-import com.ekdorn.classicdungeon.shared.engine.utils.Event
+import com.ekdorn.classicdungeon.shared.engine.utils.EventStack
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,8 +15,8 @@ import kotlinx.coroutines.withContext
 
 
 object Lifecycle {
-    internal val onResume = Event<Unit>()
-    internal val onPause = Event<Unit>()
+    internal val onResume = EventStack<Unit>()
+    internal val onPause = EventStack<Unit>()
 
     val scope = CoroutineScope(Dispatchers.Default)
 
@@ -27,14 +28,11 @@ object Lifecycle {
      * @throws ResourceNotFoundException if any resources are not loaded.
      */
     suspend fun start (width: Int, height: Int, updateStarter: () -> Unit) {
-        Input.onResized.add {
-            GLFunctions.portal(it.w, it.h)
-            false
-        }
+        IO.resizeEvents.add { GLFunctions.portal(it.w, it.h) }
 
         GLFunctions.setup()
         Assigned.assigned.forEach { it.gameStarted() }
-        Input.onResized(width, height)
+        IO.onResized(width, height)
 
         Image.init(ResourceLists.splash_textures)
         Game.start(width, height)
@@ -42,6 +40,7 @@ object Lifecycle {
 
         // TODO: refactor splash screen, replace with loading progress bar that will switch to play button
         withContext(scope.coroutineContext) {
+            Audio.loadEffect("snd_click")
             Image.load("font", "chrome", "arcs00", "arcs01")
             Image.loadAtlas("bee", List(16) { it }, 16)
             Layout.load("main_menu")

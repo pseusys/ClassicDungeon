@@ -25,7 +25,7 @@ internal abstract class ResizableUI: WidgetUI() {
      */
     override fun translate (parentCoords: Vector, parentMetrics: Vector) {
         val newMetrics = parentMetrics * dimens
-        dirty = (stretchW && (newMetrics.x != metrics.x)) || (stretchH && (newMetrics.y != metrics.y))
+        dirty = dirty || (stretchW && (newMetrics.x != metrics.x)) || (stretchH && (newMetrics.y != metrics.y))
         metrics = newMetrics
         super.translate(parentCoords, parentMetrics)
     }

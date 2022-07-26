@@ -33,7 +33,7 @@ internal actual object ResourceLoader {
 
     actual suspend fun loadDataString (name: String) = window.fetch("./$name").await().text().await()
 
-    actual suspend fun loadSound (name: String): Any = Promise<Audio> { resolve, reject ->
+    actual suspend fun loadSound (name: String): Any = Promise { resolve, reject ->
         val path = "./$name"
         Audio(path).apply {
             onerror = { _, _, _, _, _ -> reject(ResourceNotFoundException(path)) }

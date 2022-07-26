@@ -98,5 +98,7 @@ internal data class Rectangle (var left: Float, var top: Float, var right: Float
      */
     fun toPointsArray () = floatArrayOf(left, top, right, top, right, bottom, left, bottom)
 
+    fun includes (point: Vector) = (point.x >= left) && (point.y >= top) && (point.x <= right) && (point.y <= bottom)
+
     override fun toString() =  "Rectangle: (left: $left; top: $top; right: $right; bottom: $bottom)"
 }

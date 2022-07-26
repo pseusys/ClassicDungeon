@@ -4,6 +4,7 @@ import com.ekdorn.classicdungeon.shared.gl.extensions.Camera
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.gl.extensions.WidgetBuffer
 import com.ekdorn.classicdungeon.shared.engine.atomic.Color
+import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.gl.primitives.Matrix
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import kotlinx.serialization.SerialName
@@ -71,9 +72,6 @@ internal abstract class WidgetUI {
      */
     @Transient open var dimens = Vector()
         protected set
-
-
-    @Transient open var touchable = false
 
 
     /**
@@ -156,16 +154,8 @@ internal abstract class WidgetUI {
         }
      */
 
-    /**
-     * Inline property alpha - transparency of that widgets texture.
-     * Zero by default.
-     */
-    inline var alpha: Float
-        get () = material.a + ambient.a
-        set (v) {
-            material.a = v
-            ambient.a = 0F
-        }
+    inline val rect: Rectangle
+        get() = Rectangle(coords.x, coords.y, coords.x + metrics.x, coords.y + metrics.y)
 
 
     /**
@@ -286,54 +276,4 @@ internal abstract class WidgetUI {
      * Method for clearing this widget and deleting its buffer.
      */
     open fun delete () = buffer.delete()
-
-    // TODO: revise
-    fun resetColor () {
-        material.apply { r = 1F; g = 1F; b = 1F; a = 1F }
-        ambient.apply { r = 0F; g = 0F; b = 0F; a = 0F }
-    }
-
-    fun multiplyColor (color: Color) {
-        ambient.apply { r = 0F; g = 0F; b = 0F; a = 0F }
-        material.apply { r = color.r; g = color.g; b = color.b; a = color.a }
-    }
-
-    fun addColor (color: Color) {
-        material.apply { r = 0F; g = 0F; b = 0F; a = 0F }
-        ambient.apply { r = color.r; g = color.g; b = color.b; a = color.a }
-    }
-
-
-    companion object {
-        private const val LONG_CLICK = 3.0
-    }
-
-
-    @Transient private var clickTime: Int? = null
-
-
-    open fun onClick (pos: Vector) = true
-
-    open fun onShortClick (pos: Vector) = true
-
-    open fun onLongClick (pos: Vector) = true
-
-
-    open fun onTouchUp (pos: Vector) = if (!touchable) false else {
-        if (clickTime!! < LONG_CLICK) onShortClick(pos) else onLongClick(pos)
-        clickTime = null
-        true
-    }
-
-    open fun onTouchDown (pos: Vector) = if (!touchable) false else {
-        clickTime = 0
-        true
-    }
-
-
-    open fun onMove (pos: Vector) = if (!touchable) false else {
-        if (clickTime!! == 0) onClick(pos)
-        clickTime = clickTime!! + 1
-        true
-    }
 }

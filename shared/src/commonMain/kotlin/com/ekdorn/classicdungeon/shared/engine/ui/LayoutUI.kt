@@ -1,6 +1,11 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import com.ekdorn.classicdungeon.shared.engine.ui.implementable.Interactive
+import com.ekdorn.classicdungeon.shared.engine.ui.implementable.Movable
+import com.ekdorn.classicdungeon.shared.engine.ui.implementable.Zoomable
+import com.ekdorn.classicdungeon.shared.engine.utils.*
+import com.ekdorn.classicdungeon.shared.engine.utils.Event
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -17,10 +22,6 @@ internal open class LayoutUI: ResizableUI() {
      */
     private val children = mutableMapOf<String, WidgetUI>()
 
-    @Suppress("UNCHECKED_CAST")
-    @Transient private val parents = children.filterValues { it is LayoutUI }.toMutableMap() as MutableMap<String, LayoutUI>
-
-
     /**
      * Property background - special FrameUI child, representing this layout background.
      * Null by default.
@@ -33,7 +34,14 @@ internal open class LayoutUI: ResizableUI() {
         }
 
 
-    init { children.values.forEach { it.parent = this } }
+    @Suppress("UNCHECKED_CAST")
+    @Transient private val parents = children.filterValues { it is LayoutUI }.toMutableMap() as MutableMap<String, LayoutUI>
+
+
+    init {
+        background?.parent = this
+        children.values.forEach { it.parent = this }
+    }
 
 
     /**
@@ -111,6 +119,22 @@ internal open class LayoutUI: ResizableUI() {
         background?.delete()
         children.values.forEach { it.delete() }
     }
+
+
+    open fun bubble(event: Event): Boolean = children.firstNotNullOfOrNull {
+        val widget = it.value
+        val direct = when (event) {
+            is ClickEvent -> {
+                if (widget is Interactive && widget.rect.includes(event.position)) {
+                    if (if (event.type == ClickEvent.ClickType.DOWN) widget.onTouchDown(event.position) else widget.onTouchUp(event.position)) true else null
+                } else null
+            }
+            is MoveEvent -> if (widget is Movable && widget.rect.includes(event.start) && widget.rect.includes(event.end) && widget.onMove(event.start, event.end)) true else null
+            is ZoomEvent -> if (widget is Zoomable && widget.rect.includes(event.position) && widget.onZoom(event.position, event.level)) true else null
+            else -> null
+        }
+        if (direct == null && widget is LayoutUI) widget.bubble(event) else direct
+    } ?: false
 
 
     // TODO: enable delegate serialization in ancestors via:

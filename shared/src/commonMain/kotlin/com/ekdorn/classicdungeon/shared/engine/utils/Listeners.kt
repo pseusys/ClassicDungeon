@@ -16,4 +16,9 @@ internal typealias TRListener <Target, Result> = (Target) -> Result
 /**
  * Target Cancellable listener - has Target as argument and returns boolean for cancelling possibility.
  */
+internal typealias TListener <Target> = TRListener<Target, Unit>
+
+/**
+ * Target Cancellable listener - has Target as argument and returns boolean for cancelling possibility.
+ */
 internal typealias TCListener <Target> = TRListener<Target, Boolean>

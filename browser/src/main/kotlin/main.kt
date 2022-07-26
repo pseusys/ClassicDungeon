@@ -1,4 +1,4 @@
-import com.ekdorn.classicdungeon.shared.Input
+import com.ekdorn.classicdungeon.shared.IO
 import com.ekdorn.classicdungeon.shared.Lifecycle
 import com.ekdorn.classicdungeon.shared.engine.general.ResourceNotFoundException
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions.context
@@ -9,11 +9,14 @@ import kotlinx.coroutines.launch
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.get
+import kotlin.math.sign
 
 
 val surface = document.getElementById("surface") as HTMLCanvasElement
 
 var timer = 0
+
+var click: Pair<Int, Int>? = null
 
 
 fun main () {
@@ -29,7 +32,7 @@ fun main () {
                 null -> return@invokeOnCompletion
                 is CancellationException -> window.alert("${it.message}\n${it.cause}")
                 is ResourceNotFoundException -> window.alert("Game resources incomplete!\nTry reloading page or contact developer.\n${it.message}\n${it.cause}")
-                else -> window.alert("Game could not start for reason unknown!\nContact developer for further information.\n${it.cause}")
+                else -> window.alert("Game could not start for reason unknown!\nContact developer for further information.\n${it.message}\n${it.cause}")
             }
         }
     }
@@ -37,12 +40,33 @@ fun main () {
     window.onresize = {
         surface.width = window.innerWidth
         surface.height = window.innerHeight
-        Input.onResized(surface.width, surface.height)
+        IO.onResized(surface.width, surface.height)
     }
 
     window.onunload = {
         pause()
         Lifecycle.end()
+    }
+
+    window.onmousedown = {
+        click = Pair(it.x.toInt(), it.y.toInt())
+        IO.onPointerDown(it.x.toInt(), it.y.toInt())
+    }
+
+    window.onmouseup = {
+        click = null
+        IO.onPointerUp(it.x.toInt(), it.y.toInt())
+    }
+
+    window.onmousemove = {
+        if (click != null) {
+            IO.onPointerMoved(click!!.first, click!!.second, it.x.toInt(), it.y.toInt())
+            click = Pair(it.x.toInt(), it.y.toInt())
+        }
+    }
+
+    window.onwheel = {
+        IO.onZoomed(it.x.toInt(), it.y.toInt(), it.deltaY.sign.toInt())
     }
 
     document.addEventListener("visibilitychange", {

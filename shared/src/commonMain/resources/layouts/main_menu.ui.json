@@ -51,24 +51,24 @@
         },
         "button": {
           "#type": "ButtonUI",
-          "anchor": {"x": 0.5, "y": 0.9},
-          "dimens": {"x": 0.8, "y": 0.3},
+          "anchor": {"x": 0.5, "y": 0.85},
+          "dimens": {"x": 0.5, "y": 0.2},
           "background": {
             "verticalAlignment": "START",
             "horizontalAlignment": "START",
             "dimens": {"x": 1, "y": 1},
             "source": "chrome",
             "pixelation": 8.0,
-            "pixelFrame": {"left": 1, "top": 63, "right": 21, "bottom": 43},
-            "pixelBorder": {"x": 6, "y": 6}
+            "pixelFrame": {"left": 58, "top": 64, "right": 64, "bottom": 58},
+            "pixelBorder": {"x": 2, "y": 2}
           },
           "text": {
-            "anchor": {"x": 0.5, "y": 0.0},
-            "verticalAlignment": "START",
+            "anchor": {"x": 0.5, "y": 0.5},
+            "verticalAlignment": "CENTER",
             "textAlignment": "CENTER",
             "dimens": {"x": 1, "y": 0},
             "pixelation": 2.0,
-            "text": "Click for nothing!\n",
+            "text": "Click for music to start!",
             "material": {"value": [1.0, 1.0, 0.0, 1.0]}
           }
         }

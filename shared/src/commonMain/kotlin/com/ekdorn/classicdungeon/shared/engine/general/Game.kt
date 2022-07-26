@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.general
 
-import com.ekdorn.classicdungeon.shared.Input
+import com.ekdorn.classicdungeon.shared.IO
 import com.ekdorn.classicdungeon.shared.engine.cache.Layout
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import com.ekdorn.classicdungeon.shared.engine.cache.Audio
@@ -31,18 +31,13 @@ internal object Game {
         root = RootUI(width, height)
         root.add(splash, ImageUI().apply { anchor = Vector(0.5F, 0.5F); pixelation = 8F })
 
-        Input.onResized.add {
-            root.resize(it.w, it.h)
-            false
-        }
+        IO.resizeEvents.add { root.resize(it.w, it.h) }
     }
 
     fun launch () {
         println("Game launched!")
         root.get<ImageUI>(splash)!!.delete()
         root.remove(splash)
-
-        Audio.playBackground("theme", true)
 
         root.add("menu", Layout.summon("main_menu"))
         root.get<ClipUI>("bee")?.play(20, true, 7, 8, 9, 10)

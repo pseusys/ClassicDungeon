@@ -29,13 +29,6 @@ internal class TextUI: ResizableUI() {
     }
 
 
-    override var parent: LayoutUI? = null
-        set(v) {
-            field = v
-            dirty = true
-        }
-
-
     /**
      * Property multiline - whether text should be single- or multiline.
      * True by default.
@@ -72,6 +65,12 @@ internal class TextUI: ResizableUI() {
             font = ImageFont.valueOf(field)
         }
 
+
+    @Transient override var parent: LayoutUI? = null
+        set(v) {
+            field = v
+            dirty = true
+        }
 
     /**
      * Number of letters actually drawn (with unnecessary whitespaces omitted).

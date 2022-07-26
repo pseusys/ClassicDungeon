@@ -1,7 +1,11 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
+import com.ekdorn.classicdungeon.shared.IO
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import com.ekdorn.classicdungeon.shared.engine.utils.ClickEvent
+import com.ekdorn.classicdungeon.shared.engine.utils.Event
+import com.ekdorn.classicdungeon.shared.engine.utils.MoveEvent
 
 
 /**
@@ -15,9 +19,18 @@ internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI() {
         dimens = Vector(1F, 1F)
         verticalAlignment = ALIGNMENT.START
         horizontalAlignment = ALIGNMENT.START
+
+        IO.interactiveEvents.add(::bubble)
     }
 
 
+    override fun bubble(event: Event) = if (event is MoveEvent) {
+        var move = super.bubble(event)
+        val endTouch = ClickEvent(ClickEvent.ClickType.UP, event.end)
+        val startTouch = ClickEvent(ClickEvent.ClickType.DOWN, event.start)
+        if (!move) move = super.bubble(endTouch) || super.bubble(startTouch)
+        move
+    } else super.bubble(event)
 
     /**
      * Single method to update and draw whole widgets tree.

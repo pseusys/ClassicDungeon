@@ -10,6 +10,9 @@ internal object Audio: Assigned {
     const val DEFAULT = "noson"
 
     private val background = Music(listOf("theme").distinct().associateWith { "./sounds/$it.mp3" })
+    var backgroundPlaying = false
+        private set
+
     private val effect = Sounds()
 
 
@@ -21,9 +24,18 @@ internal object Audio: Assigned {
     fun playEffect (track: String) = effect.play(track)
 
 
-    fun playBackground (track: String, looped: Boolean) = background.play(track, looped)
+    fun playBackground (track: String, looped: Boolean) {
+        backgroundPlaying = true
+        background.play(track, looped)
+    }
+
+    fun stopBackground() {
+        background.stop()
+        backgroundPlaying = false
+    }
 
     fun playBackgroundLoop (from: Set<String>) {
+        backgroundPlaying = true
         val repeat = {
             var new: String
             do { new = from.random() }

@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared.gl.extensions
 
-import com.ekdorn.classicdungeon.shared.Input
+import com.ekdorn.classicdungeon.shared.IO
 import com.ekdorn.classicdungeon.shared.engine.general.Assigned
 import com.ekdorn.classicdungeon.shared.gl.primitives.Matrix
 
@@ -29,8 +29,5 @@ internal object Camera: Assigned {
     /**
      * Function, called once the game started, includes camera calibration.
      */
-    override fun gameStarted () = Input.onResized.add {
-        calibrate(it.w, it.h)
-        false
-    }
+    override fun gameStarted () = IO.resizeEvents.add { calibrate(it.w, it.h) }
 }
