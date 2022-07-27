@@ -50,10 +50,7 @@ internal open class LayoutUI: ResizableUI() {
     @Transient private val parents = children.filterValues { it is LayoutUI }.toMutableMap() as MutableMap<String, LayoutUI>
 
 
-    init {
-        background?.parent = this
-        children.forEach { it.value.parent = this }
-    }
+    init { background?.parent = this }
 
 
     /**
@@ -149,19 +146,4 @@ internal open class LayoutUI: ResizableUI() {
         }
         if (direct == null && widget is LayoutUI) widget.bubble(event) else direct
     } ?: false
-
-
-    // TODO: enable delegate serialization in ancestors via:
-    // FIXME: https://github.com/Kotlin/kotlinx.serialization/issues/1578
-    // Use https://kotlinlang.org/docs/delegated-properties.html#providing-a-delegate for adding properties to children.
-    /*
-    operator fun <Widget: WidgetUI> getValue(thisRef: LayoutUI, property: KProperty<*>): Widget? {
-        return get(property.name)
-    }
-
-    operator fun <Widget: WidgetUI> setValue(thisRef: LayoutUI, property: KProperty<*>, value: Widget?) {
-        if (value != null) add(property.name, value)
-        else remove(property.name)
-    }
-     */
 }

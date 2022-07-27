@@ -1,0 +1,12 @@
+{
+  "#type": "LayoutUI",
+  "background": {
+    "verticalAlignment": "START",
+    "horizontalAlignment": "START",
+    "dimens": {"x": 1, "y": 1},
+    "source": "chrome",
+    "pixelation": 8.0,
+    "pixelFrame": {"left": 1, "top": 63, "right": 21, "bottom": 43},
+    "pixelBorder": {"x": 6, "y": 6}
+  }
+}

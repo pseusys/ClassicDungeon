@@ -20,28 +20,15 @@
       "scrollSpeed": {"x": 0, "y": 2}
     },
     "container": {
-      "#type": "LayoutUI",
+      "#include": "wdg_window",
       "anchor": {"x": 0.5, "y": 0.5},
       "dimens": {"x": 0.6, "y": 0.8},
-      "background": {
-        "verticalAlignment": "START",
-        "horizontalAlignment": "START",
-        "dimens": {"x": 1, "y": 1},
-        "source": "chrome",
-        "pixelation": 8.0,
-        "pixelFrame": {"left": 1, "top": 63, "right": 21, "bottom": 43},
-        "pixelBorder": {"x": 6, "y": 6}
-      },
       "children": {
         "hello": {
-          "#type": "TextUI",
+          "#include": "wdg_heading",
           "anchor": {"x": 0.5, "y": 0.0},
-          "verticalAlignment": "START",
-          "textAlignment": "CENTER",
           "dimens": {"x": 1, "y": 0},
-          "pixelation": 2.0,
-          "text": "Please, enjoy this fine animation:\n",
-          "material": {"value": [1.0, 1.0, 0.0, 1.0]}
+          "text": "Please, enjoy this fine animation:\n"
         },
         "bee": {
           "#type": "ClipUI",
@@ -50,28 +37,12 @@
           "pixelation": 8.0
         },
         "button": {
-          "#type": "ButtonUI",
+          "#include": "wdg_red_button",
           "anchor": {"x": 0.5, "y": 0.85},
           "dimens": {"x": 0.5, "y": 0.2},
-          "background": {
-            "verticalAlignment": "START",
-            "horizontalAlignment": "START",
-            "dimens": {"x": 1, "y": 1},
-            "source": "chrome",
-            "pixelation": 8.0,
-            "pixelFrame": {"left": 58, "top": 64, "right": 64, "bottom": 58},
-            "pixelBorder": {"x": 2, "y": 2}
-          },
           "children": {
             "text": {
-              "anchor": {"x": 0.5, "y": 0.5},
-              "verticalAlignment": "CENTER",
-              "textAlignment": "CENTER",
-              "dimens": {"x": 1, "y": 0},
-              "pixelation": 2.0,
-              "text": "Click for music to start!",
-              "material": {"value": [1.0, 1.0, 0.0, 1.0]},
-              "#type": "TextUI"
+              "text": "Click for music to start!"
             }
           }
         }
