@@ -11,6 +11,10 @@ import kotlinx.serialization.modules.*
 // Layout file management
 // UI pixelization in camera depending on screen ratio
 internal object Layout {
+    private const val classField = "#type"
+    private const val overrideField = "#include"
+
+
     private val module = SerializersModule { polymorphic(WidgetUI::class) {
         subclass(BackgroundUI::class)
         subclass(ButtonUI::class)
@@ -23,7 +27,7 @@ internal object Layout {
 
     private val format = Json {
         serializersModule = module
-        classDiscriminator = "#type"
+        classDiscriminator = classField
     }
 
 
@@ -38,9 +42,9 @@ internal object Layout {
     }
 
     private suspend fun compile(layout: JsonObject, override: JsonObject = JsonObject(mapOf())): JsonObject {
-        if ("#include" in layout) {
-            val overridden = compile(JsonObject(layout - "#include"), override)
-            return compile(pull(layout["#include"]!!.jsonPrimitive.content), overridden)
+        if (overrideField in layout) {
+            val overridden = compile(JsonObject(layout - overrideField), override)
+            return compile(pull(layout[overrideField]!!.jsonPrimitive.content), overridden)
         } else {
             val childfree = layout + override - "children"
             if ("children" !in layout && "children" !in override) return JsonObject(childfree)
