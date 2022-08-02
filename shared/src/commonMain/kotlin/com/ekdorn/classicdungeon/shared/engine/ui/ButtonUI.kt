@@ -5,11 +5,16 @@ import com.ekdorn.classicdungeon.shared.engine.cache.Audio
 import com.ekdorn.classicdungeon.shared.engine.ui.extensions.Clickable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 @Serializable
 @SerialName("ButtonUI")
 internal class ButtonUI: LayoutUI(), Clickable {
+    @Transient override var primaryClicked = false
+    @Transient override var secondaryClicked = false
+
+
     override fun specialChildren() = mapOf("image" to ImageUI::class, "text" to TextUI::class)
 
     inline var image: ImageUI?
