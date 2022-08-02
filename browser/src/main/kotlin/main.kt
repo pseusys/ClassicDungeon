@@ -12,14 +12,15 @@ import org.w3c.dom.get
 import kotlin.math.sign
 
 
-val surface = document.getElementById("surface") as HTMLCanvasElement
-
-var timer = 0
-
-var click: Pair<Int, Int>? = null
-
+var elapsed = 0
 
 fun main () {
+    // WebGL main game widget
+    val surface = document.getElementById("surface") as HTMLCanvasElement
+
+    // Click data, for use with mousemove: x, y and button number
+    var click: Triple<Int, Int, Int>? = null
+
     window.onload = {
         context = surface.getContext("webgl") as WebGLRenderingContext
         surface.width = window.innerWidth
@@ -49,28 +50,36 @@ fun main () {
     }
 
     window.onmousedown = {
-        click = Pair(it.x.toInt(), it.y.toInt())
-        IO.onPointerDown(it.x.toInt(), it.y.toInt())
+        val number = it.button.toInt()
+        if (number == 0 || number == 2) {
+            click = Triple(it.x.toInt(), it.y.toInt(), number)
+            IO.onClickDown(it.x.toInt(), it.y.toInt(), number == 0)
+        } // else browser back and forth buttons
     }
 
     window.onmouseup = {
-        click = null
-        IO.onPointerUp(it.x.toInt(), it.y.toInt())
+        val number = it.button.toInt()
+        if (number == 0 || number == 2) {
+            click = null
+            IO.onClickUp(it.x.toInt(), it.y.toInt(), number == 0)
+        } // else browser back and forth buttons
     }
 
-    window.onmousemove = {
-        if (click != null) {
-            IO.onPointerMoved(click!!.first, click!!.second, it.x.toInt(), it.y.toInt())
-            click = Pair(it.x.toInt(), it.y.toInt())
-        }
+    window.oncontextmenu = {
+        it.preventDefault()
     }
+
+    window.onmousemove = { if (click != null) {
+        IO.onPointerMoved(click!!.first, click!!.second, it.x.toInt(), it.y.toInt(), click!!.third == 0)
+        click = Triple(it.x.toInt(), it.y.toInt(), click!!.third)
+    } }
 
     window.onwheel = {
         IO.onZoomed(it.x.toInt(), it.y.toInt(), it.deltaY.sign.toInt())
     }
 
     document.addEventListener("visibilitychange", {
-        if (timer == 0) return@addEventListener
+        if (elapsed == 0) return@addEventListener
         if (document["hidden"] as Boolean) pause()
         else resume()
     })
@@ -83,10 +92,10 @@ fun resume () {
 
 fun update () {
     Lifecycle.update()
-    timer = window.requestAnimationFrame { update() }
+    elapsed = window.requestAnimationFrame { update() }
 }
 
 fun pause () {
-    window.cancelAnimationFrame(timer)
+    window.cancelAnimationFrame(elapsed)
     Lifecycle.pause()
 }

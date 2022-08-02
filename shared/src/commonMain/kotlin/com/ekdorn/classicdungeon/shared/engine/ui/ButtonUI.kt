@@ -10,9 +10,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("ButtonUI")
 internal class ButtonUI: LayoutUI(), Clickable {
-    override var clickTime: Int? = null
-    override var clickable = true
-
     override fun specialChildren() = mapOf("image" to ImageUI::class, "text" to TextUI::class)
 
     inline var image: ImageUI?
@@ -24,13 +21,14 @@ internal class ButtonUI: LayoutUI(), Clickable {
         set(v) = if (v != null) add("text", v as WidgetUI) else Unit
 
 
-    override fun update(elapsed: Int) {
-        super.update(elapsed)
-        updateCallback()
+    override fun onPrimaryClickUp(pos: Vector): Boolean {
+        background?.resetColor()
+        return super.onPrimaryClickUp(pos)
     }
 
-
-    override fun onClick() {
+    override fun onPrimaryClickDown(pos: Vector): Boolean {
+        background?.setBrightness(1.2F)
+        Audio.playEffect("snd_click")
         if (!Audio.backgroundPlaying) {
             Audio.playBackground("theme", true)
             text?.text = "Click for music to stop!"
@@ -38,16 +36,6 @@ internal class ButtonUI: LayoutUI(), Clickable {
             Audio.stopBackground()
             text?.text = "Click for music to start!"
         }
-    }
-
-    override fun onTouchUp(pos: Vector): Boolean {
-        background?.resetColor()
-        return super.onTouchUp(pos)
-    }
-
-    override fun onTouchDown(pos: Vector): Boolean {
-        background?.setBrightness(1.2F)
-        Audio.playEffect("snd_click")
-        return super.onTouchDown(pos)
+        return super.onPrimaryClickDown(pos)
     }
 }

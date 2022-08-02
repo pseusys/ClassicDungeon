@@ -135,12 +135,8 @@ internal open class LayoutUI: ResizableUI() {
     open fun bubble(event: Event): Boolean = children.firstNotNullOfOrNull {
         val widget = it.value
         val direct = when (event) {
-            is ClickEvent -> {
-                if (widget is Clickable && widget.rect.includes(event.position)) {
-                    if (if (event.type == ClickEvent.ClickType.DOWN) widget.onTouchDown(event.position) else widget.onTouchUp(event.position)) true else null
-                } else null
-            }
-            is MoveEvent -> if (widget is Movable && widget.rect.includes(event.start) && widget.rect.includes(event.end) && widget.onMove(event.start, event.end)) true else null
+            is ClickEvent -> if (widget is Clickable && widget.rect.includes(event.position) && widget.onClick(event.position, event.type, event.mode)) true else null
+            is MoveEvent -> if (widget is Movable && widget.rect.includes(event.start) && widget.rect.includes(event.end) && widget.onMove(event.mode, event.start, event.end)) true else null
             is ZoomEvent -> if (widget is Zoomable && widget.rect.includes(event.position) && widget.onZoom(event.position, event.level)) true else null
             else -> null
         }

@@ -6,6 +6,7 @@ import kotlinx.serialization.Transient
 
 internal interface Zoomable {
     @Transient val zoomable: Boolean
+        get() = true
 
     fun onZoom (pos: Vector, level: Int) = zoomable
 }

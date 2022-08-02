@@ -1,38 +1,28 @@
 package com.ekdorn.classicdungeon.shared.engine.ui.extensions
 
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import com.ekdorn.classicdungeon.shared.engine.utils.ClickEvent
 import kotlinx.serialization.Transient
 
 
-internal interface Clickable {
-    companion object {
-        private const val LONG_CLICK = 3.0
+internal interface Clickable: Movable {
+    @Transient val clickable: Boolean
+        get() = true
+
+    fun onClick(pos: Vector, type: ClickEvent.ClickType, mode: ClickEvent.ClickMode) = when {
+        type == ClickEvent.ClickType.DOWN && mode == ClickEvent.ClickMode.PRIMARY -> onPrimaryClickDown(pos)
+        type == ClickEvent.ClickType.UP && mode == ClickEvent.ClickMode.PRIMARY -> onPrimaryClickUp(pos)
+        type == ClickEvent.ClickType.DOWN && mode == ClickEvent.ClickMode.SECONDARY -> onSecondaryClickDown(pos)
+        type == ClickEvent.ClickType.UP && mode == ClickEvent.ClickMode.SECONDARY -> onSecondaryClickUp(pos)
+        else -> clickable
     }
 
 
-    @Transient var clickTime: Int?
+    fun onPrimaryClickDown(pos: Vector) = clickable
 
-    @Transient val clickable: Boolean
+    fun onPrimaryClickUp(pos: Vector) = clickable
 
+    fun onSecondaryClickDown(pos: Vector) = clickable
 
-    fun onClick () {}
-
-    fun onLongClick () {}
-
-
-    fun onTouchUp (pos: Vector) = if (clickable) {
-        clickTime = null
-        true
-    } else false
-
-    fun onTouchDown (pos: Vector) = if (clickable) {
-        clickTime = 0
-        onClick()
-        true
-    } else false
-
-    fun updateCallback() = if (clickable && clickTime != null) {
-        if (clickTime!! > LONG_CLICK) onLongClick()
-        clickTime = clickTime!! + 1
-    } else Unit
+    fun onSecondaryClickUp(pos: Vector) = clickable
 }
