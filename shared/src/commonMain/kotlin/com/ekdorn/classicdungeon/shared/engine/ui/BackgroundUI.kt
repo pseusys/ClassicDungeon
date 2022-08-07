@@ -73,4 +73,7 @@ internal class BackgroundUI: ResizableUI() {
 
         buffer.fill(Rectangle(0F, 0F, 1F, -1F), frame)
     }
+
+
+    override fun toString() = "${super.toString()} source '$source'"
 }

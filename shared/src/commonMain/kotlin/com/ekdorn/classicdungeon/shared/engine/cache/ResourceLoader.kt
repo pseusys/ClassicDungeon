@@ -1,6 +1,5 @@
-package com.ekdorn.classicdungeon.shared.engine.general
+package com.ekdorn.classicdungeon.shared.engine.cache
 
-import com.ekdorn.classicdungeon.shared.audio.Sounds
 import com.ekdorn.classicdungeon.shared.gl.primitives.Image
 
 

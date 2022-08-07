@@ -27,10 +27,9 @@ internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI() {
 
 
     override fun bubble(event: Event) = if (event is MoveEvent) {
-        var move = super.bubble(event)
+        val move = super.bubble(event)
         val endTouch = ClickEvent(ClickEvent.ClickType.UP, event.start)
-        if (!move) move = super.bubble(endTouch)
-        move
+        if (!move) super.bubble(endTouch) else move
     } else super.bubble(event)
 
     override fun add(id: String, element: WidgetUI) {

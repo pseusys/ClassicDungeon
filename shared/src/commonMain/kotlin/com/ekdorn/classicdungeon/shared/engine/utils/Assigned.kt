@@ -1,4 +1,4 @@
-package com.ekdorn.classicdungeon.shared.engine.general
+package com.ekdorn.classicdungeon.shared.engine.utils
 
 import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.engine.cache.Audio

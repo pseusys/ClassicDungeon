@@ -10,6 +10,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlin.reflect.KClass
+import kotlin.reflect.typeOf
 
 
 /**
@@ -132,14 +133,24 @@ internal open class LayoutUI: ResizableUI() {
     }
 
 
-    open fun bubble(event: Event): Boolean = children.firstNotNullOfOrNull {
+    private fun WidgetUI.bubbleThrough(event: Event) = this is LayoutUI && this.bubble(event)
+
+    private fun WidgetUI.click(event: ClickEvent) = this is Clickable && this.onClick(event.position, event.type, event.mode)
+
+    private fun WidgetUI.move(event: MoveEvent) = this is Movable && this.onMove(event.start, event.end)
+
+    private fun WidgetUI.zoom(event: ZoomEvent) = this is Zoomable && this.onZoom(event.position, event.level)
+
+    open fun bubble(event: Event): Boolean = children.lastNotNullOfOrNull {
         val widget = it.value
-        val direct = when (event) {
-            is ClickEvent -> if (widget is Clickable && widget.rect.includes(event.position) && widget.onClick(event.position, event.type, event.mode)) true else null
-            is MoveEvent -> if (widget is Movable && widget.rect.includes(event.start) && widget.rect.includes(event.end) && widget.onMove(event.start, event.end)) true else null
-            is ZoomEvent -> if (widget is Zoomable && widget.rect.includes(event.position) && widget.onZoom(event.position, event.level)) true else null
+        when (event) {
+            is ClickEvent -> if (widget.rect.includes(event.position) && (widget.click(event) || widget.bubbleThrough(event))) true else null
+            is MoveEvent -> if (widget.rect.includes(event.start) && widget.rect.includes(event.end) && (widget.move(event) || widget.bubbleThrough(event))) true else null
+            is ZoomEvent -> if (widget.rect.includes(event.position) && (widget.zoom(event) || widget.bubbleThrough(event))) true else null
             else -> null
         }
-        if (direct == null && widget is LayoutUI) widget.bubble(event) else direct
     } ?: false
+
+
+    override fun toString() = "${super.toString()} children [${children.keys.joinToString()}]"
 }

@@ -43,4 +43,7 @@ internal class ButtonUI: LayoutUI(), Clickable {
         }
         return super.onPrimaryClickDown(pos)
     }
+
+
+    override fun toString() = "${super.toString()} text '${text?.text}', image '${image?.source}'"
 }

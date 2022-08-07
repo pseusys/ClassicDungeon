@@ -1,7 +1,9 @@
 name: DEPLOY
 
 on:
-  [ push ]
+  push:
+    branches:
+      - 'main'
 
 jobs:
   deploy:
@@ -9,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v3
 
       - name: Set up JDK 11 🔧
         uses: actions/setup-java@v2
@@ -24,7 +26,8 @@ jobs:
           arguments: browserDistribution
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+        uses: JamesIves/github-pages-deploy-action@4
         with:
-          BRANCH: gh-pages
-          FOLDER: browser/build/distributions
+          branch: gh-pages
+          folder: browser/build/distributions
+          single-commit: True

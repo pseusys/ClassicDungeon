@@ -154,4 +154,7 @@ internal class FrameUI: ResizableUI() {
 
         buffer.fill(vertices, textures)
     }
+
+
+    override fun toString() = "${super.toString()} source '$source'"
 }

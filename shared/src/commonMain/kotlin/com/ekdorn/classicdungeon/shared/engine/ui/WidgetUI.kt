@@ -304,4 +304,7 @@ internal abstract class WidgetUI {
     internal fun addColor(color: Color) = setColor(material, ambient, color)
 
     internal fun setBrightness(v: Float) = material.apply { r = v; g = v; b = v; a = v }
+
+
+    override fun toString() = "${this::class} at $coords of $metrics with "
 }

@@ -1,6 +1,6 @@
 import com.ekdorn.classicdungeon.shared.IO
 import com.ekdorn.classicdungeon.shared.Lifecycle
-import com.ekdorn.classicdungeon.shared.engine.general.ResourceNotFoundException
+import com.ekdorn.classicdungeon.shared.engine.cache.ResourceNotFoundException
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions.context
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -27,13 +27,15 @@ fun main () {
         surface.height = window.innerHeight
 
         Lifecycle.scope.launch {
-            Lifecycle.start(surface.width, surface.height, ::resume)
-        }.invokeOnCompletion {
-            when (it) { //TODO: beautiful exception handling (we will need that a lot)
+            Lifecycle.init(surface.width, surface.height)
+            resume()
+            Lifecycle.start()
+        }.invokeOnCompletion { // TODO: clarify exceptions
+            when (it) {
                 null -> return@invokeOnCompletion
                 is CancellationException -> window.alert("${it.message}\n${it.cause}")
-                is ResourceNotFoundException -> window.alert("Game resources incomplete!\nTry reloading page or contact developer.\n${it.message}\n${it.cause}")
-                else -> window.alert("Game could not start for reason unknown!\nContact developer for further information.\n${it.message}\n${it.cause}")
+                is ResourceNotFoundException -> window.alert("Game resources incomplete!\nTry reloading page or contact developer.\n${it.message}")
+                else -> window.alert("Game could not start for reason unknown!\nContact developer for further information.\n${it.message}")
             }
         }
     }

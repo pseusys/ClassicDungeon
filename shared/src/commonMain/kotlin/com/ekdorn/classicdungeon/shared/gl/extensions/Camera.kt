@@ -1,7 +1,7 @@
 package com.ekdorn.classicdungeon.shared.gl.extensions
 
 import com.ekdorn.classicdungeon.shared.IO
-import com.ekdorn.classicdungeon.shared.engine.general.Assigned
+import com.ekdorn.classicdungeon.shared.engine.utils.Assigned
 import com.ekdorn.classicdungeon.shared.gl.primitives.Matrix
 
 /**

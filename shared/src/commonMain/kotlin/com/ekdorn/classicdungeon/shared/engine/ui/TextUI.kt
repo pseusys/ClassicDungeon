@@ -223,4 +223,7 @@ internal class TextUI: ResizableUI() {
 
         buffer.fill(vertices, textures)
     }
+
+
+    override fun toString() = "${super.toString()} text '$text'"
 }

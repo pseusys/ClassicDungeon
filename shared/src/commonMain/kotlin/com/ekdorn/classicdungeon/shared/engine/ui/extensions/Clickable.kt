@@ -42,4 +42,6 @@ internal interface Clickable: Movable {
         secondaryClicked = false
         return clickable
     }
+
+    override fun onMove(start: Vector, end: Vector) = super.onMove(start, end) && (primaryClicked || secondaryClicked)
 }

@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared.audio
 
-import com.ekdorn.classicdungeon.shared.engine.general.ResourceNotFoundException
+import com.ekdorn.classicdungeon.shared.engine.cache.ResourceNotFoundException
 import com.ekdorn.classicdungeon.shared.engine.utils.Listener
 import org.w3c.dom.Audio
 import kotlin.js.Promise

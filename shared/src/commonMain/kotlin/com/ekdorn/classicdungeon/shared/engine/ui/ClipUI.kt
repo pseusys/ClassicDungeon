@@ -105,4 +105,7 @@ internal class ClipUI: ImageUI() {
         if (current != null) current!!.sus = current
         play(fps, false, *order)
     }
+
+
+    override fun toString() = "${super.toString()} source '$source'"
 }

@@ -15,7 +15,7 @@
       "description": "A ui widget (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/ui/*.kt)",
       "type": "object",
       "patternProperties": {
-        "^#type$": {"enum": ["BackgroundUI", "ButtonUI", "ClipUI", "FrameUI", "ImageUI", "LayoutUI", "TextUI", "WidgetUI"]},
+        "^#type$": { "enum": ["BackgroundUI", "ButtonUI", "ClipUI", "FrameUI", "ImageUI", "LayoutUI", "TextUI", "WidgetUI"] },
         "^#include$": { "type": "string" },
         "^background$": {
           "$ref": "#/$defs/widget"
@@ -24,7 +24,15 @@
           "type": "object",
           "patternProperties": {
             "^[A-Za-z]+$": {
-              "$ref": "#/$defs/widget"
+              "$ref": "#/$defs/widget",
+              "patternProperties": {
+                "^#override$": { "type": "boolean" }
+              },
+              "oneOf": [
+                { "required": [ "#type" ] },
+                { "required": [ "#include" ] },
+                { "required": [ "#override" ] }
+              ]
             }
           },
           "additionalProperties": false

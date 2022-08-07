@@ -1,7 +1,9 @@
 package com.ekdorn.classicdungeon.shared.gl.extensions
 
-import com.ekdorn.classicdungeon.shared.engine.general.Assigned
+import com.ekdorn.classicdungeon.shared.engine.utils.Assigned
 import com.ekdorn.classicdungeon.shared.engine.atomic.Color
+import com.ekdorn.classicdungeon.shared.engine.utils.assert
+import com.ekdorn.classicdungeon.shared.engine.utils.except
 import com.ekdorn.classicdungeon.shared.gl.primitives.Matrix
 import com.ekdorn.classicdungeon.shared.gl.wrapper.*
 
@@ -79,7 +81,7 @@ internal object Script: Assigned {
         prepareShader(vertexShader, VERTEX_SHADER)
         prepareShader(fragmentShader, FRAGMENT_SHADER)
 
-        program.link()?.apply { throw Exception("Program link error: $this") }
+        program.link()?.apply { except("Program link error: $this") }
         vertexShader.delete()
         fragmentShader.delete()
 
@@ -104,9 +106,7 @@ internal object Script: Assigned {
      * @param code shader code
      */
     private fun prepareShader (shader: GLShader, code: String) {
-        shader.prepare(code)?.apply {
-            throw Exception("${if (shader == vertexShader) "VERTEX" else "FRAGMENT"} shader compile error:\n$this")
-        }
+        shader.prepare(code)?.apply { except("${if (shader == vertexShader) "VERTEX" else "FRAGMENT"} shader compile error:\n$this") }
         program.attach(shader)
     }
 

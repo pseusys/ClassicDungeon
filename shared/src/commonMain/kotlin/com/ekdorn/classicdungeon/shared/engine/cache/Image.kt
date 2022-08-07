@@ -1,7 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.cache
 
-import com.ekdorn.classicdungeon.shared.engine.general.Assigned
-import com.ekdorn.classicdungeon.shared.engine.general.ResourceLoader
+import com.ekdorn.classicdungeon.shared.engine.utils.Assigned
 import com.ekdorn.classicdungeon.shared.gl.extensions.ImageTexture
 import com.ekdorn.classicdungeon.shared.gl.extensions.Atlas
 

@@ -100,4 +100,7 @@ internal open class ImageUI: WidgetUI() {
         val textureVertices = Rectangle(x.first, y.first, x.second, y.second)
         buffer.fill(Rectangle(0F, 0F, 1F, -1F), textureVertices)
     }
+
+
+    override fun toString() = "${super.toString()} source '$source'"
 }

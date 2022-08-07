@@ -1,8 +1,8 @@
 package com.ekdorn.classicdungeon.shared.engine.cache
 
-import com.ekdorn.classicdungeon.shared.engine.general.ResourceLoader
 import com.ekdorn.classicdungeon.shared.engine.ui.*
 import com.ekdorn.classicdungeon.shared.engine.utils.assert
+import com.ekdorn.classicdungeon.shared.engine.utils.partition
 import kotlinx.serialization.PolymorphicSerializer
 import kotlinx.serialization.json.*
 import kotlinx.serialization.modules.*
@@ -12,7 +12,8 @@ import kotlinx.serialization.modules.*
 // UI pixelization in camera depending on screen ratio
 internal object Layout {
     private const val classField = "#type"
-    private const val overrideField = "#include"
+    private const val includeField = "#include"
+    private const val overrideField = "#override"
 
 
     private val module = SerializersModule { polymorphic(WidgetUI::class) {
@@ -42,21 +43,19 @@ internal object Layout {
     }
 
     private suspend fun compile(layout: JsonObject, override: JsonObject = JsonObject(mapOf())): JsonObject {
-        if (overrideField in layout) {
-            val overridden = compile(JsonObject(layout - overrideField), override)
-            return compile(pull(layout[overrideField]!!.jsonPrimitive.content), overridden)
+        if (includeField in layout) {
+            val overridden = compile(JsonObject(layout - includeField), override)
+            return compile(pull(layout[includeField]!!.jsonPrimitive.content), overridden)
         } else {
             val childfree = layout + override - "children"
             if ("children" !in layout && "children" !in override) return JsonObject(childfree)
             val children = mutableMapOf<String, JsonElement>()
+            val overrideChildren = override["children"]?.jsonObject?.partition { it.value.jsonObject[overrideField]?.jsonPrimitive?.boolean == true }
             layout["children"]?.jsonObject?.entries?.forEach {
-                val childOverride = override["children"]?.jsonObject?.get(it.key)?.jsonObject
-                children[it.key] = compile(it.value.jsonObject, childOverride ?: JsonObject(mapOf()))
+                val childOverride = overrideChildren?.first?.get(it.key)?.jsonObject?.minus(overrideField)
+                children[it.key] = compile(it.value.jsonObject, JsonObject(childOverride ?: mapOf()))
             }
-            val overridden = layout["children"]?.jsonObject?.keys ?: listOf()
-            override["children"]?.jsonObject?.entries?.filter { it.key !in overridden }?.forEach {
-                children[it.key] = it.value.jsonObject
-            }
+            overrideChildren?.second?.entries?.forEach { children[it.key] = it.value.jsonObject }
             return JsonObject(childfree + Pair("children", JsonObject(children)))
         }
     }

@@ -3,10 +3,9 @@ package com.ekdorn.classicdungeon.shared
 import com.ekdorn.classicdungeon.shared.engine.cache.Audio
 import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.engine.cache.Layout
-import com.ekdorn.classicdungeon.shared.engine.general.Assigned
-import com.ekdorn.classicdungeon.shared.engine.general.Game
-import com.ekdorn.classicdungeon.shared.engine.general.ResourceLists
-import com.ekdorn.classicdungeon.shared.engine.general.ResourceNotFoundException
+import com.ekdorn.classicdungeon.shared.engine.utils.Assigned
+import com.ekdorn.classicdungeon.shared.engine.cache.ResourceLists
+import com.ekdorn.classicdungeon.shared.engine.cache.ResourceNotFoundException
 import com.ekdorn.classicdungeon.shared.engine.utils.EventStack
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
 import kotlinx.coroutines.CoroutineScope
@@ -20,14 +19,7 @@ object Lifecycle {
 
     val scope = CoroutineScope(Dispatchers.Default)
 
-    /**
-     * Initializing features and loading resources.
-     * Should not block UI thread, but run in parallel after game started.
-     * After this method exits, main game lifecycle should start if no errors occurred.
-     * If method finishes with exception, error method should be displayed.
-     * @throws ResourceNotFoundException if any resources are not loaded.
-     */
-    suspend fun start (width: Int, height: Int, updateStarter: () -> Unit) {
+    suspend fun init(width: Int, height: Int) {
         IO.resizeEvents.add { GLFunctions.portal(it.w, it.h) }
 
         GLFunctions.setup()
@@ -35,9 +27,17 @@ object Lifecycle {
         IO.onResized(width, height)
 
         Image.init(ResourceLists.splash_textures)
-        Game.start(width, height)
-        updateStarter.invoke()
+        Game.init(width, height)
+    }
 
+    /**
+     * Initializing features and loading resources.
+     * Should not block UI thread, but run in parallel after game started.
+     * After this method exits, main game lifecycle should start if no errors occurred.
+     * If method finishes with exception, error method should be displayed.
+     * @throws ResourceNotFoundException if any resources are not loaded.
+     */
+    suspend fun start () {
         // TODO: refactor splash screen, replace with loading progress bar that will switch to play button
         withContext(scope.coroutineContext) {
             Audio.loadEffect("snd_click")
@@ -45,8 +45,7 @@ object Lifecycle {
             Image.loadAtlas("bee", List(16) { it }, 16)
             Layout.load("main_menu")
         }
-
-        Game.launch()
+        Game.start()
     }
 
     /**
