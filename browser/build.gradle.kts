@@ -2,8 +2,8 @@ plugins {
     kotlin("js")
 }
 
-group = "com.ekdorn.classicdungeon"
-version = "1.0-SNAPSHOT"
+group = Globals.group
+version = Globals.version
 
 repositories {
     google()
@@ -19,6 +19,8 @@ kotlin {
         binaries.executable()
         browser {
             commonWebpackConfig {
+                // Known warning produced:
+                // https://youtrack.jetbrains.com/issue/KTIJ-22030/browserDevelopmentRun-task-fails-with-webpack-cli-type-error
                 outputFileName = "ClassicDungeon.js"
                 cssSupport.enabled = true
             }

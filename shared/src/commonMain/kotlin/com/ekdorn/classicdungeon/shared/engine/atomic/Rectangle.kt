@@ -1,8 +1,6 @@
 package com.ekdorn.classicdungeon.shared.engine.atomic
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import kotlin.math.abs
 
 
@@ -13,10 +11,6 @@ import kotlin.math.abs
  */
 @Serializable
 internal data class Rectangle (var left: Float, var top: Float, var right: Float, var bottom: Float) {
-    companion object {
-        fun create (json: String?, default: Rectangle) = if (json != null) Json.decodeFromString(json) else default
-    }
-
     constructor (left: Int, top: Int, right: Int, bottom: Int): this(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
     constructor (): this(0, 1, 1, 0)
 
@@ -103,6 +97,8 @@ internal data class Rectangle (var left: Float, var top: Float, var right: Float
      * └───────┘
      */
     fun toPointsArray () = floatArrayOf(left, top, right, top, right, bottom, left, bottom)
+
+    fun includes (point: Vector) = (point.x >= left) && (point.y >= top) && (point.x <= right) && (point.y <= bottom)
 
     override fun toString() =  "Rectangle: (left: $left; top: $top; right: $right; bottom: $bottom)"
 }

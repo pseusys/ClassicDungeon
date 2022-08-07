@@ -4,13 +4,18 @@ import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import com.ekdorn.classicdungeon.shared.gl.extensions.ImageFont
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 /**
  * TextUI - number of images, each representing a letter, together forming text.
  * May be stretched in different ways, single- or multiline.
  */
-internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
+@Serializable
+@SerialName("TextUI")
+internal class TextUI: ResizableUI() {
     /**
      * Types of internal text stretching:
      * - START - letters aligned to left
@@ -18,33 +23,17 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
      * - END - letters aligned to right
      * - FILL - letters stretched to fill whole width
      */
+    @Serializable
     enum class ALIGNMENT {
         START, CENTER, END, FILL
     }
 
 
-
-    /**
-     * Number of letters actually drawn (with unnecessary whitespaces omitted).
-     */
-    @Implicit private var textLength = 0
-
-
-    /**
-     * Property font - font to take letters from.
-     * ImageFont.MEDIUM by default.
-     */
-    var font = ImageFont.valueOf(initializer.getOrElse("font") { ImageFont.MEDIUM.name } as String)
-        set (v) {
-            dirty = true
-            field = v
-        }
-
     /**
      * Property multiline - whether text should be single- or multiline.
      * True by default.
      */
-    var multiline = initializer.getOrElse("multiline") { true } as Boolean
+    var multiline = true
         set (v) {
             dirty = true
             field = v
@@ -54,7 +43,7 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
      * Property text - the text to draw.
      * "" by default.
      */
-    var text = initializer.getOrElse("text") { "" } as String
+    var text = ""
         set (v) {
             dirty = true
             field = v
@@ -64,7 +53,35 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
      * Property textAlignment - type of internal text stretching to use.
      * ALIGNMENT.CENTER by default.
      */
-    var textAlignment = ALIGNMENT.valueOf(initializer.getOrElse("textAlignment") { ALIGNMENT.CENTER.name } as String)
+    var textAlignment = ALIGNMENT.CENTER
+        set (v) {
+            dirty = true
+            field = v
+        }
+
+    var fontSource = ImageFont.MEDIUM.name
+        set (v) {
+            field = v
+            font = ImageFont.valueOf(field)
+        }
+
+
+    @Transient override var parent: LayoutUI? = null
+        set(v) {
+            field = v
+            dirty = true
+        }
+
+    /**
+     * Number of letters actually drawn (with unnecessary whitespaces omitted).
+     */
+    @Transient private var textLength = 0
+
+    /**
+     * Property font - font to take letters from.
+     * ImageFont.MEDIUM by default.
+     */
+    @Transient private var font = ImageFont.valueOf(fontSource)
         set (v) {
             dirty = true
             field = v
@@ -75,7 +92,6 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
         stretchH = false
         updateVertices()
     }
-
 
 
     /**
@@ -95,8 +111,6 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
         return maxPast
     }
 
-
-
     override fun draw () {
         super.draw()
         font.texture.bind()
@@ -105,15 +119,12 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
         font.texture.release()
     }
 
-
-
-    override fun translate (parentCoords: Vector, parentMetrics: Vector) {
-        dimens.y = metrics.y / parentMetrics.y
-        super.translate(parentCoords, parentMetrics)
+    override fun translate () {
+        dimens.y = metrics.y / parentMetrics!!.y
+        super.translate()
     }
 
     override fun updateVertices () {
-        super.updateVertices()
         if (parent == null) return
 
         val vertices = mutableListOf<Rectangle>()
@@ -121,6 +132,7 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
 
         text = text.replace("\t", "    ")
         if (!multiline) text = text.replace('\n', ' ')
+        super.updateVertices()
 
         // Lines except empty.
         val lines = text.split('\n').filter { it.isNotEmpty() }.toMutableList()
@@ -201,13 +213,17 @@ internal class TextUI (initializer: Map<String, *> = hashMapOf<String, Any>()): 
 
         textLength = vertices.size
 
-        // Because this view is vertical-resizeable only, setting new metrics.
+        // Because this view is horizontally-resizeable only, setting new metrics.
         metrics.y = font.height * lines.size * pixelation
 
         // Dividing all y coords by lines number, to fit in new dimens.y.
         vertices.forEach { it.vertical /= lines.size.toFloat() }
-        dimens = Vector(if (dimens.x == 0F) maxPast else dimens.x, metrics.y / parentMetrics()!!.y)
+        dimens = Vector(if (dimens.x == 0F) maxPast else dimens.x, 0F)
+        parent!!.requestTranslate(this)
 
         buffer.fill(vertices, textures)
     }
+
+
+    override fun toString() = "${super.toString()} text '$text'"
 }

@@ -1,7 +1,6 @@
-package com.ekdorn.classicdungeon.shared.engine
+package com.ekdorn.classicdungeon.shared
 
-import com.ekdorn.classicdungeon.shared.Input
-import com.ekdorn.classicdungeon.shared.engine.general.Transcender
+import com.ekdorn.classicdungeon.shared.engine.cache.Layout
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import com.ekdorn.classicdungeon.shared.engine.ui.ClipUI
 import com.ekdorn.classicdungeon.shared.engine.ui.ImageUI
@@ -25,28 +24,26 @@ internal object Game {
     fun pause () {}
 
 
-    fun splash (width: Int, height: Int) {
+    fun init (width: Int, height: Int) {
+        IO.logger.i("Game initialized!")
         root = RootUI(width, height)
         root.add(splash, ImageUI().apply { anchor = Vector(0.5F, 0.5F); pixelation = 8F })
 
-        Input.onResized.add {
-            root.resize(it.w, it.h)
-            false
-        }
+        IO.resizeEvents.add { root.resize(it.w, it.h) }
     }
 
     fun start () {
-        println("Game started!")
+        IO.logger.i("Game started!")
         root.get<ImageUI>(splash)!!.delete()
         root.remove(splash)
 
-        root.add("menu", Transcender.summon("main_menu"))
+        root.add("menu", Layout.summon("main_menu"))
         root.get<ClipUI>("bee")?.play(20, true, 7, 8, 9, 10)
 
         elapsed = Clock.System.now().toEpochMilliseconds().toInt()
     }
 
     fun end () {
-        println("Game ended!")
+        IO.logger.i("Game ended!")
     }
 }

@@ -1,34 +1,45 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLTexture
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
-internal class BackgroundUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
-    @Implicit var scroll = Vector()
+@Serializable
+@SerialName("BackgroundUI")
+internal class BackgroundUI: ResizableUI() {
+    var scrollSpeed = Vector()
 
-    var scrollSpeed = Vector.create(initializer["scrollSpeed"] as String?, Vector())
+    var source = Image.DEFAULT
+        set (v) {
+            field = v
+            texture = Image.get(field)
+        }
+
+    var horizontalPixelate = false
+
+    var verticalPixelate = false
+
+
+    @Transient var scroll = Vector()
 
     /**
      * Property texture - image source.
      * Fallback image by default.
      */
-    var texture = TextureCache.get(initializer.getOrElse("texture") { TextureCache.NO_TEXTURE } as String)
+    @Transient private var texture = Image.get(source)
         set (v) {
             field = v
             field.wrap(GLTexture.WRAPPING.REPEAT, GLTexture.WRAPPING.REPEAT)
         }
 
-    var horizontalPixelate = initializer.getOrElse("horizontalPixelate") { false } as Boolean
-
-    var verticalPixelate = initializer.getOrElse("verticalPixelate") { false } as Boolean
-
 
     init { texture.wrap(GLTexture.WRAPPING.REPEAT, GLTexture.WRAPPING.REPEAT) }
-
 
 
     override fun draw () {
@@ -62,4 +73,7 @@ internal class BackgroundUI (initializer: Map<String, *> = hashMapOf<String, Any
 
         buffer.fill(Rectangle(0F, 0F, 1F, -1F), frame)
     }
+
+
+    override fun toString() = "${super.toString()} source '$source'"
 }

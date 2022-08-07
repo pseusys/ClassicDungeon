@@ -4,23 +4,40 @@
   "title": "Schema defining user interface layouts consisting of ui widgets",
   "description": "A widget holder, widget inside of the layout (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/general/Transcender.kt)",
 
-  "type": "object",
-  "properties": {
-    "cls": { "enum": [ "BackgroundUI", "ClipUI", "FrameUI", "ImageUI", "LayoutUI", "TextUI", "WidgetUI" ] },
-    "id": { "type": "string" },
-    "value": { "$ref": "#/$defs/widget" },
-    "children": { "type": "array", "items": { "$ref": "#" } },
-    "background": { "$ref": "#/$defs/widget" }
-  },
-  "required": [ "cls", "id", "value" ],
-  "additionalProperties": false,
+  "$ref": "#/$defs/widget",
+  "oneOf": [
+    { "required": [ "#type" ] },
+    { "required": [ "#include" ] }
+  ],
 
   "$defs": {
     "widget": {
       "description": "A ui widget (class: shared/src/commonMain/kotlin/com/ekdorn/classicdungeon/shared/engine/ui/*.kt)",
       "type": "object",
       "patternProperties": {
-        "^[A-Za-z][A-Za-z]*$": {
+        "^#type$": { "enum": ["BackgroundUI", "ButtonUI", "ClipUI", "FrameUI", "ImageUI", "LayoutUI", "TextUI", "WidgetUI"] },
+        "^#include$": { "type": "string" },
+        "^background$": {
+          "$ref": "#/$defs/widget"
+        },
+        "^children$": {
+          "type": "object",
+          "patternProperties": {
+            "^[A-Za-z]+$": {
+              "$ref": "#/$defs/widget",
+              "patternProperties": {
+                "^#override$": { "type": "boolean" }
+              },
+              "oneOf": [
+                { "required": [ "#type" ] },
+                { "required": [ "#include" ] },
+                { "required": [ "#override" ] }
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "^(?!children)[A-Za-z]+$": {
           "anyOf": [
             { "not": { "type": "object" } },
             { "$ref": "#/$defs/color" },
@@ -28,7 +45,8 @@
             { "$ref": "#/$defs/vector" }
           ]
         }
-      }
+      },
+      "additionalProperties": false
     },
 
     "color": {

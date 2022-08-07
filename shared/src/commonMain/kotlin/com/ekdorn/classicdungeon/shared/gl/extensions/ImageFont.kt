@@ -1,6 +1,6 @@
 package com.ekdorn.classicdungeon.shared.gl.extensions
 
-import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.engine.atomic.Color
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 
@@ -13,7 +13,7 @@ private object FontUtils {
 internal enum class ImageFont (resource: String): MutableMap<Char, Rectangle> by HashMap(FontUtils.ALPHABET.length) {
     SMALL("font"), MEDIUM("font");
 
-    val texture = TextureCache.get(resource)
+    val texture = Image.get(resource)
     val width = texture.image.metrics.x
     val height = texture.image.metrics.y
 

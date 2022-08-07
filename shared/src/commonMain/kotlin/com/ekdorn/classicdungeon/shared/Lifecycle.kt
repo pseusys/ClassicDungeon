@@ -1,47 +1,50 @@
 package com.ekdorn.classicdungeon.shared
 
+import com.ekdorn.classicdungeon.shared.engine.cache.Audio
+import com.ekdorn.classicdungeon.shared.engine.cache.Image
+import com.ekdorn.classicdungeon.shared.engine.cache.Layout
+import com.ekdorn.classicdungeon.shared.engine.utils.Assigned
+import com.ekdorn.classicdungeon.shared.engine.cache.ResourceLists
+import com.ekdorn.classicdungeon.shared.engine.cache.ResourceNotFoundException
+import com.ekdorn.classicdungeon.shared.engine.utils.EventStack
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
-import com.ekdorn.classicdungeon.shared.engine.Game
-import com.ekdorn.classicdungeon.shared.engine.general.Assigned
-import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
-import com.ekdorn.classicdungeon.shared.engine.general.Transcender
-import com.ekdorn.classicdungeon.shared.engine.utils.Event
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 object Lifecycle {
-    internal val onResume = Event<Unit>()
-    internal val onPause = Event<Unit>()
+    internal val onResume = EventStack<Unit>()
+    internal val onPause = EventStack<Unit>()
 
     val scope = CoroutineScope(Dispatchers.Default)
+
+    suspend fun init(width: Int, height: Int) {
+        IO.resizeEvents.add { GLFunctions.portal(it.w, it.h) }
+
+        GLFunctions.setup()
+        Assigned.assigned.forEach { it.gameStarted() }
+        IO.onResized(width, height)
+
+        Image.init(ResourceLists.splash_textures)
+        Game.init(width, height)
+    }
 
     /**
      * Initializing features and loading resources.
      * Should not block UI thread, but run in parallel after game started.
      * After this method exits, main game lifecycle should start if no errors occurred.
      * If method finishes with exception, error method should be displayed.
-     * @throws com.ekdorn.classicdungeon.shared.engine.ResourceNotFoundException if any resources are not loaded.
+     * @throws ResourceNotFoundException if any resources are not loaded.
      */
-    suspend fun start (width: Int, height: Int) {
-        Input.onResized.add {
-            GLFunctions.portal(it.w, it.h)
-            false
+    suspend fun start () {
+        // TODO: refactor splash screen, replace with loading progress bar that will switch to play button
+        withContext(scope.coroutineContext) {
+            Audio.loadEffect("snd_click")
+            Image.load("font", "chrome", "arcs00", "arcs01")
+            Image.loadAtlas("bee", List(16) { it }, 16)
+            Layout.load("main_menu")
         }
-
-        GLFunctions.setup()
-        Assigned.assigned.forEach { it.gameStarted() }
-        Input.onResized(width, height)
-
-        TextureCache.init("notex")
-        Game.splash(width, height)
-        Game.update()
-
-        awaitAll(scope.async { delay(2000) }, scope.async {
-            TextureCache.load("font", "chrome", "arcs00", "arcs01")
-            TextureCache.loadAtlas("bee", List(16) { it }, 16)
-            Transcender.load("main_menu")
-        })
-
         Game.start()
     }
 

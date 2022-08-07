@@ -1,11 +1,11 @@
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.kotlin.plugin.serialization") version("1.5.30")
-    id("com.android.library")
+    id(Dependencies.Plugins.serialization) version(Versions.Plugins.serialization)
+    id(Dependencies.Plugins.android)
 }
 
-group = "com.ekdorn.classicdungeon"
-version = "1.0-SNAPSHOT"
+group = Globals.group
+version = Globals.version
 
 repositories {
     google()
@@ -29,26 +29,32 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
+                implementation("${Dependencies.Common.dateTime}:${Versions.Common.dateTime}")
+                implementation("${Dependencies.Common.coroutines}:${Versions.Common.coroutines}")
+                implementation("${Dependencies.Common.serialization}:${Versions.Common.serialization}")
+                implementation("${Dependencies.Common.kermit}:${Versions.Common.kermit}")
             }
         }
 
-        val jsMain by getting
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin(Dependencies.Common.test))
+            }
+        }
+
+        val jsMain by getting {
+            dependencies {
+                implementation(npm(Dependencies.Browser.readPixels, Versions.Browser.readPixels))
+            }
+        }
     }
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdkVersion(32)
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdkVersion(24)
-        targetSdkVersion(30)
+        targetSdkVersion(32)
     }
 }

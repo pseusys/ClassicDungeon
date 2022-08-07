@@ -1,29 +1,24 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 /**
  * ImageUI - image, that can not be resized for it pixel sizes not to be disturbed.
  */
-internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any>()): WidgetUI(initializer) {
-    /**
-     * Part of parent widget this widget takes.
-     */
-    @Implicit override var dimens = super.dimens
-        get () = if (parent != null) metrics / parentMetrics()!! else field
-
-    /**
-     * Property texture - image source.
-     * Fallback image by default.
-     */
-    open var texture = TextureCache.get(initializer.getOrElse("texture") { TextureCache.NO_TEXTURE } as String)
+@Serializable
+@SerialName("ImageUI")
+internal open class ImageUI: WidgetUI() {
+    var source = Image.DEFAULT
         set (v) {
-            metrics = v.image.metrics * frame.metrics * pixelation
             field = v
+            texture = Image.get(field)
         }
 
     /**
@@ -31,7 +26,7 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
      * Measured from lower left corner.
      * Whole image by default.
      */
-    var frame = Rectangle.create(initializer["frame"] as String?, Rectangle())
+    var frame = Rectangle()
         set (v) {
             metrics = texture.image.metrics * v.metrics * pixelation
             dirty = true
@@ -42,7 +37,7 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
      * Property mirroredH - whether this image should be mirrored horizontally.
      * False by default.
      */
-    var mirroredH = initializer.getOrElse("mirroredH") { false } as Boolean
+    var mirroredH = false
         set (v) {
             dirty = true
             field = v
@@ -52,15 +47,31 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
      * Property mirroredV - whether this image should be mirrored vertically.
      * False by default.
      */
-    var mirroredV = initializer.getOrElse("mirroredV") { false } as Boolean
+    var mirroredV = false
         set (v) {
             dirty = true
             field = v
         }
 
 
-    init { updateVertices() }
+    /**
+     * Part of parent widget this widget takes.
+     */
+    @Transient override var dimens = super.dimens
+        get () = if (parent != null) metrics / parentMetrics!! else field
 
+    /**
+     * Property texture - image source.
+     * Fallback image by default.
+     */
+    @Transient protected open var texture = Image.get(source)
+        set (v) {
+            metrics = v.image.metrics * frame.metrics * pixelation
+            field = v
+        }
+
+
+    init { updateVertices() }
 
 
     override fun draw () {
@@ -72,9 +83,9 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
     }
 
 
-    override fun translate(parentCoords: Vector, parentMetrics: Vector) {
+    override fun translate() {
         metrics = texture.image.metrics * frame.metrics * pixelation
-        super.translate(parentCoords, parentMetrics)
+        super.translate()
     }
 
     final override fun updateVertices () {
@@ -89,4 +100,7 @@ internal open class ImageUI (initializer: Map<String, *> = hashMapOf<String, Any
         val textureVertices = Rectangle(x.first, y.first, x.second, y.second)
         buffer.fill(Rectangle(0F, 0F, 1F, -1F), textureVertices)
     }
+
+
+    override fun toString() = "${super.toString()} source '$source'"
 }

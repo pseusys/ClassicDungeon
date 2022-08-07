@@ -1,31 +1,57 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import com.ekdorn.classicdungeon.shared.engine.ui.extensions.Clickable
+import com.ekdorn.classicdungeon.shared.engine.ui.extensions.Movable
+import com.ekdorn.classicdungeon.shared.engine.ui.extensions.Zoomable
+import com.ekdorn.classicdungeon.shared.engine.utils.*
+import com.ekdorn.classicdungeon.shared.engine.utils.Event
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import kotlin.reflect.KClass
+import kotlin.reflect.typeOf
 
 
 /**
  * LayoutUI - container for widgets.
  */
-internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
+@Serializable
+@SerialName("LayoutUI")
+internal open class LayoutUI: ResizableUI() {
     /**
      * Children list.
      */
-    @Implicit private val children = mutableMapOf<String, WidgetUI>()
+    protected val children = mutableMapOf<String, WidgetUI>()
 
-    @Suppress("UNCHECKED_CAST")
-    @Implicit private val parents = children.filterValues { it is LayoutUI }.toMutableMap() as MutableMap<String, LayoutUI>
+    protected open fun specialChildren(): Map<String, KClass<out WidgetUI>> = mapOf()
+
+
+    inline val childCoords: Vector
+        get() = coords + innerBorder
+
+    inline val childMetrics: Vector
+        get() = metrics - innerBorder * 2F
 
     /**
      * Property background - special FrameUI child, representing this layout background.
      * Null by default.
      */
-    @Implicit var background: FrameUI? = null
+    var background: FrameUI? = null
         set (v) {
-            if (v != null) v.parent = this
-            else field?.parent = null
+            field?.parent = null
+            v?.parent = this
             field = v
         }
 
+
+    @Transient private var innerBorder = Vector()
+
+    @Suppress("UNCHECKED_CAST")
+    @Transient private val parents = children.filterValues { it is LayoutUI }.toMutableMap() as MutableMap<String, LayoutUI>
+
+
+    init { background?.parent = this }
 
 
     /**
@@ -33,7 +59,12 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
      * @param id id of new element
      * @param element widget to add
      */
-    fun add (id: String, element: WidgetUI) {
+    open fun add (id: String, element: WidgetUI) {
+        val special = specialChildren()
+        assert(special[id]?.isInstance(element) ?: true) {
+            "Child '$id' of '${this::class.simpleName}' should be ${special[id]!!.simpleName}, not ${element::class.simpleName}!"
+        }
+        children[id]?.parent = null
         element.parent = this
         children[id] = element
         if (element is LayoutUI) parents[id] = element
@@ -68,7 +99,10 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
      */
     fun clear () = children.clear()
 
-
+    fun populate(descendants: Map<String, WidgetUI>) {
+        children.clear()
+        descendants.forEach { add(it.key, it.value) }
+    }
 
     override fun update (elapsed: Int) {
         super.update(elapsed)
@@ -82,20 +116,41 @@ internal open class LayoutUI (initializer: Map<String, *> = hashMapOf<String, An
         children.values.forEach { if (it.visible) it.draw() }
     }
 
-
-
-    override fun translate(parentCoords: Vector, parentMetrics: Vector) {
-        super.translate(parentCoords, parentMetrics)
-        background?.translate(coords, metrics)
-        val innerBorder = if (background != null) background!!.pixelBorder * background!!.pixelation else Vector()
-        children.values.forEach { if (it.visible) it.translate(coords + innerBorder, metrics - innerBorder * 2F) }
+    override fun translate() {
+        super.translate()
+        innerBorder = Vector()
+        background?.translate()
+        innerBorder = if (background != null) background!!.pixelBorder * background!!.pixelation else Vector()
+        children.values.forEach { if (it.visible) it.translate() }
     }
 
-
+    fun requestTranslate(widget: WidgetUI) = widget.translate()
 
     override fun delete() {
         super.delete()
         background?.delete()
         children.values.forEach { it.delete() }
     }
+
+
+    private fun WidgetUI.bubbleThrough(event: Event) = this is LayoutUI && this.bubble(event)
+
+    private fun WidgetUI.click(event: ClickEvent) = this is Clickable && this.onClick(event.position, event.type, event.mode)
+
+    private fun WidgetUI.move(event: MoveEvent) = this is Movable && this.onMove(event.start, event.end)
+
+    private fun WidgetUI.zoom(event: ZoomEvent) = this is Zoomable && this.onZoom(event.position, event.level)
+
+    open fun bubble(event: Event): Boolean = children.lastNotNullOfOrNull {
+        val widget = it.value
+        when (event) {
+            is ClickEvent -> if (widget.rect.includes(event.position) && (widget.click(event) || widget.bubbleThrough(event))) true else null
+            is MoveEvent -> if (widget.rect.includes(event.start) && widget.rect.includes(event.end) && (widget.move(event) || widget.bubbleThrough(event))) true else null
+            is ZoomEvent -> if (widget.rect.includes(event.position) && (widget.zoom(event) || widget.bubbleThrough(event))) true else null
+            else -> null
+        }
+    } ?: false
+
+
+    override fun toString() = "${super.toString()} children [${children.keys.joinToString()}]"
 }

@@ -1,9 +1,12 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
-import com.ekdorn.classicdungeon.shared.engine.general.TextureCache
+import com.ekdorn.classicdungeon.shared.engine.cache.Image
 import com.ekdorn.classicdungeon.shared.gl.extensions.Script
 import com.ekdorn.classicdungeon.shared.engine.atomic.Rectangle
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 
 /**
@@ -28,7 +31,9 @@ import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
  * │ corner │
  * └────────┘
  */
-internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()): ResizableUI(initializer) {
+@Serializable
+@SerialName("FrameUI")
+internal class FrameUI: ResizableUI() {
     /**
      * Property stretchW - whether widget can be stretched horizontally.
      * Enables horizontal border(s) and right corner(s).
@@ -51,38 +56,16 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
             field = v
         }
 
-
-    /**
-     * Property frame - which part of image source is mapped.
-     * Measured from lower left corner.
-     * Whole image by default.
-     */
-    var frame = Rectangle.create(initializer["frame"] as String?, Rectangle())
+    var source = Image.DEFAULT
         set (v) {
-            dirty = true
             field = v
+            texture = Image.get(field)
         }
 
     /**
      * Inline property for setting frame in pixels.
      */
-    inline var pixelFrame: Rectangle
-        get () = frame * texture.image.metrics
-        set (v) {
-            frame = v / texture.image.metrics
-        }
-
-    /**
-     * Property texture - image source to map.
-     * Fallback image by default.
-     */
-    var texture = TextureCache.get(initializer.getOrElse("texture") { TextureCache.NO_TEXTURE } as String)
-
-    /**
-     * Property border - part of image to map as border, vertical and horizontal.
-     * Both zero by default.
-     */
-    var border = Vector.create(initializer["border"] as String?, Vector())
+    var pixelFrame = Rectangle()
         set (v) {
             dirty = true
             field = v
@@ -91,19 +74,42 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
     /**
      * Inline property for setting border in pixels.
      */
-    inline var pixelBorder: Vector
-        get () = border * pixelFrame.metrics
+    var pixelBorder = Vector()
         set (v) {
-            border = v / pixelFrame.metrics
+            dirty = true
+            field = v
+        }
+
+    /**
+     * Property border - part of image to map as border, vertical and horizontal.
+     * Both zero by default.
+     */
+    inline var border
+        get() = pixelBorder / pixelFrame.metrics
+        set (v) {
+            pixelBorder = v * pixelFrame.metrics
+        }
+
+    /**
+     * Property frame - which part of image source is mapped.
+     * Measured from lower left corner.
+     * Whole image by default.
+     */
+    inline var frame
+        get() = pixelFrame / texture.image.metrics
+        set (v) {
+            pixelFrame = v * texture.image.metrics
         }
 
 
-    init {
-        if ("pixelFrame" in initializer) pixelFrame = Rectangle.create(initializer["pixelFrame"] as String?, Rectangle())
-        if ("pixelBorder" in initializer) pixelBorder = Vector.create(initializer["pixelBorder"] as String?, Vector())
-        updateVertices()
-    }
+    /**
+     * Property texture - image source to map.
+     * Fallback image by default.
+     */
+    @Transient private var texture = Image.get(source)
 
+
+    init { updateVertices() }
 
 
     override fun draw () {
@@ -113,8 +119,6 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
         Script.drawMultiple(9)
         texture.release()
     }
-
-
 
     override fun updateVertices () {
         super.updateVertices()
@@ -150,4 +154,7 @@ internal class FrameUI (initializer: Map<String, *> = hashMapOf<String, Any>()):
 
         buffer.fill(vertices, textures)
     }
+
+
+    override fun toString() = "${super.toString()} source '$source'"
 }

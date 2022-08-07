@@ -1,23 +1,41 @@
 package com.ekdorn.classicdungeon.shared.engine.ui
 
+import com.ekdorn.classicdungeon.shared.IO
 import com.ekdorn.classicdungeon.shared.gl.wrapper.GLFunctions
 import com.ekdorn.classicdungeon.shared.engine.atomic.Vector
+import com.ekdorn.classicdungeon.shared.engine.utils.ClickEvent
+import com.ekdorn.classicdungeon.shared.engine.utils.Event
+import com.ekdorn.classicdungeon.shared.engine.utils.MoveEvent
 
 
 /**
  * RootUI - root layout of the game.
  * Has some extra functions compared to LayoutUI, for example, clears screen on update.
  */
-internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI(hashMapOf<String, Any>()) {
+internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI() {
+    private var misplaced = true
+
     init {
         coords = Vector(0F, 0F)
         metrics = Vector(screenWidth, screenHeight)
         dimens = Vector(1F, 1F)
         verticalAlignment = ALIGNMENT.START
         horizontalAlignment = ALIGNMENT.START
+
+        IO.interactiveEvents.add(::bubble)
     }
 
 
+    override fun bubble(event: Event) = if (event is MoveEvent) {
+        val move = super.bubble(event)
+        val endTouch = ClickEvent(ClickEvent.ClickType.UP, event.start)
+        if (!move) super.bubble(endTouch) else move
+    } else super.bubble(event)
+
+    override fun add(id: String, element: WidgetUI) {
+        super.add(id, element)
+        misplaced = true
+    }
 
     /**
      * Single method to update and draw whole widgets tree.
@@ -26,7 +44,7 @@ internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI(hashMapOf<
      */
     fun enter (elapsed: Int) {
         GLFunctions.clear()
-        translate(coords, metrics)
+        if (misplaced) translate()
         update(elapsed)
         draw()
     }
@@ -36,5 +54,11 @@ internal class RootUI (screenWidth: Int, screenHeight: Int): LayoutUI(hashMapOf<
      */
     fun resize (screenWidth: Int, screenHeight: Int) {
         metrics = Vector(screenWidth, screenHeight)
+        misplaced = true
+    }
+
+    override fun translate() {
+        misplaced = false
+        children.values.forEach { if (it.visible) it.translate() }
     }
 }
