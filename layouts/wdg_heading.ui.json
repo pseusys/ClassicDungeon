@@ -1,0 +1,7 @@
+{
+  "#type": "TextUI",
+  "verticalAlignment": "CENTER",
+  "textAlignment": "CENTER",
+  "pixelation": 2.0,
+  "material": {"value": [1.0, 1.0, 0.0, 1.0]}
+}

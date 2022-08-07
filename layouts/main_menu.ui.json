@@ -1,0 +1,53 @@
+{
+  "#type": "LayoutUI",
+  "anchor": {"x": 0.5, "y": 0.5},
+  "dimens": {"x": 1, "y": 1},
+  "children": {
+    "darkground": {
+      "#type": "BackgroundUI",
+      "verticalAlignment": "START",
+      "horizontalAlignment": "START",
+      "dimens": {"x": 1, "y": 1},
+      "source": "arcs00",
+      "scrollSpeed": {"x": 0, "y": 1}
+    },
+    "background": {
+      "#type": "BackgroundUI",
+      "verticalAlignment": "START",
+      "horizontalAlignment": "START",
+      "dimens": {"x": 1, "y": 1},
+      "source": "arcs01",
+      "scrollSpeed": {"x": 0, "y": 2}
+    },
+    "container": {
+      "#include": "wdg_window",
+      "anchor": {"x": 0.5, "y": 0.5},
+      "dimens": {"x": 0.6, "y": 0.8},
+      "children": {
+        "hello": {
+          "#include": "wdg_heading",
+          "anchor": {"x": 0.5, "y": 0.1},
+          "dimens": {"x": 1, "y": 0},
+          "text": "Please, enjoy this fine animation:\n"
+        },
+        "bee": {
+          "#type": "ClipUI",
+          "anchor": {"x": 0.5, "y": 0.5},
+          "source": "bee",
+          "pixelation": 8.0
+        },
+        "button": {
+          "#include": "wdg_red_button",
+          "anchor": {"x": 0.5, "y": 0.85},
+          "dimens": {"x": 0.5, "y": 0.2},
+          "children": {
+            "text": {
+              "#override": true,
+              "text": "Click for music to start!"
+            }
+          }
+        }
+      }
+    }
+  }
+}

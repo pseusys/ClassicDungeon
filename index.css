@@ -1,0 +1,12 @@
+html, body, #surface {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+#surface {
+    position: absolute;
+}
