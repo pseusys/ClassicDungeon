@@ -1,11 +1,11 @@
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.kotlin.plugin.serialization") version("1.7.10")
-    id("com.android.library")
+    id(Dependencies.Plugins.serialization) version(Versions.Plugins.serialization)
+    id(Dependencies.Plugins.android)
 }
 
-group = "com.ekdorn.classicdungeon"
-version = "0.1-SNAPSHOT"
+group = Globals.group
+version = Globals.version
 
 repositories {
     google()
@@ -29,19 +29,24 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
-                implementation("co.touchlab:kermit:1.1.3")
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
+                implementation("${Dependencies.Common.dateTime}:${Versions.Common.dateTime}")
+                implementation("${Dependencies.Common.coroutines}:${Versions.Common.coroutines}")
+                implementation("${Dependencies.Common.serialization}:${Versions.Common.serialization}")
+                implementation("${Dependencies.Common.kermit}:${Versions.Common.kermit}")
             }
         }
 
-        val jsMain by getting
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin(Dependencies.Common.test))
+            }
+        }
+
+        val jsMain by getting {
+            dependencies {
+                implementation(npm(Dependencies.Browser.readPixels, Versions.Browser.readPixels))
+            }
+        }
     }
 }
 

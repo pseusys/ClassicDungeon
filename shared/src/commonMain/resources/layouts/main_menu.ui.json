@@ -36,17 +36,6 @@
           "source": "bee",
           "pixelation": 8.0
         },
-        "anotherButton": {
-          "#include": "wdg_red_button",
-          "anchor": {"x": 0.5, "y": 0.85},
-          "dimens": {"x": 0.7, "y": 0.3},
-          "children": {
-            "text": {
-              "#override": true,
-              "text": "FAKE CLICK!!!"
-            }
-          }
-        },
         "button": {
           "#include": "wdg_red_button",
           "anchor": {"x": 0.5, "y": 0.85},

@@ -2,8 +2,8 @@ plugins {
     kotlin("js")
 }
 
-group = "com.ekdorn.classicdungeon"
-version = "0,1.1NAPSHOT"
+group = Globals.group
+version = Globals.version
 
 repositories {
     google()
