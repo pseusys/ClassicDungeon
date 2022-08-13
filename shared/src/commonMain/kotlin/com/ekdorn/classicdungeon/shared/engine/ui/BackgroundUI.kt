@@ -12,6 +12,7 @@ import kotlinx.serialization.Transient
 
 @Serializable
 @SerialName("BackgroundUI")
+// TODO: gets faster sometimes for no reason
 internal class BackgroundUI: ResizableUI() {
     var scrollSpeed = Vector()
 

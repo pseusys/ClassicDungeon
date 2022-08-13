@@ -9,8 +9,7 @@ import com.ekdorn.classicdungeon.shared.engine.utils.Event
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlin.reflect.KClass
-import kotlin.reflect.typeOf
+import kotlin.reflect.KProperty
 
 
 /**
@@ -23,8 +22,6 @@ internal open class LayoutUI: ResizableUI() {
      * Children list.
      */
     protected val children = mutableMapOf<String, WidgetUI>()
-
-    protected open fun specialChildren(): Map<String, KClass<out WidgetUI>> = mapOf()
 
 
     inline val childCoords: Vector
@@ -60,10 +57,6 @@ internal open class LayoutUI: ResizableUI() {
      * @param element widget to add
      */
     open fun add (id: String, element: WidgetUI) {
-        val special = specialChildren()
-        assert(special[id]?.isInstance(element) ?: true) {
-            "Child '$id' of '${this::class.simpleName}' should be ${special[id]!!.simpleName}, not ${element::class.simpleName}!"
-        }
         children[id]?.parent = null
         element.parent = this
         children[id] = element
@@ -150,6 +143,12 @@ internal open class LayoutUI: ResizableUI() {
             else -> null
         }
     } ?: false
+
+
+    @Suppress("UNCHECKED_CAST")
+    operator fun <T: WidgetUI> getValue(thisRef: LayoutUI, property: KProperty<*>) = children[property.name] as T?
+
+    operator fun <T: WidgetUI> setValue(thisRef: LayoutUI, property: KProperty<*>, value: T?) = if (value != null) add(property.name, value) else Unit
 
 
     override fun toString() = "${super.toString()} children [${children.keys.joinToString()}]"

@@ -1,5 +1,5 @@
 # Gradle packages
-/.gradle/
+**/.gradle/
 
 # Gradle scripts
 gradlew
@@ -13,28 +13,23 @@ gradlew.bat
 
 
 
-# General kotlin lib build folder
+# General build folder
 /shared/build/
 
-# Browser kotlin build folder
+# Browser build folder
 /browser/build/
 /kotlin-js-store/
 
-# Native kotlin lib build folder
+# Native build folder
 /desktop/build/
 
 # Native GLFW lib folder
 /desktop/glfw/
 
-
-
-# QT project build folder
-/desktop/build-*/
-
-# QT settings
-/desktop/ClassicDungeon/ClassicDungeon.pro.*
+# BuildSrc build folder
+/buildSrc/build/
 
 
 
-# JS build folder
+# Project build folder
 /build/

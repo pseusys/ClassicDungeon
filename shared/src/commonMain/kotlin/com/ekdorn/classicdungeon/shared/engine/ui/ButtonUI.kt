@@ -6,6 +6,7 @@ import com.ekdorn.classicdungeon.shared.engine.ui.extensions.Clickable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlin.reflect.KClass
 
 
 @Serializable
@@ -15,15 +16,8 @@ internal class ButtonUI: LayoutUI(), Clickable {
     @Transient override var secondaryClicked = false
 
 
-    override fun specialChildren() = mapOf("image" to ImageUI::class, "text" to TextUI::class)
-
-    inline var image: ImageUI?
-        get() = children["image"] as ImageUI?
-        set(v) = if (v != null) add("image", v as WidgetUI) else Unit
-
-    inline var text: TextUI?
-        get() = children["text"] as TextUI?
-        set(v) = if (v != null) add("text", v as WidgetUI) else Unit
+    var image: ImageUI? by this
+    var text: TextUI? by this
 
 
     override fun onPrimaryClickUp(pos: Vector): Boolean {
